@@ -66,32 +66,120 @@
               <div class="tab-content" id="dmt-cardholder-info">
                 <br>
                 <div class="form-column-in">
-                  
+                  <div class="form-group">
+                    <label for="client-no">Mã khách hàng (*):</label>
+                    <input type="text" id="client-no" name="client-no" placeholder="Nhập mã khách hàng (clientNo)" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="company-name">Tên doanh nghiệp (*):</label>
+                    <input type="text" id="company-name" name="company-name" placeholder="Nhập tên doanh nghiệp" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="company-name-en">Tên tiếng Anh:</label>
+                    <input type="text" id="company-name-en" name="company-name-en" placeholder="Nhập tên tiếng Anh (nếu có)">
+                  </div>
+                  <div class="form-group">
+                    <label for="tax-id">Mã số thuế (*):</label>
+                    <input type="text" id="tax-id" name="tax-id" placeholder="Nhập mã số thuế doanh nghiệp" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="business-license">Giấy phép đăng ký kinh doanh (*):</label>
+                    <input type="text" id="business-license" name="business-license" placeholder="Nhập giấy phép đăng ký kinh doanh" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="license-issue-date">Ngày cấp GPKD (*):</label>
+                    <input type="date" id="license-issue-date" name="license-issue-date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="company-address">Địa chỉ doanh nghiệp (*):</label>
+                    <input type="text" id="company-address" name="company-address" placeholder="Nhập địa chỉ doanh nghiệp" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="business-type">Loại hình doanh nghiệp (*):</label>
+                    <input type="text" id="business-type" name="business-type" placeholder="Nhập loại hình doanh nghiệp" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="business-field">Lĩnh vực hoạt động (*):</label>
+                    <input type="text" id="business-field" name="business-field" placeholder="Nhập lĩnh vực hoạt động" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="country-name">Tên quốc gia:</label>
+                    <select id="country-name" name="country-name">
+                      <option value="" disabled selected>Chọn tên quốc gia</option>
+                      <option value="vietnam">Việt Nam</option>
+                      <option value="usa">Hoa Kỳ</option>
+                      <option value="japan">Nhật Bản</option>
+                      <!-- Add more options as needed -->
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">Số điện thoại (*):</label>
+                    <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại liên hệ" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email (*):</label>
+                    <input type="email" id="email" name="email" placeholder="Nhập email liên hệ" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="fax">Số fax:</label>
+                    <input type="text" id="fax" name="fax" placeholder="Nhập số fax">
+                  </div>
+                  <div class="form-group">
+                    <label for="notification-address">Địa chỉ thông báo:</label>
+                    <input type="text" id="notification-address" name="notification-address" placeholder="Nhập địa chỉ nhận thông báo">
+                  </div>
+                  <div class="form-group">
+                    <label for="card-delivery-method">Phương thức giao thẻ (*):</label>
+                    <input type="text" id="card-delivery-method" name="card-delivery-method" placeholder="Nhập phương thức giao thẻ (Bưu phát, Chi nhánh…)" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="previous-credit-limit">Hạn mức phê duyệt trước đó:</label>
+                    <input type="text" id="previous-credit-limit" name="previous-credit-limit" placeholder="Nhập hạn mức tín dụng gần nhất đã được phê duyệt">
+                  </div>
+                  <div class="form-group">
+                    <label for="recent-card-product">Sản phẩm thẻ gần nhất:</label>
+                    <input type="text" id="recent-card-product" name="recent-card-product" placeholder="Nhập sản phẩm thẻ gần nhất đã dùng">
+                  </div>
                 </div>
               </div>
-
 
               <div class="tab-content" id="dmt-company-info">
                 <br>
                 <div class="form-column-in">
+                  <!-- Người đại diện 1 -->
                   <div class="form-group">
-                    <label for="company-name">Tên công ty:</label>
-                    <input type="text" id="company-name" name="company-name" placeholder="Nhập tên công ty chủ thẻ">
+                    <label for="representative1-name">Người đại diện 1 (*):</label>
+                    <input type="text" id="representative1-name" name="representative1-name" placeholder="Nhập họ tên người đại diện 1" required>
                   </div>
-                  
                   <div class="form-group">
-                    <label for="company-address">Địa chỉ:</label>
-                    <input type="text" id="company-address" name="company-address" placeholder="Nhập địa chỉ công ty">
+                    <label for="representative1-cccd">CCCD 1 (*):</label>
+                    <input type="text" id="representative1-cccd" name="representative1-cccd" placeholder="Nhập CCCD người đại diện 1" required>
                   </div>
-                  
                   <div class="form-group">
-                    <label for="company-phone">Số điện thoại:</label>
-                    <input type="text" id="company-phone" name="company-phone" placeholder="Nhập số điện thoại công ty">
+                    <label for="representative1-phone">Số điện thoại 1 (*):</label>
+                    <input type="text" id="representative1-phone" name="representative1-phone" placeholder="Nhập số điện thoại người đại diện 1" required>
                   </div>
-                  
                   <div class="form-group">
-                    <label for="company-fax">Số fax:</label>
-                    <input type="text" id="company-fax" name="company-fax" placeholder="Nhập số fax công ty">
+                    <label for="representative1-position">Chức vụ 1 (*):</label>
+                    <input type="text" id="representative1-position" name="representative1-position" placeholder="Nhập chức vụ người đại diện 1" required>
+                  </div>
+
+                  <!-- Người đại diện 2 -->
+                  <div class="form-group">
+                    <label for="representative2-name">Người đại diện 2 (*):</label>
+                    <input type="text" id="representative2-name" name="representative2-name" placeholder="Nhập họ tên người đại diện 2" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="representative2-cccd">CCCD 2 (*):</label>
+                    <input type="text" id="representative2-cccd" name="representative2-cccd" placeholder="Nhập CCCD người đại diện 2" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="representative2-phone">Số điện thoại 2 (*):</label>
+                    <input type="text" id="representative2-phone" name="representative2-phone" placeholder="Nhập số điện thoại người đại diện 2" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="representative2-position">Chức vụ 2 (*):</label>
+                    <input type="text" id="representative2-position" name="representative2-position" placeholder="Nhập chức vụ người đại diện 2" required>
                   </div>
                 </div>
                 
@@ -137,21 +225,31 @@
               <div class="tab-content" id="dmt-other-info">
                 <br>
                 <div class="form-column-in">
+                  <!-- Báo cáo tài chính -->
                   <div class="form-group">
-                    <label for="main-income">Thu nhập chính:</label>
-                    <input type="text" id="main-income" name="main-income" placeholder="Nhập thu nhập chính của khách hàng (VNĐ)">
+                    <label for="financial-report">Báo cáo tài chính (*):</label>
+                    <input type="text" id="financial-report" name="financial-report" placeholder="Nhập báo cáo tài chính (VNĐ)" required>
                   </div>
-                  
+
+                  <!-- Doanh thu trung bình hàng tháng -->
                   <div class="form-group">
-                    <label for="additional-income">Thu nhập khác:</label>
-                    <input type="text" id="additional-income" name="additional-income" placeholder="Nhập thu nhập bổ sung của khách hàng (VNĐ)">
+                    <label for="monthly-revenue">Doanh thu trung bình hàng tháng (*):</label>
+                    <input type="text" id="monthly-revenue" name="monthly-revenue" placeholder="Nhập doanh thu trung bình hàng tháng (VNĐ)" required>
                   </div>
-                  
+
+                  <!-- Bảng cân đối kế toán -->
                   <div class="form-group">
-                    <label for="total-income">Tổng thu nhập:</label>
-                    <input type="text" id="total-income" name="total-income" placeholder="Nhập tổng thu nhập của khách hàng (VNĐ)">
+                    <label for="balance-sheet">Bảng cân đối kế toán:</label>
+                    <input type="text" id="balance-sheet" name="balance-sheet" placeholder="Nhập bảng cân đối kế toán">
                   </div>
-                  
+
+                  <!-- Xác nhận tình trạng thuế -->
+                  <div class="form-group">
+                    <label for="tax-status">Xác nhận tình trạng thuế:</label>
+                    <input type="text" id="tax-status" name="tax-status" placeholder="Nhập xác nhận tình trạng thuế">
+                  </div>
+
+                  <!-- Các ngân hàng hiện đang cấp thẻ tín dụng -->
                   <div class="form-group">
                     <label for="credit-card-banks">Các ngân hàng hiện đang cấp thẻ tín dụng:</label>
                     <textarea id="credit-card-banks" name="credit-card-banks" placeholder="Nhập danh sách các ngân hàng hiện đang cấp thẻ tín dụng cho khách hàng" style="height: 60px;"></textarea>
@@ -190,8 +288,6 @@
                       <tr>
                         <th>Loại tài liệu</th>
                         <th>Nội dung</th>
-                        <th>Tên tệp</th>
-                        <th>Kích thước</th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
@@ -200,8 +296,6 @@
                       <tr>
                         <td>CMND/CCCD</td>
                         <td>Chứng minh nhân dân</td>
-                        <td>cmnd.pdf</td>
-                        <td>500 KB</td>
                         <td>
                           <button class="delete-btn">Xóa</button>
                         </td>
@@ -217,272 +311,251 @@
               </div>
             </form>
           </div>
-
         </div>
 
         <div class="forms-wrapper">
           <div class="form-column">
-            <form id="cndmt">
+            <form id="dmt">
               <h2>Cập nhật đơn mở thẻ doanh nghiệp</h2>
               <div class="tabs">
                 <button class="tab-button1 active" data-tab="cndmt-application-info">Thông tin đơn mở thẻ</button>
                 <!-- <button class="tab-button" data-tab="credit-limit">Hạn mức chủ thẻ</button> -->
                 <button class="tab-button1" data-tab="cndmt-cardholder-info">Thông tin chủ thẻ</button>
-                <button class="tab-button1" data-tab="cndmt-company-info">Thông tin công ty chủ thẻ</button>
-                <button class="tab-button1" data-tab="cndmt-contact-info">Thông tin liên hệ</button>
+                <button class="tab-button1" data-tab="cndmt-company-info">Thông tin người đại diện</button>
+                <!-- <button class="tab-button" data-tab="dmt-contact-info">Thông tin liên hệ</button> -->
                 <button class="tab-button1" data-tab="cndmt-other-info">Thông tin khác liên quan đến thẻ tín dụng</button>
-                <button class="tab-button1" data-tab="cndmt-upload-info">File liên quan</button>
+                <button class="tab-button1" data-tab="cndmt-upload-info">Tài liệu liên quan</button>
               </div>
               <div class="tab-content1 active" id="cndmt-application-info">
                 <br>
-                <div class="form-group">
-                  <label for="branch">Chi nhánh:</label>
-                  <select id="branch" name="branch" readonly disabled>
-                    <option value="" disabled selected>Chi nhánh 1</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label for="card-type">Thẻ (*):</label>
-                  <select id="card-type" name="card-type" required>
-                    <option value="" disabled selected>Chọn loại thẻ</option>
-                    <option value="credit">Tín dụng</option>
-                    <option value="combo">Combo</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label for="debit-application-id">Đơn mở thẻ ghi nợ (*):</label>
-                  <input type="text" id="debit-application-id" name="debit-application-id" placeholder="Nhập mã đơn mở thẻ ghi nợ">
-                </div>
-                
-                <div class="form-group">
-                  <label for="card-product">Sản phẩm thẻ (*):</label>
-                  <select id="card-product" name="card-product" required>
-                    <option value="" disabled selected>Chọn sản phẩm thẻ</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label for="currency">Tiền tệ:</label>
-                  <select id="currency" name="currency" required>
-                    <option value="vnd" selected>VNĐ</option>
-                  </select>
+                <div class="form-column-in">
+                  <div class="form-group">
+                    <label for="branch">Chi nhánh:</label>
+                    <select id="branch" name="branch" readonly disabled>
+                      <option value="" disabled selected>Chi nhánh 1</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="card-type">Thẻ (*):</label>
+                    <select id="card-type" name="card-type" required>
+                      <option value="" disabled selected>Chọn loại thẻ</option>
+                      <option value="credit">Tín dụng</option>
+                      <option value="combo">Combo</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="debit-application-id">Đơn mở thẻ ghi nợ (*):</label>
+                    <input type="text" id="debit-application-id" name="debit-application-id" placeholder="Nhập mã đơn mở thẻ ghi nợ">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="card-product">Sản phẩm thẻ (*):</label>
+                    <select id="card-product" name="card-product" required>
+                      <option value="" disabled selected>Chọn sản phẩm thẻ</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="currency">Tiền tệ:</label>
+                    <select id="currency" name="currency" required>
+                      <option value="vnd" selected>VNĐ</option>
+                    </select>
+                  </div>
                 </div>
               </div>
-
-
               <div class="tab-content1" id="cndmt-cardholder-info">
                 <br>
-                <div class="form-group">
-                  <label for="customer-id">Mã khách hàng (*):</label>
-                  <input type="text" id="customer-id" name="customer-id" placeholder="Nhập mã khách hàng (clientNo)" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="customer-name">Tên khách hàng (*):</label>
-                  <input type="text" id="customer-name" name="customer-name" placeholder="Nhập họ tên khách hàng" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="customer-name-en">Tên tiếng Anh:</label>
-                  <input type="text" id="customer-name-en" name="customer-name-en" placeholder="Nhập tên tiếng Anh (nếu có)">
-                </div>
-                
-                <div class="form-group">
-                  <label for="tax-id">Mã số thuế (*):</label>
-                  <input type="text" id="tax-id" name="tax-id" placeholder="Nhập mã số thuế doanh nghiệp" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="issue-date">Ngày cấp (*):</label>
-                  <input type="date" id="issue-date" name="issue-date" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="issue-place">Nơi cấp (*):</label>
-                  <input type="text" id="issue-place" name="issue-place" placeholder="Nhập nơi cấp" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="expiry-date">Ngày hết hạn:</label>
-                  <input type="text" id="expiry-date" name="expiry-date" placeholder="Nhập ngày hết hạn">
-                </div>
-                
-                <div class="form-group">
-                  <label for="address">Địa chỉ (*):</label>
-                  <input type="text" id="address" name="address" placeholder="Nhập địa chỉ thường trú của khách hàng" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="province-code">Mã tỉnh/thành phố:</label>
-                  <select id="province-code" name="province-code">
-                    <option value="" disabled selected>Chọn mã tỉnh/thành phố</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label for="country-name">Tên quốc gia:</label>
-                  <select id="country-name" name="country-name">
-                    <option value="" disabled selected>Chọn tên quốc gia</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label for="secondary-address">Địa chỉ liên hệ 2:</label>
-                  <input type="text" id="secondary-address" name="secondary-address" placeholder="Nhập địa chỉ liên hệ bổ sung">
-                </div>
-                
-                <div class="form-group">
-                  <label for="phone">Số điện thoại (*):</label>
-                  <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại liên hệ" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="email">Email (*):</label>
-                  <input type="email" id="email" name="email" placeholder="Nhập email liên hệ" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="mobile-phone">Số di động (*):</label>
-                  <input type="text" id="mobile-phone" name="mobile-phone" placeholder="Nhập số di động" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="fax-number">Số fax:</label>
-                  <input type="text" id="fax-number" name="fax-number" placeholder="Nhập số fax">
-                </div>
-                
-                <div class="form-group">
-                  <label for="notification-address">Địa chỉ thông báo:</label>
-                  <input type="text" id="notification-address" name="notification-address" placeholder="Nhập địa chỉ nhận thông báo">
-                </div>
-                
-                <div class="form-group">
-                  <label for="card-delivery-method">Phương thức giao thẻ (*):</label>
-                  <input type="text" id="card-delivery-method" name="card-delivery-method" placeholder="Nhập phương thức giao thẻ (Bưu phát, Chi nhánh…)" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="previous-credit-limit">Hạn mức phê duyệt trước đó:</label>
-                  <input type="text" id="previous-credit-limit" name="previous-credit-limit" placeholder="Nhập hạn mức tín dụng gần nhất đã được phê duyệt">
-                </div>
-                
-                <div class="form-group">
-                  <label for="recent-card-product">Sản phẩm thẻ gần nhất:</label>
-                  <input type="text" id="recent-card-product" name="recent-card-product" placeholder="Nhập sản phẩm thẻ gần nhất đã dùng">
+                <div class="form-column-in">
+                  <div class="form-group">
+                    <label for="client-no">Mã khách hàng (*):</label>
+                    <input type="text" id="client-no" name="client-no" placeholder="Nhập mã khách hàng (clientNo)" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="company-name">Tên doanh nghiệp (*):</label>
+                    <input type="text" id="company-name" name="company-name" placeholder="Nhập tên doanh nghiệp" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="company-name-en">Tên tiếng Anh:</label>
+                    <input type="text" id="company-name-en" name="company-name-en" placeholder="Nhập tên tiếng Anh (nếu có)">
+                  </div>
+                  <div class="form-group">
+                    <label for="tax-id">Mã số thuế (*):</label>
+                    <input type="text" id="tax-id" name="tax-id" placeholder="Nhập mã số thuế doanh nghiệp" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="business-license">Giấy phép đăng ký kinh doanh (*):</label>
+                    <input type="text" id="business-license" name="business-license" placeholder="Nhập giấy phép đăng ký kinh doanh" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="license-issue-date">Ngày cấp GPKD (*):</label>
+                    <input type="date" id="license-issue-date" name="license-issue-date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="company-address">Địa chỉ doanh nghiệp (*):</label>
+                    <input type="text" id="company-address" name="company-address" placeholder="Nhập địa chỉ doanh nghiệp" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="business-type">Loại hình doanh nghiệp (*):</label>
+                    <input type="text" id="business-type" name="business-type" placeholder="Nhập loại hình doanh nghiệp" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="business-field">Lĩnh vực hoạt động (*):</label>
+                    <input type="text" id="business-field" name="business-field" placeholder="Nhập lĩnh vực hoạt động" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="country-name">Tên quốc gia:</label>
+                    <select id="country-name" name="country-name">
+                      <option value="" disabled selected>Chọn tên quốc gia</option>
+                      <option value="vietnam">Việt Nam</option>
+                      <option value="usa">Hoa Kỳ</option>
+                      <option value="japan">Nhật Bản</option>
+                      <!-- Add more options as needed -->
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">Số điện thoại (*):</label>
+                    <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại liên hệ" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email (*):</label>
+                    <input type="email" id="email" name="email" placeholder="Nhập email liên hệ" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="fax">Số fax:</label>
+                    <input type="text" id="fax" name="fax" placeholder="Nhập số fax">
+                  </div>
+                  <div class="form-group">
+                    <label for="notification-address">Địa chỉ thông báo:</label>
+                    <input type="text" id="notification-address" name="notification-address" placeholder="Nhập địa chỉ nhận thông báo">
+                  </div>
+                  <div class="form-group">
+                    <label for="card-delivery-method">Phương thức giao thẻ (*):</label>
+                    <input type="text" id="card-delivery-method" name="card-delivery-method" placeholder="Nhập phương thức giao thẻ (Bưu phát, Chi nhánh…)" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="previous-credit-limit">Hạn mức phê duyệt trước đó:</label>
+                    <input type="text" id="previous-credit-limit" name="previous-credit-limit" placeholder="Nhập hạn mức tín dụng gần nhất đã được phê duyệt">
+                  </div>
+                  <div class="form-group">
+                    <label for="recent-card-product">Sản phẩm thẻ gần nhất:</label>
+                    <input type="text" id="recent-card-product" name="recent-card-product" placeholder="Nhập sản phẩm thẻ gần nhất đã dùng">
+                  </div>
                 </div>
               </div>
-
 
               <div class="tab-content1" id="cndmt-company-info">
                 <br>
-                <div class="form-group">
-                  <label for="company-name">Tên công ty:</label>
-                  <input type="text" id="company-name" name="company-name" placeholder="Nhập tên công ty chủ thẻ">
+                <div class="form-column-in">
+                  <!-- Người đại diện 1 -->
+                  <div class="form-group">
+                    <label for="representative1-name">Người đại diện 1 (*):</label>
+                    <input type="text" id="representative1-name" name="representative1-name" placeholder="Nhập họ tên người đại diện 1" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="representative1-cccd">CCCD 1 (*):</label>
+                    <input type="text" id="representative1-cccd" name="representative1-cccd" placeholder="Nhập CCCD người đại diện 1" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="representative1-phone">Số điện thoại 1 (*):</label>
+                    <input type="text" id="representative1-phone" name="representative1-phone" placeholder="Nhập số điện thoại người đại diện 1" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="representative1-position">Chức vụ 1 (*):</label>
+                    <input type="text" id="representative1-position" name="representative1-position" placeholder="Nhập chức vụ người đại diện 1" required>
+                  </div>
+
+                  <!-- Người đại diện 2 -->
+                  <div class="form-group">
+                    <label for="representative2-name">Người đại diện 2 (*):</label>
+                    <input type="text" id="representative2-name" name="representative2-name" placeholder="Nhập họ tên người đại diện 2" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="representative2-cccd">CCCD 2 (*):</label>
+                    <input type="text" id="representative2-cccd" name="representative2-cccd" placeholder="Nhập CCCD người đại diện 2" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="representative2-phone">Số điện thoại 2 (*):</label>
+                    <input type="text" id="representative2-phone" name="representative2-phone" placeholder="Nhập số điện thoại người đại diện 2" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="representative2-position">Chức vụ 2 (*):</label>
+                    <input type="text" id="representative2-position" name="representative2-position" placeholder="Nhập chức vụ người đại diện 2" required>
+                  </div>
                 </div>
                 
-                <div class="form-group">
-                  <label for="company-address">Địa chỉ:</label>
-                  <input type="text" id="company-address" name="company-address" placeholder="Nhập địa chỉ công ty">
-                </div>
-                
-                <div class="form-group">
-                  <label for="company-phone">Số điện thoại:</label>
-                  <input type="text" id="company-phone" name="company-phone" placeholder="Nhập số điện thoại công ty">
-                </div>
-                
-                <div class="form-group">
-                  <label for="company-fax">Số fax:</label>
-                  <input type="text" id="company-fax" name="company-fax" placeholder="Nhập số fax công ty">
-                </div>
               </div>
               
-              <div class="tab-content1" id="cndmt-contact-info">
+              <!-- <div class="tab-content" id="cndmt-contact-info">
                 <br>
-                <div class="form-group">
-                  <label for="contact1-name">Tên người liên hệ 1 (*):</label>
-                  <input type="text" id="contact1-name" name="contact1-name" placeholder="Nhập họ tên người liên hệ 1" required>
+                <div class="form-column-in">
+                  <div class="form-group">
+                    <label for="contact1-name">Tên người liên hệ 1 (*):</label>
+                    <input type="text" id="contact1-name" name="contact1-name" placeholder="Nhập họ tên người liên hệ 1" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact1-relationship">Mối quan hệ (*):</label>
+                    <input type="text" id="contact1-relationship" name="contact1-relationship" placeholder="Nhập mối quan hệ (Cha/Mẹ, Vợ/Chồng, Bạn bè, Khác)" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact1-phone">Số điện thoại người liên hệ 1 (*):</label>
+                    <input type="text" id="contact1-phone" name="contact1-phone" placeholder="Nhập số điện thoại người liên hệ 1" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact2-name">Tên người liên hệ 2 (*):</label>
+                    <input type="text" id="contact2-name" name="contact2-name" placeholder="Nhập họ tên người liên hệ 2" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact2-relationship">Mối quan hệ (*):</label>
+                    <input type="text" id="contact2-relationship" name="contact2-relationship" placeholder="Nhập mối quan hệ (Cha/Mẹ, Vợ/Chồng, Bạn bè, Khác)" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact2-phone">Số điện thoại người liên hệ 2 (*):</label>
+                    <input type="text" id="contact2-phone" name="contact2-phone" placeholder="Nhập số điện thoại người liên hệ 2" required>
+                  </div>
                 </div>
                 
-                <div class="form-group">
-                  <label for="contact1-relationship">Mối quan hệ (*):</label>
-                  <input type="text" id="contact1-relationship" name="contact1-relationship" placeholder="Nhập mối quan hệ (Cha/Mẹ, Vợ/Chồng, Bạn bè, Khác)" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="contact1-phone">Số điện thoại người liên hệ 1 (*):</label>
-                  <input type="text" id="contact1-phone" name="contact1-phone" placeholder="Nhập số điện thoại người liên hệ 1" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="contact2-name">Tên người liên hệ 2 (*):</label>
-                  <input type="text" id="contact2-name" name="contact2-name" placeholder="Nhập họ tên người liên hệ 2" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="contact2-relationship">Mối quan hệ (*):</label>
-                  <input type="text" id="contact2-relationship" name="contact2-relationship" placeholder="Nhập mối quan hệ (Cha/Mẹ, Vợ/Chồng, Bạn bè, Khác)" required>
-                </div>
-                
-                <div class="form-group">
-                  <label for="contact2-phone">Số điện thoại người liên hệ 2 (*):</label>
-                  <input type="text" id="contact2-phone" name="contact2-phone" placeholder="Nhập số điện thoại người liên hệ 2" required>
-                </div>
-
-                <!-- <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-                  <thead>
-                    <tr>
-                      <th>Họ tên</th>
-                      <th>Mối quan hệ</th>
-                      <th>Số điện thoại</th>
-                      <th>Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Nguyễn Văn A</td>
-                      <td>Cha</td>
-                      <td>0901234567</td>
-                      <td>
-                        <button class="edit-btn" class="edit">Sửa</button>
-                        <button class="delete-btn" class="delete">Xóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Nguyễn Văn B</td>
-                      <td>Anh</td>
-                      <td>0901234597</td>
-                      <td>
-                        <button class="edit-btn" class="edit">Sửa</button>
-                        <button class="delete-btn" class="delete">Xóa</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table> -->
-              </div>
+              </div> -->
 
 
               <div class="tab-content1" id="cndmt-other-info">
                 <br>
-                <div class="form-group">
-                  <label for="main-income">Thu nhập chính:</label>
-                  <input type="text" id="main-income" name="main-income" placeholder="Nhập thu nhập chính của khách hàng (VNĐ)">
-                </div>
-                
-                <div class="form-group">
-                  <label for="additional-income">Thu nhập khác:</label>
-                  <input type="text" id="additional-income" name="additional-income" placeholder="Nhập thu nhập bổ sung của khách hàng (VNĐ)">
-                </div>
-                
-                <div class="form-group">
-                  <label for="total-income">Tổng thu nhập:</label>
-                  <input type="text" id="total-income" name="total-income" placeholder="Nhập tổng thu nhập của khách hàng (VNĐ)">
-                </div>
-                
-                <div class="form-group">
-                  <label for="credit-card-banks">Các ngân hàng hiện đang cấp thẻ tín dụng:</label>
-                  <textarea id="credit-card-banks" name="credit-card-banks" placeholder="Nhập danh sách các ngân hàng hiện đang cấp thẻ tín dụng cho khách hàng" style="height: 60px;"></textarea>
+                <div class="form-column-in">
+                  <!-- Báo cáo tài chính -->
+                  <div class="form-group">
+                    <label for="financial-report">Báo cáo tài chính (*):</label>
+                    <input type="text" id="financial-report" name="financial-report" placeholder="Nhập báo cáo tài chính (VNĐ)" required>
+                  </div>
+
+                  <!-- Doanh thu trung bình hàng tháng -->
+                  <div class="form-group">
+                    <label for="monthly-revenue">Doanh thu trung bình hàng tháng (*):</label>
+                    <input type="text" id="monthly-revenue" name="monthly-revenue" placeholder="Nhập doanh thu trung bình hàng tháng (VNĐ)" required>
+                  </div>
+
+                  <!-- Bảng cân đối kế toán -->
+                  <div class="form-group">
+                    <label for="balance-sheet">Bảng cân đối kế toán:</label>
+                    <input type="text" id="balance-sheet" name="balance-sheet" placeholder="Nhập bảng cân đối kế toán">
+                  </div>
+
+                  <!-- Xác nhận tình trạng thuế -->
+                  <div class="form-group">
+                    <label for="tax-status">Xác nhận tình trạng thuế:</label>
+                    <input type="text" id="tax-status" name="tax-status" placeholder="Nhập xác nhận tình trạng thuế">
+                  </div>
+
+                  <!-- Các ngân hàng hiện đang cấp thẻ tín dụng -->
+                  <div class="form-group">
+                    <label for="credit-card-banks">Các ngân hàng hiện đang cấp thẻ tín dụng:</label>
+                    <textarea id="credit-card-banks" name="credit-card-banks" placeholder="Nhập danh sách các ngân hàng hiện đang cấp thẻ tín dụng cho khách hàng" style="height: 60px;"></textarea>
+                  </div>
                 </div>
               </div>
 
@@ -517,8 +590,6 @@
                       <tr>
                         <th>Loại tài liệu</th>
                         <th>Nội dung</th>
-                        <th>Tên tệp</th>
-                        <th>Kích thước</th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
@@ -527,8 +598,6 @@
                       <tr>
                         <td>CMND/CCCD</td>
                         <td>Chứng minh nhân dân</td>
-                        <td>cmnd.pdf</td>
-                        <td>500 KB</td>
                         <td>
                           <button class="delete-btn">Xóa</button>
                         </td>
@@ -543,10 +612,8 @@
                 <button type="button" class="cancel">Thoát</button>
               </div>
             </form>
-
           </div>
         </div>
-
       </div>
 
     </main>
