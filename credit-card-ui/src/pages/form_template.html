@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cập Nhật Tỉnh/Thành Phố</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    html, body {
+      font-family: Arial, sans-serif;
+      background: rgba(0, 0, 0, 0.2);
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+    }
+    nav {
+      width: 200px;
+      background-color: #f4f4f9;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      height: 100vh;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      margin-bottom: 15px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      padding: 20px;
+    }
+    .modal {
+      background: white;
+      width: 700px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      padding: 20px 30px;
+    }
+    .modal h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="email"] {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .form-group input[readonly] {
+      background-color: #f5f5f5;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .checkbox-group label {
+      font-weight: bold;
+    }
+    .checkbox-group input {
+      width: 18px;
+      height: 18px;
+    }
+    .form-row {
+      display: flex;
+      gap: 20px;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    .actions {
+      text-align: right;
+      margin-top: 20px;
+    }
+    .actions button {
+      padding: 8px 16px;
+      border: none;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .actions .save {
+      background-color: #007bff;
+      color: white;
+      margin-right: 10px;
+    }
+    .actions .cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Include the navigation -->
+  <div id="nav-placeholder"></div>
+
+  <main>
+    <div class="modal">
+      <h2>Cập Nhật Tỉnh/Thành Phố</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Mã Tỉnh/Thành Phố</label>
+          <input type="text" value="2" readonly>
+        </div>
+        <div class="form-group">
+          <label>Tỉnh/Thành Phố <span style="color:red">(*)</span></label>
+          <input type="text" value="Long An">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Vùng</label>
+          <input type="text" value="27">
+        </div>
+        <div class="form-group">
+          <label>Tên tỉnh/Thành phố [ATM]</label>
+          <input type="text" value="Long An">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="checkbox-group">
+          <input type="checkbox" checked>
+          <label>Cho phép sử dụng</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox">
+          <label>Thanh toán tiện ích</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Người tạo dữ liệu</label>
+          <input type="email" value="hai.nguyen@wirecard.com" readonly>
+        </div>
+        <div class="form-group">
+          <label>Ngày, giờ tạo dữ liệu</label>
+          <input type="text" value="11/11/2021 14:01:33" readonly>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Người cập nhật dữ liệu</label>
+          <input type="email" value="hai.nguyen@bccardvn.com" readonly>
+        </div>
+        <div class="form-group">
+          <label>Ngày, giờ cập nhật dữ liệu</label>
+          <input type="text" value="09/03/2022 15:39:39" readonly>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="save">Lưu</button>
+        <button class="cancel">Thoát</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Load the navigation menu dynamically
+    fetch('../partials/nav.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+  </script>
+</body>
+</html>

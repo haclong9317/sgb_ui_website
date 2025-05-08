@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Thêm/Sửa Cấu Hình</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    html, body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    #container {
+      display: flex;
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+    }
+    #nav-placeholder {
+      width: 20%;
+    }
+    nav {
+      width: 100%;
+      background-color: #f4f4f9;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      margin-bottom: 15px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    main {
+      width: 80%;
+      display: block;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .modal {
+    width: 100%; /* Occupy full width of the parent container */
+    margin-bottom: 20px; /* Add spacing between modals */
+    background-color: #fff; /* White background */
+    border: 1px solid #ddd; /* Add a border */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden; /* Prevent content overflow */
+    display: block; /* Ensure modals are block-level elements */
+  }
+
+  .modal .header {
+    padding: 10px 20px;
+    background-color: #f4f4f9;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal .content {
+    padding: 20px;
+  }
+
+  .modal .card {
+    margin-bottom: 20px;
+  }
+
+  .modal .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .modal .row {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 4px;
+  }
+
+  .modal .row span {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .modal .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+    
+    .modal h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .forms-wrapper {
+      display: flex;
+      gap: 40px;
+      align-items: stretch; /* Ensure both columns stretch to the same height */
+    }
+    .form-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* Ensure form takes full height of its parent */
+    }
+    form .form-group {
+      margin-bottom: 15px;
+    }
+    form .form-group label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    .input-with-unit {
+      display: inline-flex;
+      align-items: center;
+    }
+    .input-with-unit input {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+    }
+    .input-with-unit span {
+      margin-left: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    form input:not(.input-with-unit input),
+    form select {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    .actions {
+      margin-top: 20px;
+      text-align: right;
+    }
+    .actions button {
+      padding: 8px 16px;
+      border: none;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .actions .save {
+      background-color: #007bff;
+      color: white;
+    }
+    .actions .cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+    hr {
+      margin: 40px 0;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+    .form-group div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .form-group div input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin: 0;
+        position: relative;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+    .form-group div input[type="checkbox"]:checked::before {
+        content: '✔';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 12px;
+        color: #007bff;
+    }
+    .form-group div label {
+        margin: 0;
+        padding-left: 10px;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .form-group div input[type="radio"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      margin: 0;
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .form-group div input[type="radio"]:checked {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .form-group div input[type="radio"]:checked::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background-color: #fff;
+      border-radius: 50%;
+    }
+    
+    .form-column-in {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Create responsive columns */
+      gap: 20px; /* Add spacing between fields */
+      padding: 20px; /* Add padding inside the column */
+      
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f5f6f8;
+    }
+
+    .header, .footer {
+      padding: 10px 20px;
+      background: #fff;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .language {
+      display: flex;
+      align-items: center;
+    }
+
+    .language img {
+      width: 20px;
+      margin-right: 5px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .card-header, .card-footer {
+      padding: 10px;
+      background: #f1f1f1;
+      font-weight: bold;
+    }
+
+    .filter-btn {
+      float: right;
+      padding: 5px 10px;
+      background: #666;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .row {
+      padding: 10px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .row a {
+      color: #0d6efd;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .row span {
+      display: block;
+    }
+
+    .edit-btn {
+      background-color: #4caf50; /* Green background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .edit-btn:hover {
+      background-color: #45a049; /* Darker green on hover */
+    }
+
+    .delete-btn {
+      background-color: #f44336; /* Red background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .delete-btn:hover {
+      background-color: #d32f2f; /* Darker red on hover */
+    }
+
+    .checkbox {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: #ccc;
+      border-radius: 3px;
+      position: relative;
+      top: 3px;
+    }
+
+    .fab {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #4caf50;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .pagination {
+      padding: 10px 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .pagination button {
+      background: none;
+      border: none;
+      font-size: 18px;
+    }
+
+    .footer {
+      font-size: 12px;
+      text-align: center;
+      color: #666;
+    }
+
+    .edit-btn {
+      background-color: #4caf50; /* Green background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .edit-btn:hover {
+      background-color: #45a049; /* Darker green on hover */
+    }
+
+    .delete-btn {
+      background-color: #f44336; /* Red background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .delete-btn:hover {
+      background-color: #d32f2f; /* Darker red on hover */
+    }
+
+    .tab-button {
+      background-color: #f4f4f9; /* Default background color */
+      color: #333; /* Default text color */
+      border: 1px solid #ddd;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-right: 10px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .tab-button.active {
+      background-color: #4caf50; /* Green background for active tab */
+      color: white; /* White text for active tab */
+      border-color: #4caf50;
+    }
+
+    .tab-button:hover {
+      background-color: #e0e0e0; /* Light gray on hover */
+    }
+
+    .tab-button1 {
+      background-color: #f4f4f9; /* Default background color */
+      color: #333; /* Default text color */
+      border: 1px solid #ddd;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-right: 10px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .tab-button1.active {
+      background-color: #4caf50; /* Green background for active tab */
+      color: white; /* White text for active tab */
+      border-color: #4caf50;
+    }
+
+    .tab-button1:hover {
+      background-color: #e0e0e0; /* Light gray on hover */
+    }
+
+    form input,
+    form select,
+    form textarea {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px; /* Ensure the width matches the textboxes */
+      box-sizing: border-box; /* Include padding and border in the width */
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="nav-placeholder"></div>
+    <main>
+      <div class="modal">
+        <div class="header">
+          <div><strong>Danh sách đơn mở thẻ</strong></div>
+          <div class="language">
+            <img src="https://flagcdn.com/vn.svg" alt="VN">
+            <span>giaodichvien@sgb.com</span>
+          </div>
+        </div>
+      
+        <div class="content">
+          <div class="card">
+            <div class="card-header">
+              <span>1 / 1</span>
+              <button class="filter-btn">Lọc dữ liệu</button>
+            </div>
+      
+            <div class="row">
+              <span>Mã đơn mở thẻ: <strong style="color: #4caf50;">123456</strong> &nbsp; Thẻ: <strong style="color: #4caf50;">Thẻ chính</strong></span>
+              <span>Đơn mở thẻ gốc: <strong style="color: #4caf50;">DMTG123456</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+              <span>Loại thẻ: <strong style="color: #4caf50;">Tín dụng</strong> &nbsp; Hạng thẻ: <strong style="color: #4caf50;">Platinum</strong></span>
+              <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm A</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">24 tháng</strong></span>
+              <span>Tình trạng: <strong style="color: #4caf50;">Đang chờ duyệt</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Sửa</button>
+                <button class="delete-btn">Xóa</button>
+              </div>
+            </div>
+      
+           <!-- Example 2 -->
+            <div class="row">
+              <span>Mã đơn mở thẻ: <strong style="color: #2196f3;">654321</strong> &nbsp; Thẻ: <strong style="color: #2196f3;">Thẻ phụ</strong></span>
+              <span>Đơn mở thẻ gốc: <strong style="color: #2196f3;">DMTG654321</strong> &nbsp; Chi nhánh: <strong style="color: #2196f3;">Chi nhánh 2</strong></span>
+              <span>Loại thẻ: <strong style="color: #2196f3;">Tín dụng</strong> &nbsp; Hạng thẻ: <strong style="color: #2196f3;">Gold</strong></span>
+              <span>Sản phẩm thẻ: <strong style="color: #2196f3;">Sản phẩm B</strong> &nbsp; Thời hạn thẻ: <strong style="color: #2196f3;">12 tháng</strong></span>
+              <span>Tình trạng: <strong style="color: #2196f3;">Đã duyệt</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Sửa</button>
+                <button class="delete-btn">Xóa</button>
+              </div>
+            </div>
+
+            <!-- Example 3 -->
+            <div class="row">
+              <span>Mã đơn mở thẻ: <strong style="color: #f44336;">789012</strong> &nbsp; Thẻ: <strong style="color: #f44336;">Thẻ chính</strong></span>
+              <span>Đơn mở thẻ gốc: <strong style="color: #f44336;">DMTG789012</strong> &nbsp; Chi nhánh: <strong style="color: #f44336;">Chi nhánh 3</strong></span>
+              <span>Loại thẻ: <strong style="color: #f44336;">Tín dụng</strong> &nbsp; Hạng thẻ: <strong style="color: #f44336;">Standard</strong></span>
+              <span>Sản phẩm thẻ: <strong style="color: #f44336;">Sản phẩm C</strong> &nbsp; Thời hạn thẻ: <strong style="color: #f44336;">36 tháng</strong></span>
+              <span>Tình trạng: <strong style="color: #f44336;">Từ chối</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Sửa</button>
+                <button class="delete-btn">Xóa</button>
+              </div>
+            </div>
+
+            <div class="card-footer">Tổng số 3 dòng</div>
+          </div>
+        </div>
+        <!-- <div class="fab">+</div> -->
+        <!-- <div class="footer">
+          Version 1.1.0 - Copyright© 2022 BCCard (Vietnam) Co., Ltd.
+        </div> -->
+      </div>
+
+      <div class="modal">
+        <div class="header">
+          <div><strong>Thêm đơn mở thẻ vào lô</strong></div>
+          <div class="language">
+            <img src="https://flagcdn.com/vn.svg" alt="VN">
+            <span>giaodichvien@sgb.com</span>
+          </div>
+        </div>
+      
+        <div class="content">
+          <div class="card">
+
+            <!-- Combobox for selecting Lô -->
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label for="select-lo">Chọn Lô:</label>
+              <select id="select-lo" name="select-lo" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="" disabled selected>Chọn lô để thêm đơn mở thẻ</option>
+                <option value="lo1">Lô 1 - Chi nhánh 1</option>
+                <option value="lo2">Lô 2 - Chi nhánh 2</option>
+                <option value="lo3">Lô 3 - Chi nhánh 3</option>
+              </select>
+            </div>
+
+            <div class="card-header">
+              <span>1 / 1</span>
+              <button class="filter-btn">Lọc dữ liệu</button>
+            </div>
+            
+
+
+            <div class="row">
+              <span>Mã đơn mở thẻ: <strong style="color: #4caf50;">123456</strong> &nbsp; Thẻ: <strong style="color: #4caf50;">Thẻ chính</strong></span>
+              <span>Đơn mở thẻ gốc: <strong style="color: #4caf50;">DMTG123456</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+              <span>Loại thẻ: <strong style="color: #4caf50;">Tín dụng</strong> &nbsp; Hạng thẻ: <strong style="color: #4caf50;">Platinum</strong></span>
+              <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm A</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">24 tháng</strong></span>
+              <span>Tình trạng: <strong style="color: #4caf50;">Mới</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Thêm vào lô</button>
+                <button class="delete-btn">Xóa</button>
+              </div>
+            </div>
+      
+           <!-- Example 2 -->
+          <div class="row">
+            <span>Mã đơn mở thẻ: <strong style="color: #4caf50;">654321</strong> &nbsp; Thẻ: <strong style="color: #4caf50;">Thẻ phụ</strong></span>
+            <span>Đơn mở thẻ gốc: <strong style="color: #4caf50;">DMTG654321</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+            <span>Loại thẻ: <strong style="color: #4caf50;">Tín dụng</strong> &nbsp; Hạng thẻ: <strong style="color: #4caf50;">Gold</strong></span>
+            <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm B</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">12 tháng</strong></span>
+            <span>Tình trạng: <strong style="color: #4caf50;">Mới</strong></span>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+              <button class="edit-btn">Thêm vào lô</button>
+              <button class="delete-btn">Xóa</button>
+            </div>
+          </div>
+
+          <!-- Example 3 -->
+          <div class="row">
+            <span>Mã đơn mở thẻ: <strong style="color: #4caf50;">789012</strong> &nbsp; Thẻ: <strong style="color: #4caf50;">Thẻ chính</strong></span>
+            <span>Đơn mở thẻ gốc: <strong style="color: #4caf50;">DMTG789012</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+            <span>Loại thẻ: <strong style="color: #4caf50;">Combo</strong> &nbsp; Hạng thẻ: <strong style="color: #4caf50;">Standard</strong></span>
+            <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm C</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">36 tháng</strong></span>
+            <span>Tình trạng: <strong style="color: #4caf50;">Mới</strong></span>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+              <button class="edit-btn">Thêm vào lô</button>
+              <button class="delete-btn">Xóa</button>
+            </div>
+          </div>
+
+            <div class="card-footer">Tổng số 3 dòng</div>
+          </div>
+        </div>
+        <!-- <div class="fab">+</div> -->
+        <!-- <div class="footer">
+          Version 1.1.0 - Copyright© 2022 BCCard (Vietnam) Co., Ltd.
+        </div> -->
+      </div>
+
+      <hr>
+      <div class="modal">
+        <div class="header">
+          <div><strong>Danh sách lô</strong></div>
+          <div class="language">
+            <img src="https://flagcdn.com/vn.svg" alt="VN">
+            <span>kiemsoatvien@sgb.com</span>
+          </div>
+        </div>
+      
+        <div class="content">
+          <div class="card">
+            <div class="card-header">
+              <span>1 / 1</span>
+              <button class="filter-btn">Lọc dữ liệu</button>
+            </div>
+      
+            <div class="row">
+              <span>Mã lô: <strong style="color: #4caf50;">ML001</strong></span>
+              <span>Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+              <span>Loại thẻ: <strong style="color: #4caf50;">Tín dụng</strong></span>
+              <span>Số đơn mở thẻ trong lô: <strong style="color: #4caf50;">10</strong></span>
+              <span>Tình trạng: <strong style="color: #4caf50;">Đang chờ duyệt</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Xem chi tiết</button>
+                <button class="edit-btn">Duyệt</button>
+                <button class="delete-btn">Từ chối</button>
+              </div>
+            </div>
+
+            <!-- Example 2: Đã duyệt -->
+            <div class="row">
+              <span>Mã lô: <strong style="color: #2196f3;">ML002</strong></span>
+              <span>Chi nhánh: <strong style="color: #2196f3;">Chi nhánh 2</strong></span>
+              <span>Loại thẻ: <strong style="color: #2196f3;">Tín dụng</strong></span>
+              <span>Số đơn mở thẻ trong lô: <strong style="color: #2196f3;">15</strong></span>
+              <span>Tình trạng: <strong style="color: #2196f3;">Đã duyệt</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Xem chi tiết</button>
+                <!-- <button class="delete-btn">Hủy</button> -->
+              </div>
+            </div>
+
+            <!-- Example 3: Từ chối -->
+            <div class="row">
+              <span>Mã lô: <strong style="color: #f44336;">ML003</strong></span>
+              <span>Chi nhánh: <strong style="color: #f44336;">Chi nhánh 3</strong></span>
+              <span>Loại thẻ: <strong style="color: #f44336;">Combo</strong></span>
+              <span>Số đơn mở thẻ trong lô: <strong style="color: #f44336;">20</strong></span>
+              <span>Tình trạng: <strong style="color: #f44336;">Từ chối</strong></span>
+              <span>Lý do: <strong style="color: #f44336;">Thông tin chưa đầy đủ</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Xem chi tiết</button>
+                <!-- <button class="delete-btn">Xóa</button> -->
+              </div>
+            </div>
+
+            <div class="card-footer">Tổng số 3 dòng</div>
+          </div>
+        </div>
+        <!-- <div class="fab">+</div> -->
+        <!-- <div class="footer">
+          Version 1.1.0 - Copyright© 2022 BCCard (Vietnam) Co., Ltd.
+        </div> -->
+      </div>
+
+      <div class="modal">
+        <div class="header">
+          <div><strong>Danh sách đơn mở thẻ</strong></div>
+          <div class="language">
+            <img src="https://flagcdn.com/vn.svg" alt="VN">
+            <span>kiemsoatvien@sgb.com</span>
+          </div>
+        </div>
+      
+        <div class="content">
+          <div class="card">
+            <div class="card-header">
+              <span>Mã lô: ML001</span>
+              <!-- <button class="filter-btn">Lọc dữ liệu</button> -->
+            </div>
+      
+            <div class="row">
+              <span>Mã đơn mở thẻ: <strong style="color: #4caf50;">123456</strong> &nbsp; Thẻ: <strong style="color: #4caf50;">Thẻ chính</strong></span>
+              <span>Đơn mở thẻ gốc: <strong style="color: #4caf50;">DMTG123456</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+              <span>Loại thẻ: <strong style="color: #4caf50;">Tín dụng</strong> &nbsp; Hạng thẻ: <strong style="color: #4caf50;">Platinum</strong></span>
+              <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm A</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">24 tháng</strong></span>
+              <span>Tình trạng: <strong style="color: #4caf50;">Mới</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Duyệt</button>
+                <button class="delete-btn">Từ chối</button>
+              </div>
+            </div>
+      
+           <!-- Example 2 -->
+          <div class="row">
+            <span>Mã đơn mở thẻ: <strong style="color: #4caf50;">654321</strong> &nbsp; Thẻ: <strong style="color: #4caf50;">Thẻ phụ</strong></span>
+            <span>Đơn mở thẻ gốc: <strong style="color: #4caf50;">DMTG654321</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+            <span>Loại thẻ: <strong style="color: #4caf50;">Tín dụng</strong> &nbsp; Hạng thẻ: <strong style="color: #4caf50;">Gold</strong></span>
+            <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm B</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">12 tháng</strong></span>
+            <span>Tình trạng: <strong style="color: #4caf50;">Mới</strong></span>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+              <button class="edit-btn">Duyệt</button>
+              <button class="delete-btn">Từ chối</button>
+            </div>
+          </div>
+
+          <!-- Example 3 -->
+          <div class="row">
+            <span>Mã đơn mở thẻ: <strong style="color: #4caf50;">789012</strong> &nbsp; Thẻ: <strong style="color: #4caf50;">Thẻ chính</strong></span>
+            <span>Đơn mở thẻ gốc: <strong style="color: #4caf50;">DMTG789012</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+            <span>Loại thẻ: <strong style="color: #4caf50;">Tín dụng</strong> &nbsp; Hạng thẻ: <strong style="color: #4caf50;">Standard</strong></span>
+            <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm C</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">36 tháng</strong></span>
+            <span>Tình trạng: <strong style="color: #4caf50;">Mới</strong></span>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+              <button class="edit-btn">Duyệt</button>
+              <button class="delete-btn">Từ chối</button>
+            </div>
+          </div>
+
+            <div class="card-footer">Tổng số 3 dòng</div>
+          </div>
+        </div>
+        <!-- <div class="fab">+</div> -->
+        <!-- <div class="footer">
+          Version 1.1.0 - Copyright© 2022 BCCard (Vietnam) Co., Ltd.
+        </div> -->
+      </div>
+
+      <div class="modal">
+        <div class="header">
+          <div><strong>Danh sách thẻ chờ kích hoạt/mở khóa</strong></div>
+          <div class="language">
+            <img src="https://flagcdn.com/vn.svg" alt="VN">
+            <span>kiemsoatvien@sgb.com</span>
+          </div>
+        </div>
+      
+        <div class="content">
+          <div class="card">
+            <div class="filter-section" style="margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+              <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                <div>
+                  <label for="customer-id">Mã khách hàng:</label>
+                  <input type="text" id="customer-id"  style="padding: 5px; width: 150px;">
+                </div>
+                <div>
+                  <label for="customer-name">Tên khách hàng:</label>
+                  <input type="text" id="customer-name"  style="padding: 5px; width: 200px;">
+                </div>
+                <div>
+                  <label for="cccd">CCCD:</label>
+                  <input type="text" id="cccd"  style="padding: 5px; width: 150px;">
+                </div>
+                <div>
+                  <label for="card-number">Số thẻ:</label>
+                  <input type="text" id="card-number"  style="padding: 5px; width: 200px;">
+                </div>
+                <div>
+                  <label for="expiry-date">Ngày hết hạn:</label>
+                  <input type="date" id="expiry-date" style="padding: 5px; width: 180px;">
+                </div>
+                <div>
+                  <label for="card-status">Tình trạng thẻ:</label>
+                  <select id="card-status" style="padding: 5px; width: 180px;">
+                    <option value="">Chọn tình trạng</option>
+                    <option value="not-activated">Chờ kích hoạt</option>
+                    <option value="locked">Tạm ngưng</option>
+                  </select>
+                </div>
+              </div>
+              <div style="margin-top: 10px; text-align: right;">
+                <button class="filter-btn" style="padding: 8px 16px; background-color: #4caf50; color: white; border: none; border-radius: 3px;">Lọc</button>
+                <button class="reset-btn" style="padding: 8px 16px; background-color: #f44336; color: white; border: none; border-radius: 3px; margin-left: 10px;">Đặt lại</button>
+              </div>
+            </div>
+            <!-- Example 1 -->
+            <div class="row">
+              <span>Mã thẻ: <strong style="color: #4caf50;">ACT001</strong> &nbsp; Loại thẻ: <strong style="color: #4caf50;">Tín dụng</strong></span>
+              <span>Hạng thẻ: <strong style="color: #4caf50;">Platinum</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+              <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm A</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">24 tháng</strong></span>
+              <span>Kênh nhận kích hoạt: <strong style="color: #4caf50;">SMS</strong></span>
+              <span>Tình trạng: <strong style="color: #4caf50;">Chờ kích hoạt</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Kích hoạt</button>
+              </div>
+            </div>
+
+            <!-- Example 2 -->
+            <div class="row">
+              <span>Mã thẻ: <strong style="color: #4caf50;">ACT002</strong> &nbsp; Loại thẻ: <strong style="color: #4caf50;">Tín dụng</strong></span>
+              <span>Hạng thẻ: <strong style="color: #4caf50;">Gold</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+              <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm B</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">12 tháng</strong></span>
+              <span>Kênh nhận kích hoạt: <strong style="color: #4caf50;">Tổng đài</strong></span>
+              <span>Tình trạng: <strong style="color: #4caf50;">Chờ kích hoạt</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Kích hoạt</button>
+              </div>
+            </div>
+
+            <!-- Example 3 -->
+            <div class="row">
+              <span>Mã thẻ: <strong style="color: #4caf50;">ACT003</strong> &nbsp; Loại thẻ: <strong style="color: #4caf50;">Combo</strong></span>
+              <span>Hạng thẻ: <strong style="color: #4caf50;">Standard</strong> &nbsp; Chi nhánh: <strong style="color: #4caf50;">Chi nhánh 1</strong></span>
+              <span>Sản phẩm thẻ: <strong style="color: #4caf50;">Sản phẩm C</strong> &nbsp; Thời hạn thẻ: <strong style="color: #4caf50;">36 tháng</strong></span>
+              <span>Kênh nhận kích hoạt: <strong style="color: #4caf50;">Smart banking</strong></span>
+              <span>Tình trạng: <strong style="color: #4caf50;">Chờ kích hoạt</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Kích hoạt</button>
+              </div>
+            </div>
+
+            <!-- Example for a locked card -->
+            <div class="row">
+              <span>Mã thẻ: <strong style="color: #f44336;">ACT004</strong> &nbsp; Loại thẻ: <strong style="color: #f44336;">Tín dụng</strong></span>
+              <span>Hạng thẻ: <strong style="color: #f44336;">Platinum</strong> &nbsp; Chi nhánh: <strong style="color: #f44336;">Chi nhánh 1</strong></span>
+              <span>Sản phẩm thẻ: <strong style="color: #f44336;">Sản phẩm D</strong> &nbsp; Thời hạn thẻ: <strong style="color: #f44336;">12 tháng</strong></span>
+              <span>Kênh nhận kích hoạt: <strong style="color: #f44336;">Smart banking</strong></span>
+              <span>Tình trạng: <strong style="color: #f44336;">Tạm ngưng</strong></span>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button class="edit-btn">Kích hoạt lạ<img src="" alt="" sizes="" srcset=""></button>
+              </div>
+            </div>
+
+            <div class="card-footer">Tổng số 4 dòng</div>
+          </div>
+        </div>
+        <!-- <div class="fab">+</div> -->
+        <!-- <div class="footer">
+          Version 1.1.0 - Copyright© 2022 BCCard (Vietnam) Co., Ltd.
+        </div> -->
+      </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <form id="dmt">
+              <h2>Đơn mở thẻ cá nhân</h2>
+              <div class="tabs">
+                <button class="tab-button active" data-tab="dmt-application-info">Thông tin đơn mở thẻ</button>
+                <!-- <button class="tab-button" data-tab="credit-limit">Hạn mức chủ thẻ</button> -->
+                <button class="tab-button" data-tab="dmt-cardholder-info">Thông tin chủ thẻ</button>
+                <button class="tab-button" data-tab="dmt-company-info">Thông tin công ty chủ thẻ</button>
+                <button class="tab-button" data-tab="dmt-contact-info">Thông tin liên hệ</button>
+                <button class="tab-button" data-tab="dmt-other-info">Thông tin khác liên quan đến thẻ tín dụng</button>
+                <button class="tab-button" data-tab="dmt-upload-info">File liên quan</button>
+              </div>
+              <div class="tab-content active" id="dmt-application-info">
+                <br>
+                <div class="form-column-in">
+                  <div class="form-group">
+                    <label for="branch">Chi nhánh:</label>
+                    <select id="branch" name="branch" readonly disabled>
+                      <option value="" disabled selected>Chi nhánh 1</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="card-type">Thẻ (*):</label>
+                    <select id="card-type" name="card-type" required>
+                      <option value="" disabled selected>Chọn loại thẻ</option>
+                      <option value="credit">Tín dụng</option>
+                      <option value="combo">Combo</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="debit-application-id">Đơn mở thẻ ghi nợ (*):</label>
+                    <input type="text" id="debit-application-id" name="debit-application-id" placeholder="Nhập mã đơn mở thẻ ghi nợ">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="card-product">Sản phẩm thẻ (*):</label>
+                    <select id="card-product" name="card-product" required>
+                      <option value="" disabled selected>Chọn sản phẩm thẻ</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="currency">Tiền tệ:</label>
+                    <select id="currency" name="currency" required>
+                      <option value="vnd" selected>VNĐ</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="tab-content" id="dmt-cardholder-info">
+                <br>
+                <div class="form-column-in">
+                    <!-- Mã khách hàng -->
+                  <div class="form-group">
+                    <label for="customer-id">Mã khách hàng (*):</label>
+                    <input type="text" id="customer-id" name="customer-id" placeholder="Nhập mã khách hàng (clientNo)" required>
+                  </div>
+
+                  <!-- Đối tượng khách hàng -->
+                  <div class="form-group">
+                    <label for="customer-type">Đối tượng khách hàng (*):</label>
+                    <select id="customer-type" name="customer-type" required>
+                      <option value="" disabled selected>Chọn đối tượng khách hàng</option>
+                      <option value="individual">Cá nhân</option>
+                      <option value="business">Doanh nghiệp</option>
+                    </select>
+                  </div>
+
+                  <!-- Tên khách hàng -->
+                  <div class="form-group">
+                    <label for="customer-name">Tên khách hàng (*):</label>
+                    <input type="text" id="customer-name" name="customer-name" placeholder="Nhập họ tên khách hàng" required>
+                  </div>
+
+                  <!-- Tên tiếng Anh -->
+                  <div class="form-group">
+                    <label for="customer-name-en">Tên tiếng Anh:</label>
+                    <input type="text" id="customer-name-en" name="customer-name-en" placeholder="Nhập tên tiếng Anh (nếu có)">
+                  </div>
+
+                  <!-- Tình trạng hôn nhân -->
+                  <div class="form-group">
+                    <label for="marital-status">Tình trạng hôn nhân:</label>
+                    <select id="marital-status" name="marital-status">
+                      <option value="" disabled selected>Chọn tình trạng</option>
+                      <option value="single">Độc thân</option>
+                      <option value="married">Đã kết hôn</option>
+                      <option value="divorced">Ly hôn</option>
+                    </select>
+                  </div>
+
+                  <!-- Ngày sinh -->
+                  <div class="form-group">
+                    <label for="birth-date">Ngày sinh (*):</label>
+                    <input type="date" id="birth-date" name="birth-date" required>
+                  </div>
+
+                  <!-- Nơi sinh -->
+                  <div class="form-group">
+                    <label for="birth-place">Nơi sinh:</label>
+                    <input type="text" id="birth-place" name="birth-place" placeholder="Nhập nơi sinh">
+                  </div>
+
+                  <!-- Số CMND/CCCD -->
+                  <div class="form-group">
+                    <label for="id-card">Số CMND/CCCD (*):</label>
+                    <input type="text" id="id-card" name="id-card" placeholder="Nhập số CMND/CCCD" required>
+                  </div>
+
+                  <!-- Ngày cấp -->
+                  <div class="form-group">
+                    <label for="issue-date">Ngày cấp (*):</label>
+                    <input type="date" id="issue-date" name="issue-date" required>
+                  </div>
+
+                  <!-- Nơi cấp -->
+                  <div class="form-group">
+                    <label for="issue-place">Nơi cấp (*):</label>
+                    <input type="text" id="issue-place" name="issue-place" placeholder="Nhập nơi cấp" required>
+                  </div>
+
+                  <!-- Ngày hết hạn -->
+                  <div class="form-group">
+                    <label for="expiry-date">Ngày hết hạn:</label>
+                    <input type="text" id="expiry-date" name="expiry-date" placeholder="Nhập ngày hết hạn">
+                  </div>
+
+                  <!-- Địa chỉ -->
+                  <div class="form-group">
+                    <label for="address">Địa chỉ (*):</label>
+                    <input type="text" id="address" name="address" placeholder="Nhập địa chỉ thường trú" required>
+                  </div>
+
+                  <!-- Mã tỉnh/thành phố -->
+                  <div class="form-group">
+                    <label for="province-code">Mã tỉnh/thành phố:</label>
+                    <select id="province-code" name="province-code">
+                      <option value="" disabled selected>Chọn mã tỉnh/thành phố</option>
+                    </select>
+                  </div>
+
+                  <!-- Tên quốc gia -->
+                  <div class="form-group">
+                    <label for="country-name">Tên quốc gia:</label>
+                    <select id="country-name" name="country-name">
+                      <option value="" disabled selected>Chọn tên quốc gia</option>
+                    </select>
+                  </div>
+
+                  <!-- Địa chỉ liên hệ 2 -->
+                  <div class="form-group">
+                    <label for="secondary-address">Địa chỉ liên hệ 2:</label>
+                    <input type="text" id="secondary-address" name="secondary-address" placeholder="Nhập địa chỉ liên hệ bổ sung">
+                  </div>
+
+                  <!-- Số điện thoại -->
+                  <div class="form-group">
+                    <label for="phone">Số điện thoại (*):</label>
+                    <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+                  </div>
+
+                  <!-- Email -->
+                  <div class="form-group">
+                    <label for="email">Email (*):</label>
+                    <input type="email" id="email" name="email" placeholder="Nhập email" required>
+                  </div>
+
+                  
+
+                  <div class="form-group">
+                    <label for="mobile-phone">Số di động (*):</label>
+                    <input type="text" id="mobile-phone" name="mobile-phone" placeholder="Nhập số di động" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="fax-number">Số fax:</label>
+                    <input type="text" id="fax-number" name="fax-number" placeholder="Nhập số fax">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="gender">Giới tính (*):</label>
+                    <select id="gender" name="gender" required>
+                      <option value="" disabled selected>Chọn giới tính</option>
+                      <option value="male">Nam</option>
+                      <option value="female">Nữ</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="notification-address">Địa chỉ thông báo:</label>
+                    <input type="text" id="notification-address" name="notification-address" placeholder="Nhập địa chỉ nhận thông báo">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="card-delivery-method">Phương thức giao thẻ (*):</label>
+                    <input type="text" id="card-delivery-method" name="card-delivery-method" placeholder="Nhập phương thức giao thẻ (Bưu phát, Chi nhánh…)" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="previous-credit-limit">Hạn mức phê duyệt trước đó:</label>
+                    <input type="text" id="previous-credit-limit" name="previous-credit-limit" placeholder="Nhập hạn mức tín dụng gần nhất đã được phê duyệt">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="recent-card-product">Sản phẩm thẻ gần nhất:</label>
+                    <input type="text" id="recent-card-product" name="recent-card-product" placeholder="Nhập sản phẩm thẻ gần nhất đã dùng">
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="tab-content" id="dmt-company-info">
+                <br>
+                <div class="form-column-in">
+                  <!-- Tên công ty -->
+                  <div class="form-group">
+                    <label for="company-name">Tên công ty:</label>
+                    <input type="text" id="company-name" name="company-name" placeholder="Nhập tên công ty">
+                  </div>
+                
+                  <!-- Địa chỉ -->
+                  <div class="form-group">
+                    <label for="company-address">Địa chỉ:</label>
+                    <input type="text" id="company-address" name="company-address" placeholder="Nhập địa chỉ công ty">
+                  </div>
+                
+                  <!-- Số điện thoại -->
+                  <div class="form-group">
+                    <label for="company-phone">Số điện thoại:</label>
+                    <input type="text" id="company-phone" name="company-phone" placeholder="Nhập số điện thoại công ty">
+                  </div>
+                
+                  <!-- Số fax -->
+                  <div class="form-group">
+                    <label for="company-fax">Số fax:</label>
+                    <input type="text" id="company-fax" name="company-fax" placeholder="Nhập số fax công ty">
+                  </div>
+                
+                  <!-- Số hợp đồng chi lương -->
+                  <div class="form-group">
+                    <label for="payroll-contract-number">Số hợp đồng chi lương:</label>
+                    <input type="text" id="payroll-contract-number" name="payroll-contract-number" placeholder="Nhập số hợp đồng chi lương">
+                  </div>
+                
+                  <!-- Ngày ký hợp đồng chi lương -->
+                  <div class="form-group">
+                    <label for="payroll-contract-date">Ngày ký hợp đồng chi lương:</label>
+                    <input type="date" id="payroll-contract-date" name="payroll-contract-date">
+                  </div>
+                
+                  <!-- Mã Client của đơn vị chi lương -->
+                  <div class="form-group">
+                    <label for="payroll-client-id">Mã Client của đơn vị chi lương:</label>
+                    <input type="text" id="payroll-client-id" name="payroll-client-id" placeholder="Nhập mã Client của đơn vị chi lương">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="tab-content" id="dmt-contact-info">
+                <br>
+                <div class="form-column-in">
+                  <div class="form-group">
+                    <label for="contact1-name">Tên người liên hệ 1 (*):</label>
+                    <input type="text" id="contact1-name" name="contact1-name" placeholder="Nhập họ tên người liên hệ 1" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact1-relationship">Mối quan hệ (*):</label>
+                    <input type="text" id="contact1-relationship" name="contact1-relationship" placeholder="Nhập mối quan hệ (Cha/Mẹ, Vợ/Chồng, Bạn bè, Khác)" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact1-phone">Số điện thoại người liên hệ 1 (*):</label>
+                    <input type="text" id="contact1-phone" name="contact1-phone" placeholder="Nhập số điện thoại người liên hệ 1" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact2-name">Tên người liên hệ 2 (*):</label>
+                    <input type="text" id="contact2-name" name="contact2-name" placeholder="Nhập họ tên người liên hệ 2" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact2-relationship">Mối quan hệ (*):</label>
+                    <input type="text" id="contact2-relationship" name="contact2-relationship" placeholder="Nhập mối quan hệ (Cha/Mẹ, Vợ/Chồng, Bạn bè, Khác)" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact2-phone">Số điện thoại người liên hệ 2 (*):</label>
+                    <input type="text" id="contact2-phone" name="contact2-phone" placeholder="Nhập số điện thoại người liên hệ 2" required>
+                  </div>
+                </div>
+              
+                <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Họ tên</th>
+                      <th>Mối quan hệ</th>
+                      <th>Số điện thoại</th>
+                      <th>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Nguyễn Văn A</td>
+                      <td>Cha</td>
+                      <td>0901234567</td>
+                      <td>
+                        <button class="edit-btn" class="edit">Sửa</button>
+                        <button class="delete-btn" class="delete">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Nguyễn Văn B</td>
+                      <td>Anh</td>
+                      <td>0901234597</td>
+                      <td>
+                        <button class="edit-btn" class="edit">Sửa</button>
+                        <button class="delete-btn" class="delete">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+
+
+              <div class="tab-content" id="dmt-other-info">
+                <br>
+                <div class="form-column-in">
+                  <div class="form-group">
+                    <label for="occupation">Nghề nghiệp:</label>
+                    <input type="text" id="occupation" name="occupation" placeholder="Nhập nghề nghiệp của khách hàng (ví dụ: Nhân viên văn phòng, Kinh doanh)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="position">Chức vụ:</label>
+                    <input type="text" id="position" name="position" placeholder="Nhập chức vụ của khách hàng (ví dụ: Trưởng phòng, Giám đốc)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="education-level">Học vấn:</label>
+                    <select id="education-level" name="education-level">
+                      <option value="" disabled selected>Chọn trình độ học vấn</option>
+                      <option value="intermediate">Trung cấp</option>
+                      <option value="college">Cao đẳng</option>
+                      <option value="university">Đại học</option>
+                      <option value="postgraduate">Sau đại học</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="is-business-owner">Làm chủ:</label>
+                    <select id="is-business-owner" name="is-business-owner">
+                      <option value="" disabled selected>Khách hàng có phải là chủ doanh nghiệp không?</option>
+                      <option value="yes">Có</option>
+                      <option value="no">Không</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="workplace">Nơi công tác:</label>
+                    <input type="text" id="workplace" name="workplace" placeholder="Nhập tên công ty hoặc tổ chức nơi khách hàng đang làm việc">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="main-income">Thu nhập chính:</label>
+                    <input type="text" id="main-income" name="main-income" placeholder="Nhập thu nhập chính của khách hàng (VNĐ)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="additional-income">Thu nhập khác:</label>
+                    <input type="text" id="additional-income" name="additional-income" placeholder="Nhập thu nhập bổ sung của khách hàng (VNĐ)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="total-income">Tổng thu nhập:</label>
+                    <input type="text" id="total-income" name="total-income" placeholder="Nhập tổng thu nhập của khách hàng (VNĐ)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="credit-card-banks">Các ngân hàng hiện đang cấp thẻ tín dụng:</label>
+                    <textarea id="credit-card-banks" name="credit-card-banks" placeholder="Nhập danh sách các ngân hàng hiện đang cấp thẻ tín dụng cho khách hàng" style="height: 60px;"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-content" id="dmt-upload-info">
+                <br>
+                <!-- <div class="form-column-in"> -->
+                  <div class="form-group">
+                    <label for="document-type">Loại tài liệu (*):</label>
+                    <select id="document-type" name="document-type" required>
+                      <option value="" disabled selected>Chọn loại tài liệu</option>
+                      <option value="id-card">CMND/CCCD</option>
+                      <option value="contract">Hợp đồng lao động</option>
+                      <option value="bank-statement">Sao kê ngân hàng</option>
+                      <option value="other">Khác</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="document-content">Nội dung (*):</label>
+                    <textarea id="document-content" name="document-content" placeholder="Nhập mô tả nội dung tài liệu" style="height: 60px;" required></textarea>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="file-upload">Tải lên tệp (*):</label>
+                    <input type="file" id="file-upload" name="file-upload" required>
+                  </div>
+                <!-- </div> -->
+
+                <!-- Table to display uploaded files -->
+                <div class="uploaded-files">
+                  <h4>Danh sách tệp đã tải lên</h4>
+                  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                      <tr>
+                        <th>Loại tài liệu</th>
+                        <th>Nội dung</th>
+                        <th>Tên tệp</th>
+                        <th>Kích thước</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody id="uploaded-files-table">
+                      <!-- Example Row -->
+                      <tr>
+                        <td>CMND/CCCD</td>
+                        <td>Chứng minh nhân dân</td>
+                        <td>cmnd.pdf</td>
+                        <td>500 KB</td>
+                        <td>
+                          <button class="delete-btn">Xóa</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Thoát</button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <form id="cndmt">
+              <h2>Cập nhật đơn mở thẻ cá nhân</h2>
+              <div class="tabs">
+                <button class="tab-button1 active" data-tab="cndmt-application-info">Thông tin đơn mở thẻ</button>
+                <!-- <button class="tab-button" data-tab="credit-limit">Hạn mức chủ thẻ</button> -->
+                <button class="tab-button1" data-tab="cndmt-cardholder-info">Thông tin chủ thẻ</button>
+                <button class="tab-button1" data-tab="cndmt-company-info">Thông tin công ty chủ thẻ</button>
+                <button class="tab-button1" data-tab="cndmt-contact-info">Thông tin liên hệ</button>
+                <button class="tab-button1" data-tab="cndmt-other-info">Thông tin khác liên quan đến thẻ tín dụng</button>
+                <button class="tab-button1" data-tab="cndmt-upload-info">File liên quan</button>
+              </div>
+              <div class="tab-content1 active" id="cndmt-application-info">
+                <br>
+                <div class="form-column-in">
+                  <div class="form-group">
+                    <label for="branch">Chi nhánh:</label>
+                    <select id="branch" name="branch" readonly disabled>
+                      <option value="" disabled selected>Chi nhánh 1</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="card-type">Thẻ (*):</label>
+                    <select id="card-type" name="card-type" required>
+                      <option value="" disabled selected>Chọn loại thẻ</option>
+                      <option value="credit">Tín dụng</option>
+                      <option value="combo">Combo</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="debit-application-id">Đơn mở thẻ ghi nợ (*):</label>
+                    <input type="text" id="debit-application-id" name="debit-application-id" placeholder="Nhập mã đơn mở thẻ ghi nợ">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="card-product">Sản phẩm thẻ (*):</label>
+                    <select id="card-product" name="card-product" required>
+                      <option value="" disabled selected>Chọn sản phẩm thẻ</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="currency">Tiền tệ:</label>
+                    <select id="currency" name="currency" required>
+                      <option value="vnd" selected>VNĐ</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="tab-content1" id="cndmt-cardholder-info">
+                <br>
+                <div class="form-column-in">
+                  <!-- Mã khách hàng -->
+                  <div class="form-group">
+                    <label for="customer-id">Mã khách hàng (*):</label>
+                    <input type="text" id="customer-id" name="customer-id" placeholder="Nhập mã khách hàng (clientNo)" required>
+                  </div>
+
+                  <!-- Đối tượng khách hàng -->
+                  <div class="form-group">
+                    <label for="customer-type">Đối tượng khách hàng (*):</label>
+                    <select id="customer-type" name="customer-type" required>
+                      <option value="" disabled selected>Chọn đối tượng khách hàng</option>
+                      <option value="individual">Cá nhân</option>
+                      <option value="business">Doanh nghiệp</option>
+                    </select>
+                  </div>
+
+                  <!-- Tên khách hàng -->
+                  <div class="form-group">
+                    <label for="customer-name">Tên khách hàng (*):</label>
+                    <input type="text" id="customer-name" name="customer-name" placeholder="Nhập họ tên khách hàng" required>
+                  </div>
+
+                  <!-- Tên tiếng Anh -->
+                  <div class="form-group">
+                    <label for="customer-name-en">Tên tiếng Anh:</label>
+                    <input type="text" id="customer-name-en" name="customer-name-en" placeholder="Nhập tên tiếng Anh (nếu có)">
+                  </div>
+
+                  <!-- Tình trạng hôn nhân -->
+                  <div class="form-group">
+                    <label for="marital-status">Tình trạng hôn nhân:</label>
+                    <select id="marital-status" name="marital-status">
+                      <option value="" disabled selected>Chọn tình trạng</option>
+                      <option value="single">Độc thân</option>
+                      <option value="married">Đã kết hôn</option>
+                      <option value="divorced">Ly hôn</option>
+                    </select>
+                  </div>
+
+                  <!-- Ngày sinh -->
+                  <div class="form-group">
+                    <label for="birth-date">Ngày sinh (*):</label>
+                    <input type="date" id="birth-date" name="birth-date" required>
+                  </div>
+
+                  <!-- Nơi sinh -->
+                  <div class="form-group">
+                    <label for="birth-place">Nơi sinh:</label>
+                    <input type="text" id="birth-place" name="birth-place" placeholder="Nhập nơi sinh">
+                  </div>
+
+                  <!-- Số CMND/CCCD -->
+                  <div class="form-group">
+                    <label for="id-card">Số CMND/CCCD (*):</label>
+                    <input type="text" id="id-card" name="id-card" placeholder="Nhập số CMND/CCCD" required>
+                  </div>
+
+                  <!-- Ngày cấp -->
+                  <div class="form-group">
+                    <label for="issue-date">Ngày cấp (*):</label>
+                    <input type="date" id="issue-date" name="issue-date" required>
+                  </div>
+
+                  <!-- Nơi cấp -->
+                  <div class="form-group">
+                    <label for="issue-place">Nơi cấp (*):</label>
+                    <input type="text" id="issue-place" name="issue-place" placeholder="Nhập nơi cấp" required>
+                  </div>
+
+                  <!-- Ngày hết hạn -->
+                  <div class="form-group">
+                    <label for="expiry-date">Ngày hết hạn:</label>
+                    <input type="text" id="expiry-date" name="expiry-date" placeholder="Nhập ngày hết hạn">
+                  </div>
+
+                  <!-- Địa chỉ -->
+                  <div class="form-group">
+                    <label for="address">Địa chỉ (*):</label>
+                    <input type="text" id="address" name="address" placeholder="Nhập địa chỉ thường trú" required>
+                  </div>
+
+                  <!-- Mã tỉnh/thành phố -->
+                  <div class="form-group">
+                    <label for="province-code">Mã tỉnh/thành phố:</label>
+                    <select id="province-code" name="province-code">
+                      <option value="" disabled selected>Chọn mã tỉnh/thành phố</option>
+                    </select>
+                  </div>
+
+                  <!-- Tên quốc gia -->
+                  <div class="form-group">
+                    <label for="country-name">Tên quốc gia:</label>
+                    <select id="country-name" name="country-name">
+                      <option value="" disabled selected>Chọn tên quốc gia</option>
+                    </select>
+                  </div>
+
+                  <!-- Địa chỉ liên hệ 2 -->
+                  <div class="form-group">
+                    <label for="secondary-address">Địa chỉ liên hệ 2:</label>
+                    <input type="text" id="secondary-address" name="secondary-address" placeholder="Nhập địa chỉ liên hệ bổ sung">
+                  </div>
+
+                  <!-- Số điện thoại -->
+                  <div class="form-group">
+                    <label for="phone">Số điện thoại (*):</label>
+                    <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+                  </div>
+
+                  <!-- Email -->
+                  <div class="form-group">
+                    <label for="email">Email (*):</label>
+                    <input type="email" id="email" name="email" placeholder="Nhập email" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="mobile-phone">Số di động (*):</label>
+                    <input type="text" id="mobile-phone" name="mobile-phone" placeholder="Nhập số di động" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="fax-number">Số fax:</label>
+                    <input type="text" id="fax-number" name="fax-number" placeholder="Nhập số fax">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="gender">Giới tính (*):</label>
+                    <select id="gender" name="gender" required>
+                      <option value="" disabled selected>Chọn giới tính</option>
+                      <option value="male">Nam</option>
+                      <option value="female">Nữ</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="notification-address">Địa chỉ thông báo:</label>
+                    <input type="text" id="notification-address" name="notification-address" placeholder="Nhập địa chỉ nhận thông báo">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="card-delivery-method">Phương thức giao thẻ (*):</label>
+                    <input type="text" id="card-delivery-method" name="card-delivery-method" placeholder="Nhập phương thức giao thẻ (Bưu phát, Chi nhánh…)" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="previous-credit-limit">Hạn mức phê duyệt trước đó:</label>
+                    <input type="text" id="previous-credit-limit" name="previous-credit-limit" placeholder="Nhập hạn mức tín dụng gần nhất đã được phê duyệt">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="recent-card-product">Sản phẩm thẻ gần nhất:</label>
+                    <input type="text" id="recent-card-product" name="recent-card-product" placeholder="Nhập sản phẩm thẻ gần nhất đã dùng">
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="tab-content1" id="cndmt-company-info">
+                <br>
+                <div class="form-column-in">
+                  <!-- Tên công ty -->
+                  <div class="form-group">
+                    <label for="company-name">Tên công ty:</label>
+                    <input type="text" id="company-name" name="company-name" placeholder="Nhập tên công ty">
+                  </div>
+                
+                  <!-- Địa chỉ -->
+                  <div class="form-group">
+                    <label for="company-address">Địa chỉ:</label>
+                    <input type="text" id="company-address" name="company-address" placeholder="Nhập địa chỉ công ty">
+                  </div>
+                
+                  <!-- Số điện thoại -->
+                  <div class="form-group">
+                    <label for="company-phone">Số điện thoại:</label>
+                    <input type="text" id="company-phone" name="company-phone" placeholder="Nhập số điện thoại công ty">
+                  </div>
+                
+                  <!-- Số fax -->
+                  <div class="form-group">
+                    <label for="company-fax">Số fax:</label>
+                    <input type="text" id="company-fax" name="company-fax" placeholder="Nhập số fax công ty">
+                  </div>
+                
+                  <!-- Số hợp đồng chi lương -->
+                  <div class="form-group">
+                    <label for="payroll-contract-number">Số hợp đồng chi lương:</label>
+                    <input type="text" id="payroll-contract-number" name="payroll-contract-number" placeholder="Nhập số hợp đồng chi lương">
+                  </div>
+                
+                  <!-- Ngày ký hợp đồng chi lương -->
+                  <div class="form-group">
+                    <label for="payroll-contract-date">Ngày ký hợp đồng chi lương:</label>
+                    <input type="date" id="payroll-contract-date" name="payroll-contract-date">
+                  </div>
+                
+                  <!-- Mã Client của đơn vị chi lương -->
+                  <div class="form-group">
+                    <label for="payroll-client-id">Mã Client của đơn vị chi lương:</label>
+                    <input type="text" id="payroll-client-id" name="payroll-client-id" placeholder="Nhập mã Client của đơn vị chi lương">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="tab-content1" id="cndmt-contact-info">
+                <br>
+                <div class="form-column-in">
+                  <div class="form-group">
+                    <label for="contact1-name">Tên người liên hệ 1 (*):</label>
+                    <input type="text" id="contact1-name" name="contact1-name" placeholder="Nhập họ tên người liên hệ 1" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact1-relationship">Mối quan hệ (*):</label>
+                    <input type="text" id="contact1-relationship" name="contact1-relationship" placeholder="Nhập mối quan hệ (Cha/Mẹ, Vợ/Chồng, Bạn bè, Khác)" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact1-phone">Số điện thoại người liên hệ 1 (*):</label>
+                    <input type="text" id="contact1-phone" name="contact1-phone" placeholder="Nhập số điện thoại người liên hệ 1" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact2-name">Tên người liên hệ 2 (*):</label>
+                    <input type="text" id="contact2-name" name="contact2-name" placeholder="Nhập họ tên người liên hệ 2" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact2-relationship">Mối quan hệ (*):</label>
+                    <input type="text" id="contact2-relationship" name="contact2-relationship" placeholder="Nhập mối quan hệ (Cha/Mẹ, Vợ/Chồng, Bạn bè, Khác)" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="contact2-phone">Số điện thoại người liên hệ 2 (*):</label>
+                    <input type="text" id="contact2-phone" name="contact2-phone" placeholder="Nhập số điện thoại người liên hệ 2" required>
+                  </div>
+                </div>
+                
+                <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Họ tên</th>
+                      <th>Mối quan hệ</th>
+                      <th>Số điện thoại</th>
+                      <th>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Nguyễn Văn A</td>
+                      <td>Cha</td>
+                      <td>0901234567</td>
+                      <td>
+                        <button class="edit-btn" class="edit">Sửa</button>
+                        <button class="delete-btn" class="delete">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Nguyễn Văn B</td>
+                      <td>Anh</td>
+                      <td>0901234597</td>
+                      <td>
+                        <button class="edit-btn" class="edit">Sửa</button>
+                        <button class="delete-btn" class="delete">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
+              <div class="tab-content1" id="cndmt-other-info">
+                <br>
+                <div class="form-column-in">
+                  <div class="form-group">
+                    <label for="occupation">Nghề nghiệp:</label>
+                    <input type="text" id="occupation" name="occupation" placeholder="Nhập nghề nghiệp của khách hàng (ví dụ: Nhân viên văn phòng, Kinh doanh)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="position">Chức vụ:</label>
+                    <input type="text" id="position" name="position" placeholder="Nhập chức vụ của khách hàng (ví dụ: Trưởng phòng, Giám đốc)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="education-level">Học vấn:</label>
+                    <select id="education-level" name="education-level">
+                      <option value="" disabled selected>Chọn trình độ học vấn</option>
+                      <option value="intermediate">Trung cấp</option>
+                      <option value="college">Cao đẳng</option>
+                      <option value="university">Đại học</option>
+                      <option value="postgraduate">Sau đại học</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="is-business-owner">Làm chủ:</label>
+                    <select id="is-business-owner" name="is-business-owner">
+                      <option value="" disabled selected>Khách hàng có phải là chủ doanh nghiệp không?</option>
+                      <option value="yes">Có</option>
+                      <option value="no">Không</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="workplace">Nơi công tác:</label>
+                    <input type="text" id="workplace" name="workplace" placeholder="Nhập tên công ty hoặc tổ chức nơi khách hàng đang làm việc">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="main-income">Thu nhập chính:</label>
+                    <input type="text" id="main-income" name="main-income" placeholder="Nhập thu nhập chính của khách hàng (VNĐ)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="additional-income">Thu nhập khác:</label>
+                    <input type="text" id="additional-income" name="additional-income" placeholder="Nhập thu nhập bổ sung của khách hàng (VNĐ)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="total-income">Tổng thu nhập:</label>
+                    <input type="text" id="total-income" name="total-income" placeholder="Nhập tổng thu nhập của khách hàng (VNĐ)">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="credit-card-banks">Các ngân hàng hiện đang cấp thẻ tín dụng:</label>
+                    <textarea id="credit-card-banks" name="credit-card-banks" placeholder="Nhập danh sách các ngân hàng hiện đang cấp thẻ tín dụng cho khách hàng" style="height: 60px;"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-content1" id="cndmt-upload-info">
+                <br>
+                <div class="form-group">
+                  <label for="document-type">Loại tài liệu (*):</label>
+                  <select id="document-type" name="document-type" required>
+                    <option value="" disabled selected>Chọn loại tài liệu</option>
+                    <option value="id-card">CMND/CCCD</option>
+                    <option value="contract">Hợp đồng lao động</option>
+                    <option value="bank-statement">Sao kê ngân hàng</option>
+                    <option value="other">Khác</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="document-content">Nội dung (*):</label>
+                  <textarea id="document-content" name="document-content" placeholder="Nhập mô tả nội dung tài liệu" style="height: 60px;" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label for="file-upload">Tải lên tệp (*):</label>
+                  <input type="file" id="file-upload" name="file-upload" required>
+                </div>
+                
+                <!-- Table to display uploaded files -->
+                <div class="uploaded-files">
+                  <h4>Danh sách tệp đã tải lên</h4>
+                  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                      <tr>
+                        <th>Loại tài liệu</th>
+                        <th>Nội dung</th>
+                        <th>Tên tệp</th>
+                        <th>Kích thước</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody id="uploaded-files-table">
+                      <!-- Example Row -->
+                      <tr>
+                        <td>CMND/CCCD</td>
+                        <td>Chứng minh nhân dân</td>
+                        <td>cmnd.pdf</td>
+                        <td>500 KB</td>
+                        <td>
+                          <button class="delete-btn">Xóa</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Thoát</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+  <script>
+    fetch('../partials/nav.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+
+    // // Show the first tab content on page load
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.getElementById('dmt-application-info').style.display = 'block';
+
+    // Add event listeners to all tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', function () {
+        // Remove the active class from all buttons
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+
+        // Show the selected tab content
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).style.display = 'block';
+
+        // Add the active class to the clicked button
+        this.classList.add('active');
+      });
+    });
+
+
+    // // Show the first tab content on page load
+    document.querySelectorAll('.tab-content1').forEach(tab => tab.style.display = 'none');
+    document.getElementById('cndmt-application-info').style.display = 'block';
+
+    // Add event listeners to all tab buttons
+    document.querySelectorAll('.tab-button1').forEach(button => {
+      button.addEventListener('click', function () {
+        // Remove the active class from all buttons
+        document.querySelectorAll('.tab-button1').forEach(btn => btn.classList.remove('active'));
+
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content1').forEach(tab => tab.style.display = 'none');
+
+        // Show the selected tab content
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).style.display = 'block';
+
+        // Add the active class to the clicked button
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Applications</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    html, body {
+      font-family: Arial, sans-serif;
+      background: white; /* Changed background to white */
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+    }
+    nav {
+      width: 200px;
+      background-color: #f4f4f9;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      height: 100vh;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      margin-bottom: 15px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    main {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    h1, h2 {
+      margin: 0 0 10px;
+    }
+    /* Uniform width for textboxes and similar inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    textarea {
+      width: 300px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <!-- Placeholder for dynamic navigation -->
+  <div id="nav-placeholder"></div>
+
+  <main>
+    <section>
+      <h1>Review Credit Card Applications</h1>
+      <h2>Submitted Applications</h2>
+      <!-- Example filter form that uses textboxes -->
+      <form id="filter-form">
+        <label for="search-applicant">Search Applicant:</label>
+        <input type="text" id="search-applicant" name="search-applicant" placeholder="Enter applicant name">
+        <button type="submit">Search</button>
+      </form>
+      <table>
+        <thead>
+          <tr>
+            <th>Applicant Name</th>
+            <th>Email</th>
+            <th>Requested Credit Limit</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Sample data row -->
+          <tr>
+            <td>John Doe</td>
+            <td>john.doe@example.com</td>
+            <td>$5,000</td>
+            <td>Pending</td>
+            <td>
+              <button class="approve-btn">Approve</button>
+              <button class="reject-btn">Reject</button>
+            </td>
+          </tr>
+          <!-- Additional rows will be populated dynamically -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    // Load the navigation menu dynamically
+    fetch("../partials/nav.html")
+      .then(response => response.text())
+      .then(data => document.getElementById("nav-placeholder").innerHTML = data);
+  </script>
+  <script src="../js/scripts.js"></script>
+</body>
+</html>

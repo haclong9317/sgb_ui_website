@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Thêm/Sửa Cấu Hình</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="nav-placeholder"></div>
+    <main>
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <div class="batch-form">
+              <h3>Thêm Lô</h3>
+              <form id="batch-form">
+                <!-- Mã lô -->
+                <!-- <div class="form-group">
+                  <label for="batch-id">Mã lô:</label>
+                  <input type="text" id="batch-id" name="batch-id"  readonly>
+                </div>
+             -->
+                <!-- Tên lô -->
+                <div class="form-group">
+                  <label for="batch-name">Tên lô:</label>
+                  <input type="text" id="batch-name" name="batch-name" placeholder="Nhập tên lô">
+                </div>
+            
+                <!-- Loại lô -->
+                <div class="form-group">
+                  <label for="batch-type">Loại lô:</label>
+                  <select id="batch-type" name="batch-type">
+                    <option value="" disabled selected>Chọn loại lô</option>
+                    <option value="type1">Cấp mới</option>
+                    <option value="type2">Cấp lại</option>
+                    <option value="type2">Thay thế</option>
+                    <option value="type2">Gia hạn</option>
+                  </select>
+                </div>
+            
+                <!-- Thẻ -->
+                <div class="form-group">
+                  <label for="card-type">Thẻ:</label>
+                  <select id="card-type" name="card-type">
+                    <option value="" disabled selected>Chọn loại thẻ</option>
+                    <option value="credit">Tín dụng</option>
+                    <option value="combo">Combo</option>
+                  </select>
+                </div>
+            
+                <!-- Tên chi nhánh -->
+                <!-- <div class="form-group">
+                  <label for="branch-name">Tên chi nhánh:</label>
+                  <select id="branch-name" name="branch-name">
+                    <option value="" disabled selected>Chọn tên chi nhánh</option>
+                    <option value="branch1">Chi nhánh 1</option>
+                    <option value="branch2">Chi nhánh 2</option>
+                  </select>
+                </div> -->
+            
+                <!-- Tình trạng -->
+                <!-- <div class="form-group">
+                  <label for="status">Tình trạng:</label>
+                  <select id="status" name="status">
+                    <option value="" disabled selected>Chọn tình trạng</option>
+                    <option value="pending">Chờ duyệt</option>
+                    <option value="approved">Đã duyệt</option>
+                    <option value="rejected">Thoái duyệt</option>
+                  </select>
+                </div> -->
+            
+                <!-- Danh sách đơn mở thẻ -->
+                <!-- <div class="form-group">
+                  <label>Danh sách đơn mở thẻ:</label>
+                  <ul>
+                    <li>[ 0001 ]: Tín dụng/Combo</li>
+                    <li>[ 0002 ]: Ghi nợ/Combo</li>
+                    <li>[ 0003 ]: Tín dụng</li>
+                  </ul>
+                </div> -->
+            
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Tạo mới</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="form-column">
+            <div class="batch-form">
+              <h3>Cập nhật Lô</h3>
+              <form id="batch-form">
+                <!-- Mã lô -->
+                <div class="form-group">
+                  <label for="batch-id">Mã lô:</label>
+                  <input type="text" id="batch-id" name="batch-id" disabled readonly>
+                </div>
+            
+                <!-- Tên lô -->
+                <div class="form-group">
+                  <label for="batch-name">Tên lô:</label>
+                  <input type="text" id="batch-name" name="batch-name" placeholder="Nhập tên lô">
+                </div>
+            
+                <!-- Loại lô -->
+                <div class="form-group">
+                  <label for="batch-type">Loại lô:</label>
+                  <select id="batch-type" name="batch-type">
+                    <option value="" disabled selected>Chọn loại lô</option>
+                    <option value="type1">Loại 1</option>
+                    <option value="type2">Loại 2</option>
+                  </select>
+                </div>
+            
+                <!-- Thẻ -->
+                <div class="form-group">
+                  <label for="card-type">Thẻ:</label>
+                  <select id="card-type" name="card-type">
+                    <option value="" disabled selected>Chọn loại thẻ</option>
+                    <option value="credit">Tín dụng</option>
+                    <option value="combo">Combo</option>
+                  </select>
+                </div>
+            
+                <!-- Tên chi nhánh -->
+                <!-- <div class="form-group">
+                  <label for="branch-name">Tên chi nhánh:</label>
+                  <select id="branch-name" name="branch-name">
+                    <option value="" disabled selected>Chọn tên chi nhánh</option>
+                    <option value="branch1">Chi nhánh 1</option>
+                    <option value="branch2">Chi nhánh 2</option>
+                  </select>
+                </div> -->
+            
+                <!-- Tình trạng -->
+                <!-- <div class="form-group">
+                  <label for="status">Tình trạng:</label>
+                  <select id="status" name="status">
+                    <option value="" disabled selected>Chọn tình trạng</option>
+                    <option value="pending">Chờ duyệt</option>
+                    <option value="approved">Đã duyệt</option>
+                    <option value="rejected">Thoái duyệt</option>
+                  </select>
+                </div> -->
+            
+                <!-- Danh sách đơn mở thẻ -->
+                <!-- <div class="form-group">
+                  <label>Danh sách đơn mở thẻ:</label>
+                  <ul>
+                    <li>[ 0001 ]: Tín dụng/Combo</li>
+                    <li>[ 0002 ]: Ghi nợ/Combo</li>
+                    <li>[ 0003 ]: Tín dụng</li>
+                  </ul>
+                </div> -->
+            
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h3>Danh sách Lô</h3>
+            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr style="background-color: #f2f2f2;">
+                  <th>Mã lô</th>
+                  <th>Tên lô</th>
+                  <th>Loại lô</th>
+                  <th>Thẻ</th>
+                  <th>Tên chi nhánh</th>
+                  <th>Giai đoạn xử lý</th>
+                  <th>Trạng thái lô</th>
+                  <th>Ghi chú</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Example Row 1 -->
+                <tr>
+                  <td>20250501-CN001-000001</td>
+                  <td>Lô mở mới tháng 9</td>
+                  <td>Mở mới</td>
+                  <td>Tín dụng</td>
+                  <td>Chi nhánh 1</td>
+                  <td>Mới</td>
+                  <td>Chờ duyệt</td>
+                  <td>-</td>
+                  <td>
+                    <button class="edit-btn">Sửa</button>
+                    <button class="edit-btn">Xem</button>
+                    <button class="edit-btn">Thêm</button>
+                    <button class="delete-btn">Xóa</button>
+                  </td>
+                </tr>
+                <!-- Example Row 2 -->
+                <tr>
+                  <td>20250501-CN001-000002</td>
+                  <td>Lô cấp lại tháng 9</td>
+                  <td>Cấp lại</td>
+                  <td>Combo</td>
+                  <td>Chi nhánh 1</td>
+                  <td>Xét duyệt lô yêu cầu</td>
+                  <td>Duyệt</td>
+                  <td>-</td>
+                  <td>
+                    <button class="edit-btn" disabled>Sửa</button>
+                    <button class="edit-btn">Xem</button>
+                    <button class="edit-btn" disabled>Thêm</button>
+                    <button class="delete-btn" disabled>Xóa</button>
+                  </td>
+                </tr>
+                <!-- Example Row 3 -->
+                <tr>
+                  <td>20250501-CN001-000003</td>
+                  <td>Lô thay thế tháng 9</td>
+                  <td>Thay thế</td>
+                  <td>Tín dụng</td>
+                  <td>Chi nhánh 1</td>
+                  <td>Giao thẻ cho chi nhánh</td>
+                  <td>Thoái lô</td>
+                  <td>Lỗi dữ liệu</td>
+                  <td>
+                    <button class="edit-btn">Sửa</button>
+                    <button class="edit-btn">Xem</button>
+                    <button class="edit-btn">Thêm</button>
+                    <button class="delete-btn">Xóa</button>
+                  </td>
+                </tr>
+                <!-- Example Row 4 -->
+                <tr>
+                  <td>20250501-CN001-000004</td>
+                  <td>Lô gia hạn tháng 9</td>
+                  <td>Gia hạn</td>
+                  <td>Combo</td>
+                  <td>Chi nhánh 1</td>
+                  <td>Giao thẻ cho chủ thẻ</td>
+                  <td>Từ chối duyệt</td>
+                  <td>Thông tin không hợp lệ</td>
+                  <td>
+                    <button class="edit-btn">Sửa</button>
+                    <button class="edit-btn">Xem</button>
+                    <button class="edit-btn">Thêm</button>
+                    <button class="delete-btn">Xóa</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h3>Danh sách Đơn Mở Thẻ</h3>
+            <h4>Mã lô: 20250501-CN001-000001</h4>
+            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr style="background-color: #f2f2f2;">
+                  <th>Mã đơn</th>
+                  <th>Tên khách hàng</th>
+                  <th>CCCD</th>
+                  <th>Số thẻ</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Example Row 1 -->
+                <tr>
+                  <td>0001</td>
+                  <td>Nguyễn Văn A</td>
+                  <td>012345678901</td>
+                  <td>1234-5678-9012-3456</td>
+                  <td>Chờ duyệt</td>
+                  <td>
+                    <button class="edit-btn">Sửa</button>
+                    <button class="delete-btn">Xóa</button>
+                  </td>
+                </tr>
+                <!-- Example Row 2 -->
+                <tr>
+                  <td>0002</td>
+                  <td>Trần Thị B</td>
+                  <td>987654321098</td>
+                  <td>2345-6789-0123-4567</td>
+                  <td>Đã duyệt</td>
+                  <td>
+                    <button class="edit-btn">Sửa</button>
+                    <button class="delete-btn">Xóa</button>
+                  </td>
+                </tr>
+                <!-- Example Row 3 -->
+                <tr>
+                  <td>0003</td>
+                  <td>Phạm Văn C</td>
+                  <td>123456789012</td>
+                  <td>3456-7890-1234-5678</td>
+                  <td>Thoái duyệt</td>
+                  <td>
+                    <button class="edit-btn">Sửa</button>
+                    <button class="delete-btn">Xóa</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h3>Thêm đơn mở thẻ vào Lô</h3>
+            <h4>Mã lô: 20250501-CN001-000001</h4>
+
+            <!-- Filters -->
+            <div class="filters" style="margin-bottom: 20px;">
+              <input type="text" id="filter-name" placeholder="Tìm theo tên" style="padding: 6px; margin-right: 10px; width: 200px;">
+              <input type="text" id="filter-cccd" placeholder="Tìm theo CCCD" style="padding: 6px; margin-right: 10px; width: 200px;">
+              <input type="text" id="filter-card" placeholder="Tìm theo số thẻ" style="padding: 6px; width: 200px;">
+              <button id="search-btn" class="edit-btn" style="padding: 6px 12px;">Tìm kiếm</button>
+            </div>
+
+            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr style="background-color: #f2f2f2;">
+                  <th>Mã đơn</th>
+                  <th>Tên khách hàng</th>
+                  <th>CCCD</th>
+                  <th>Số thẻ</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Example Row 1 -->
+                <tr>
+                  <td>0001</td>
+                  <td>Nguyễn Văn A</td>
+                  <td>012345678901</td>
+                  <td>-</td>
+                  <td>
+                    <button class="edit-btn">Thêm</button>
+                  </td>
+                </tr>
+                <!-- Example Row 2 -->
+                <tr>
+                  <td>0002</td>
+                  <td>Trần Thị B</td>
+                  <td>987654321098</td>
+                  <td>-</td>
+                  <td>
+                    <button class="edit-btn">Thêm</button>
+                  </td>
+                </tr>
+                <!-- Example Row 3 -->
+                <tr>
+                  <td>0003</td>
+                  <td>Phạm Văn C</td>
+                  <td>123456789012</td>
+                  <td>-</td>
+                  <td>
+                    <button class="edit-btn">Thêm</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+  <script>
+    fetch('../partials/nav.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+
+    // Show the tab content on page load
+    document.getElementById('personal-info').style.display = 'block';
+    // Hide the company-info tab content
+    document.getElementById('company-info').style.display = 'none';
+    // Hide the related-info tab content
+    document.getElementById('related-info').style.display = 'none';
+    // Hide the attachments tab content
+    document.getElementById('attachments').style.display = 'none';
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="personal-info"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('personal-info').style.display = 'block';
+      // Show the company-info tab content
+      document.getElementById('company-info').style.display = 'none';
+      // Show the related-info tab content
+      document.getElementById('related-info').style.display = 'none';
+      // Show the attachments tab content
+      document.getElementById('attachments').style.display = 'none';
+    });
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="company-info"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('personal-info').style.display = 'none';
+      // Show the company-info tab content
+      document.getElementById('company-info').style.display = 'block';
+      // Show the related-info tab content
+       document.getElementById('related-info').style.display = 'none';
+      // Show the attachments tab content
+      document.getElementById('attachments').style.display = 'none';
+    });
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="related-info"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('personal-info').style.display = 'none';
+      // Show the company-info tab content
+      document.getElementById('company-info').style.display = 'none';
+      // Show the related-info tab content
+       document.getElementById('related-info').style.display = 'block';
+      // Show the attachments tab content
+      document.getElementById('attachments').style.display = 'none';
+    });
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="attachments"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('personal-info').style.display = 'none';
+      // Show the company-info tab content
+      document.getElementById('company-info').style.display = 'none';
+      // Show the related-info tab content
+       document.getElementById('related-info').style.display = 'none';
+      // Show the attachments tab content
+      document.getElementById('attachments').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

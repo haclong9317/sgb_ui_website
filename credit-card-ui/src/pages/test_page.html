@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Posting Date Form</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f8f8f8; }
+    form { max-width: 400px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input, button { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+    .message { font-size: 14px; color: red; margin-top: -10px; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+
+<h2>Transaction Posting Date</h2>
+
+<form id="postingForm">
+  <label for="posting_date">Posting Date</label>
+  <input type="date" id="posting_date" name="posting_date" required>
+  <div class="message" id="dateWarning"></div>
+
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  const postingDateInput = document.getElementById('posting_date');
+  const warning = document.getElementById('dateWarning');
+
+  postingDateInput.addEventListener('change', () => {
+    const date = new Date(postingDateInput.value);
+    const day = date.getDay(); // 0 = Sunday, 6 = Saturday
+
+    if (day === 0 || day === 6) {
+      warning.textContent = '⚠️ The selected date is a weekend. Posting will be adjusted to the next business day.';
+    } else {
+      warning.textContent = '';
+    }
+  });
+
+  document.getElementById('postingForm').addEventListener('submit', function (e) {
+    const date = new Date(postingDateInput.value);
+    if (date.getDay() === 0) date.setDate(date.getDate() + 1); // Sunday → Monday
+    else if (date.getDay() === 6) date.setDate(date.getDate() + 2); // Saturday → Monday
+
+    postingDateInput.value = date.toISOString().split('T')[0];
+  });
+</script>
+
+</body>
+</html>

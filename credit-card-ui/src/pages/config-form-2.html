@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Thêm/Sửa Cấu Hình</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    html, body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    #container {
+      display: flex;
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+    }
+    #nav-placeholder {
+      width: 20%;
+    }
+    nav {
+      width: 100%;
+      background-color: #f4f4f9;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      margin-bottom: 15px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    main {
+      width: 80%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .modal {
+      background: white;
+      width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      padding: 20px 30px;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    .modal h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .forms-wrapper {
+      display: flex;
+      gap: 40px;
+      align-items: stretch; /* Ensure both columns stretch to the same height */
+    }
+    .form-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* Ensure form takes full height of its parent */
+    }
+    form .form-group {
+      margin-bottom: 15px;
+    }
+    form .form-group label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    .input-with-unit {
+      display: inline-flex;
+      align-items: center;
+    }
+    .input-with-unit input {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+    }
+    .input-with-unit span {
+      margin-left: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    form input:not(.input-with-unit input),
+    form select {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    .actions {
+      margin-top: 20px;
+      text-align: right;
+    }
+    .actions button {
+      padding: 8px 16px;
+      border: none;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .actions .save {
+      background-color: #007bff;
+      color: white;
+    }
+    .actions .cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+    hr {
+      margin: 40px 0;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+    .form-group div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .form-group div input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin: 0;
+        position: relative;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+    .form-group div input[type="checkbox"]:checked::before {
+        content: '✔';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 12px;
+        color: #007bff;
+    }
+    .form-group div label {
+        margin: 0;
+        padding-left: 10px;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .form-group div input[type="radio"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      margin: 0;
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .form-group div input[type="radio"]:checked {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .form-group div input[type="radio"]:checked::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background-color: #fff;
+      border-radius: 50%;
+    }
+
+
+
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="nav-placeholder"></div>
+    <main>
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h2 style="text-align:center;">Form Thêm/Sửa Sản phẩm Thẻ</h2>
+            <form id="card-product-form">
+              <!-- Row 1: Mã sản phẩm, Tên sản phẩm, Loại thẻ, Hạng thẻ -->
+              <div class="form-group">
+                <label for="product-code">Mã sản phẩm (*):</label>
+                <input type="text" id="product-code" name="product-code" placeholder="Nhập mã sản phẩm">
+              </div>
+              <div class="form-group">
+                <label for="product-name">Tên sản phẩm (*):</label>
+                <input type="text" id="product-name" name="product-name" placeholder="Nhập tên sản phẩm">
+              </div>
+              <div class="form-group">
+                <label for="card-type">Loại thẻ (*):</label>
+                <select id="card-type" name="card-type">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="main">Thẻ chính</option>
+                  <option value="secondary">Thẻ phụ</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="card-tier">Hạng thẻ (*):</label>
+                <select id="card-tier" name="card-tier">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="standard">Standard</option>
+                  <option value="platinum">Platinum</option>
+                  <!-- Add more options as needed -->
+                </select>
+              </div>
+              
+              <!-- Row 2: Lãi suất, Số tiền cố định, Số ngày được miễn lãi -->
+              <div class="form-group">
+                <label for="interest-rate">Lãi suất (%/năm) (*):</label>
+                <input type="text" id="interest-rate" name="interest-rate" placeholder="Nhập lãi suất">
+              </div>
+              <div class="form-group">
+                <label for="fixed-amount">Số tiền cố định:</label>
+                <input type="text" id="fixed-amount" name="fixed-amount" placeholder="Nhập số tiền cố định">
+              </div>
+              <div class="form-group">
+                <label for="interest-free-days">Số ngày được miễn lãi (*):</label>
+                <input type="text" id="interest-free-days" name="interest-free-days" placeholder="Nhập số ngày miễn lãi">
+              </div>
+              
+              <!-- Row 3: Hạn mức tín dụng tối thiểu & tối đa -->
+              <div class="form-group">
+                <label for="credit-min">Hạn mức tín dụng tối thiểu (*):</label>
+                <input type="text" id="credit-min" name="credit-min" placeholder="Nhập hạn mức tối thiểu">
+              </div>
+              <div class="form-group">
+                <label for="credit-max">Hạn mức tín dụng tối đa (*):</label>
+                <input type="text" id="credit-max" name="credit-max" placeholder="Nhập hạn mức tối đa">
+              </div>
+              
+              <!-- Row 4: Phí rút tiền mặt, Số tiền rút tối thiểu, Số tiền rút tối đa, Phần trăm hạn mức rút & Số lần rút -->
+              <div class="form-group">
+                <label for="cash-withdrawal-fee">Phí rút tiền mặt (%) (*):</label>
+                <input type="text" id="cash-withdrawal-fee" name="cash-withdrawal-fee" placeholder="Nhập phí rút tiền mặt">
+              </div>
+              <div class="form-group">
+                <label for="withdrawal-min">Số tiền rút tối thiểu (*):</label>
+                <input type="text" id="withdrawal-min" name="withdrawal-min" placeholder="Nhập số tiền rút tối thiểu">
+              </div>
+              <div class="form-group">
+                <label for="withdrawal-max">Số tiền rút tối đa (*):</label>
+                <input type="text" id="withdrawal-max" name="withdrawal-max" placeholder="Nhập số tiền rút tối đa">
+              </div>
+              <div class="form-group">
+                <label for="withdrawal-limit-percent">Phần trăm hạn mức rút tiền mặt (*):</label>
+                <input type="text" id="withdrawal-limit-percent" name="withdrawal-limit-percent" placeholder="Nhập phần trăm hạn mức rút">
+              </div>
+              <div class="form-group">
+                <label for="daily-withdrawal-count">Số lần rút trong ngày (*):</label>
+                <input type="text" id="daily-withdrawal-count" name="daily-withdrawal-count" placeholder="Nhập số lần rút trong ngày">
+              </div>
+              
+              <!-- Row 5: Hạn mức tối thiểu giao dịch trả góp -->
+              <div class="form-group">
+                <label for="installment-min">Hạn mức tối thiểu giao dịch trả góp:</label>
+                <input type="text" id="installment-min" name="installment-min" placeholder="Nhập hạn mức tối thiểu trả góp">
+              </div>
+              
+              <!-- Row 6: Thời hạn thẻ & Giá trị thời hạn -->
+              <div class="form-group">
+                <label for="card-duration-unit">Thời hạn thẻ (*):</label>
+                  <div>
+                    <input type="radio" id="duration-month" name="card-duration-unit" value="month">
+                    <label for="duration-month" style="display:inline;">Tháng</label>
+                  </div>
+                  <div>
+                    <input type="radio" id="duration-year" name="card-duration-unit" value="year" >
+                    <label for="duration-year" style="display:inline;">Năm</label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                <label for="card-duration-value">Giá trị thời hạn (*):</label>
+                <input type="text" id="card-duration-value" name="card-duration-value" placeholder="Nhập giá trị thời hạn">
+              </div>
+              
+              <!-- Row 7: Mã dịch vụ & Mã định danh ngân hàng -->
+              <div class="form-group">
+                <label for="service-code">Mã dịch vụ (*):</label>
+                <input type="text" id="service-code" name="service-code" placeholder="Nhập mã dịch vụ">
+              </div>
+              <div class="form-group">
+                <label for="bank-id-code">Mã định danh ngân hàng (*):</label>
+                <input type="text" id="bank-id-code" name="bank-id-code" placeholder="Nhập mã định danh ngân hàng">
+              </div>
+              
+              <!-- Row 8: Loại thẻ đẹp nếu có -->
+              <div class="form-group">
+                <div>
+                  <input type="checkbox" id="premium-card" name="premium-card">
+                  <label for="premium-card" style="display:inline;">Loại thẻ đẹp nếu có</label>
+                </div>  
+              </div>
+              
+              <!-- Form actions -->
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>
+          <div class="form-column">
+            <h2>Form Thêm/Sửa Lãi suất</h2>
+            <div id="interest-rate-modal" class="modal">
+              <div class="modal-content">
+                <form id="interest-rate-form">
+                  <!-- Mã Lãi suất -->
+                  <div class="form-group">
+                    <label for="interest-rate-code">Mã Lãi suất (*):</label>
+                    <input type="text" id="interest-rate-code" name="interest-rate-code" placeholder="Nhập mã lãi suất" required>
+                  </div>
+            
+                  <!-- Tên Lãi suất -->
+                  <div class="form-group">
+                    <label for="interest-rate-name">Tên Lãi suất (*):</label>
+                    <input type="text" id="interest-rate-name" name="interest-rate-name" placeholder="Nhập tên lãi suất" required>
+                  </div>
+            
+                  <!-- Loại Lãi suất -->
+                  <div class="form-group">
+                    <label for="interest-rate-type">Loại lãi suất (*):</label>
+                    <select id="interest-rate-type" name="interest-rate-type" required>
+                      <option value="" disabled selected>Chọn loại lãi suất</option>
+                      <option value="type1">Loại 1</option>
+                      <option value="type2">Loại 2</option>
+                    </select>
+                  </div>
+            
+                  <!-- Hình thức tính -->
+                  <div class="form-group">
+                    <label for="calculation-method">Hình thức tính (*):</label>
+                    <select id="calculation-method" name="calculation-method" required>
+                      <option value="" disabled selected>Chọn hình thức tính</option>
+                      <option value="P">Phần trăm</option>
+                      <option value="F">Số tiền cố định</option>
+                    </select>
+                  </div>
+            
+                  <!-- Giá trị phần trăm -->
+                  <div class="form-group">
+                    <label for="percentage-value">Giá trị phần trăm:</label>
+                    <input type="text" id="percentage-value" name="percentage-value" placeholder="Nhập giá trị phần trăm">
+                  </div>
+            
+                  <!-- Giá trị cố định -->
+                  <div class="form-group">
+                    <label for="fixed-value">Giá trị cố định:</label>
+                    <input type="text" id="fixed-value" name="fixed-value" placeholder="Nhập giá trị cố định">
+                  </div>
+            
+                  <!-- Áp dụng cho tất cả sản phẩm thẻ -->
+                  <!-- <div class="form-group">
+                    <input type="checkbox" id="apply-all-products" name="apply-all-products">
+                    <label for="apply-all-products">Áp dụng cho tất cả sản phẩm thẻ (*)</label>
+                  </div> -->
+                  <div class="form-group">
+                    <div>
+                      <label for="apply-all-products" style="font-weight: bold;font-size: 16px;padding-left: 0px;padding-right: 10px;">Áp dụng cho tất cả sản phẩm thẻ </label>
+                      <input type="checkbox" id="product-all" name="product-list" value="applyAllCard">
+                    </div>
+                    <label>Danh sách sản phẩm thẻ:</label>
+                    <div>
+                      <input type="checkbox" id="product-1" name="product-list" value="TDND-001">
+                      <label for="product-1">TDND-001</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" id="product-2" name="product-list" value="TDND-002">
+                      <label for="product-2">TDND-002</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" id="product-3" name="product-list" value="TDND-003">
+                      <label for="product-3">TDND-003</label>
+                    </div>
+                  </div>
+            
+                  <!-- Danh sách sản phẩm thẻ -->
+                  <div class="form-group" id="product-list-group" style="display: none;">
+                    <label>Danh sách sản phẩm thẻ:</label>
+                    <div>
+                      <input type="checkbox" id="product-1" name="product-list" value="TDND-001">
+                      <label for="product-1">TDND-001</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" id="product-2" name="product-list" value="TDND-002">
+                      <label for="product-2">TDND-002</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" id="product-3" name="product-list" value="TDND-003">
+                      <label for="product-3">TDND-003</label>
+                    </div>
+                  </div>
+            
+                  <!-- Trạng thái -->
+                  <div class="form-group">
+                    <label for="status">Trạng thái (*):</label>
+                    <select id="status" name="status" required>
+                      <option value="" disabled selected>Chọn trạng thái</option>
+                      <option value="active">Hoạt động</option>
+                      <option value="inactive">Ngừng hoạt động</option>
+                    </select>
+                  </div>
+            
+                  <!-- Mô tả -->
+                  <div class="form-group">
+                    <label for="description">Mô tả:</label>
+                    <textarea id="description" name="description" style="width:300px; height:100px; resize:vertical;" placeholder="Nhập mô tả chi tiết"></textarea>
+                  </div>
+            
+                  <!-- Form actions -->
+                  <div class="actions">
+                    <button type="submit" class="save">Lưu</button>
+                    <button type="button" class="cancel">Hủy</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>  
+        <div class="forms-wrapper">
+          <div class="form-column">
+              <h2>Thêm/Sửa Phí Thường Niên</h2>
+              <form id="annual-fee-form">
+                <!-- Mã phí thường niên -->
+                <div class="form-group">
+                  <label for="annual-fee-code">Mã phí thường niên (*):</label>
+                  <input type="text" id="annual-fee-code" name="annual-fee-code" placeholder="Nhập mã phí thường niên" required>
+                </div>
+          
+                <!-- Tên -->
+                <div class="form-group">
+                  <label for="annual-fee-name">Tên (*):</label>
+                  <input type="text" id="annual-fee-name" name="annual-fee-name" placeholder="Nhập tên phí thường niên" required>
+                </div>
+          
+                <!-- Số tiền -->
+                <div class="form-group">
+                  <label for="annual-fee-amount">Số tiền (*):</label>
+                  <input type="text" id="annual-fee-amount" name="annual-fee-amount" placeholder="Nhập số tiền cố định" required>
+                </div>
+          
+                <!-- Tần suất -->
+                <div class="form-group">
+                  <label for="annual-fee-frequency">Tần suất (đợt) (*):</label>
+                  <select id="annual-fee-frequency" name="annual-fee-frequency" required>
+                    <option value="" disabled selected>Chọn tần suất</option>
+                    <option value="yearly">Hàng năm</option>
+                    <option value="monthly">Hàng tháng</option>
+                  </select>
+                </div>
+          
+                <!-- Chính sách -->
+                <div class="form-group">
+                  <label for="annual-fee-policy">Chính sách (%):</label>
+                  <input type="text" id="annual-fee-policy" name="annual-fee-policy" placeholder="Nhập tỷ lệ phần trăm">
+                </div>
+          
+                <!-- Bắt đầu thu phí -->
+                <div class="form-group">
+                  <label for="annual-fee-start">Bắt đầu thu phí (*):</label>
+                  <input type="text" id="annual-fee-start" name="annual-fee-start" placeholder="Nhập số năm hoặc số tháng" required>
+                </div>
+          
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+              </form>
+          </div>
+          <div class="form-column">
+              <h2>Thêm/Sửa Chương trình Trả góp</h2>
+              <form id="installment-program-form">
+                <!-- Tên chương trình -->
+                <div class="form-group">
+                  <label for="program-name">Tên chương trình (*):</label>
+                  <input type="text" id="program-name" name="program-name" placeholder="Nhập tên chương trình trả góp" required>
+                </div>
+          
+                <!-- Số tiền tối thiểu -->
+                <div class="form-group">
+                  <label for="minimum-amount">Số tiền tối thiểu (*):</label>
+                  <input type="text" id="minimum-amount" name="minimum-amount" placeholder="Nhập số tiền tối thiểu" required>
+                </div>
+          
+                <!-- Sản phẩm thẻ -->
+                <div class="form-group">
+                  <label for="card-product">Sản phẩm thẻ (*):</label>
+                  <select id="card-product" name="card-product" required>
+                    <option value="" disabled selected>Chọn sản phẩm thẻ</option>
+                    <option value="product1">Sản phẩm 1</option>
+                    <option value="product2">Sản phẩm 2</option>
+                    <option value="product3">Sản phẩm 3</option>
+                  </select>
+                </div>
+          
+                <!-- Lãi suất -->
+                <div class="form-group">
+                  <label for="interest-rate">Lãi suất (%/năm) (*):</label>
+                  <input type="text" id="interest-rate" name="interest-rate" placeholder="Nhập lãi suất" required>
+                </div>
+          
+                <!-- Kỳ hạn trả góp -->
+                <div class="form-group">
+                  <label for="installment-term">Kỳ hạn trả góp (*):</label>
+                  <input type="text" id="installment-term" name="installment-term" placeholder="Nhập kỳ hạn trả góp (3,6,12,24)" required>
+                </div>
+          
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+              </form>
+          </div>
+        </div> 
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h2>Thêm/Sửa Merchant</h2>
+            <form id="merchant-form">
+              <!-- Merchant ID -->
+              <div class="form-group">
+                <label for="merchant-id">Merchant ID:</label>
+                <input type="text" id="merchant-id" name="merchant-id" value="Tự động tạo" readonly>
+              </div>
+        
+              <!-- Tên -->
+              <div class="form-group">
+                <label for="merchant-name">Tên (*):</label>
+                <input type="text" id="merchant-name" name="merchant-name" placeholder="Nhập tên Merchant" required>
+              </div>
+        
+              <!-- MCC -->
+              <div class="form-group">
+                <label for="merchant-mcc">MCC (*):</label>
+                <select id="merchant-mcc" name="merchant-mcc" required>
+                  <option value="" disabled selected>Chọn mã danh mục thương mại</option>
+                  <option value="mcc1">MCC 1</option>
+                  <option value="mcc2">MCC 2</option>
+                  <option value="mcc3">MCC 3</option>
+                </select>
+              </div>
+        
+              <!-- Địa chỉ -->
+              <div class="form-group">
+                <label for="merchant-address">Địa chỉ (*):</label>
+                <input type="text" id="merchant-address" name="merchant-address" placeholder="Nhập địa chỉ Merchant" required>
+              </div>
+        
+              <!-- Email -->
+              <div class="form-group">
+                <label for="merchant-email">Email:</label>
+                <input type="email" id="merchant-email" name="merchant-email" placeholder="Nhập email liên hệ">
+              </div>
+        
+              <!-- Tài khoản -->
+              <div class="form-group">
+                <label for="merchant-account">Tài khoản:</label>
+                <input type="text" id="merchant-account" name="merchant-account" placeholder="Nhập tài khoản ngân hàng">
+              </div>
+        
+              <!-- Người liên hệ -->
+              <div class="form-group">
+                <label for="contact-person">Người liên hệ (*):</label>
+                <input type="text" id="contact-person" name="contact-person" placeholder="Nhập họ tên người liên hệ" required>
+              </div>
+        
+              <!-- Số điện thoại -->
+              <div class="form-group">
+                <label for="contact-phone">Số điện thoại (*):</label>
+                <input type="text" id="contact-phone" name="contact-phone" placeholder="Nhập số điện thoại liên hệ" required>
+              </div>
+        
+              <!-- Giới tính -->
+              <div class="form-group">
+                <label for="gender">Giới tính:</label>
+                <select id="gender" name="gender">
+                  <option value="" disabled selected>Chọn giới tính</option>
+                  <option value="male">Nam</option>
+                  <option value="female">Nữ</option>
+                </select>
+              </div>
+        
+              <!-- Ngày sinh -->
+              <div class="form-group">
+                <label for="birth-date">Ngày sinh:</label>
+                <input type="date" id="birth-date" name="birth-date">
+              </div>
+        
+              <!-- Số CCCD -->
+              <div class="form-group">
+                <label for="id-card">Số CCCD:</label>
+                <input type="text" id="id-card" name="id-card" placeholder="Nhập số căn cước công dân">
+              </div>
+        
+              <!-- Chức vụ -->
+              <div class="form-group">
+                <label for="position">Chức vụ:</label>
+                <input type="text" id="position" name="position" placeholder="Nhập chức vụ của người liên hệ">
+              </div>
+        
+              <!-- Chi nhánh quản lý -->
+              <div class="form-group">
+                <label for="branch">Chi nhánh quản lý Merchant (*):</label>
+                <input type="text" id="branch" name="branch" placeholder="Nhập chi nhánh quản lý" required>
+              </div>
+        
+              <!-- Trạng thái -->
+              <div class="form-group">
+                <label for="status">Trạng thái:</label>
+                <div>
+                  <input type="checkbox" id="status" name="status" checked>
+                  <label for="status" style="display: inline;">ACTIVE</label>
+                </div>
+              </div>
+        
+              <!-- Form actions -->
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Thoát</button>
+              </div>
+            </form>
+          </div>
+          <div class="form-column">
+            <div id="customer-modal" >
+              <h2>Thêm/Cập nhật Khách hàng</h2>
+              <div class="modal-content">
+                <div class="tabs">
+                  <button class="tab-button active" data-tab="personal-info">Thông tin chủ thẻ</button>
+                  <button class="tab-button" data-tab="company-info">Thông tin công ty chủ thẻ</button>
+                  <button class="tab-button" data-tab="related-info">Thông tin liên quan</button>
+                  <button class="tab-button" data-tab="attachments">Tài liệu đính kèm</button>
+                </div>
+                <div class="tab-content active" id="personal-info">
+                  <form id="personal-info-form">
+                    <!-- Mã khách hàng -->
+                    <div class="form-group">
+                      <label for="customer-id">Mã khách hàng (*):</label>
+                      <input type="text" id="customer-id" name="customer-id" placeholder="Nhập mã khách hàng" required>
+                    </div>
+            
+                    <!-- Tên khách hàng -->
+                    <div class="form-group">
+                      <label for="customer-name">Tên khách hàng (*):</label>
+                      <input type="text" id="customer-name" name="customer-name" placeholder="Nhập tên khách hàng" required>
+                    </div>
+            
+                    <!-- Ngày sinh -->
+                    <div class="form-group">
+                      <label for="birth-date">Ngày sinh (*):</label>
+                      <input type="date" id="birth-date" name="birth-date" required>
+                    </div>
+            
+                    <!-- Giới tính -->
+                    <div class="form-group">
+                      <label for="gender">Giới tính (*):</label>
+                      <select id="gender" name="gender" required>
+                        <option value="" disabled selected>Chọn giới tính</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                      </select>
+                    </div>
+            
+                    <!-- Số CMND/CCCD -->
+                    <div class="form-group">
+                      <label for="id-card">Số CMND/CCCD (*):</label>
+                      <input type="text" id="id-card" name="id-card" placeholder="Nhập số CMND/CCCD" required>
+                    </div>
+            
+                    <!-- Ngày cấp -->
+                    <div class="form-group">
+                      <label for="issue-date">Ngày cấp (*):</label>
+                      <input type="date" id="issue-date" name="issue-date" required>
+                    </div>
+            
+                    <!-- Nơi cấp -->
+                    <div class="form-group">
+                      <label for="issue-place">Nơi cấp (*):</label>
+                      <input type="text" id="issue-place" name="issue-place" placeholder="Nhập nơi cấp" required>
+                    </div>
+            
+                    <!-- Địa chỉ -->
+                    <div class="form-group">
+                      <label for="address">Địa chỉ (*):</label>
+                      <input type="text" id="address" name="address" placeholder="Nhập địa chỉ" required>
+                    </div>
+            
+                    <!-- Địa chỉ liên hệ 2 -->
+                    <div class="form-group">
+                      <label for="secondary-address">Địa chỉ liên hệ 2:</label>
+                      <input type="text" id="secondary-address" name="secondary-address" placeholder="Nhập địa chỉ liên hệ 2">
+                    </div>
+            
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                      <label for="phone">Số điện thoại (*):</label>
+                      <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+                    </div>
+            
+                    <!-- Email -->
+                    <div class="form-group">
+                      <label for="email">Email (*):</label>
+                      <input type="email" id="email" name="email" placeholder="Nhập email" required>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="tab-content" id="company-info">
+                  <form id="company-info-form">
+                    <!-- Tên công ty -->
+                    <div class="form-group">
+                      <label for="company-name">Tên công ty:</label>
+                      <input type="text" id="company-name" name="company-name" placeholder="Nhập tên công ty">
+                    </div>
+            
+                    <!-- Địa chỉ -->
+                    <div class="form-group">
+                      <label for="company-address">Địa chỉ:</label>
+                      <input type="text" id="company-address" name="company-address" placeholder="Nhập địa chỉ công ty">
+                    </div>
+            
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                      <label for="company-phone">Số điện thoại:</label>
+                      <input type="text" id="company-phone" name="company-phone" placeholder="Nhập số điện thoại công ty">
+                    </div>
+            
+                    <!-- Số fax -->
+                    <div class="form-group">
+                      <label for="company-fax">Số fax:</label>
+                      <input type="text" id="company-fax" name="company-fax" placeholder="Nhập số fax">
+                    </div>
+                  </form>
+                </div>
+            
+                <div class="tab-content" id="related-info">
+                  <h3>Thông tin liên quan</h3>
+                  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                      <tr>
+                        <th>Họ tên</th>
+                        <th>Mối quan hệ</th>
+                        <th>Số điện thoại</th>
+                        <th>Chức vụ</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Nguyễn Văn A</td>
+                        <td>Cha</td>
+                        <td>0901234567</td>
+                        <td>Giám đốc</td>
+                        <td>
+                          <button type="button" class="edit">Sửa</button>
+                          <button type="button" class="delete">Xóa</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Trần Thị B</td>
+                        <td>Mẹ</td>
+                        <td>0909876543</td>
+                        <td>Nhân viên văn phòng</td>
+                        <td>
+                          <button type="button" class="edit">Sửa</button>
+                          <button type="button" class="delete">Xóa</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Lê Văn C</td>
+                        <td>Bạn bè</td>
+                        <td>0912345678</td>
+                        <td></td>
+                        <td>
+                          <button type="button" class="edit">Sửa</button>
+                          <button type="button" class="delete">Xóa</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+            
+                <div class="tab-content" id="attachments">
+                  <h3>Tài liệu đính kèm</h3>
+                  <form id="attachments-form">
+                    <!-- Tên file -->
+                    <div class="form-group">
+                      <label for="file-name">Tên file:</label>
+                      <input type="text" id="file-name" name="file-name" placeholder="Nhập tên file">
+                    </div>
+                
+                    <!-- Nội dung -->
+                    <div class="form-group">
+                      <label for="file-content">Nội dung:</label>
+                      <textarea id="file-content" name="file-content" placeholder="Nhập nội dung"></textarea>
+                    </div>
+                
+                    <!-- Đường dẫn -->
+                    <div class="form-group">
+                      <label for="file-path">Đường dẫn:</label>
+                      <input type="text" id="file-path" name="file-path" placeholder="Nhập đường dẫn">
+                    </div>
+                
+                    <!-- Actions -->
+                    <div class="actions">
+                      <button type="button" class="upload">Upload</button>
+                      <button type="button" class="delete">Xóa</button>
+                    </div>
+                  </form>
+                </div>
+            
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h2>Thông tin khác liên quan đến thẻ tín dụng</h2>
+            <form id="credit-card-info-form">
+              <!-- Nghề nghiệp -->
+              <div class="form-group">
+                <label for="occupation">Nghề nghiệp:</label>
+                <input type="text" id="occupation" name="occupation" placeholder="Nhập nghề nghiệp">
+              </div>
+
+              <!-- Chức vụ -->
+              <div class="form-group">
+                <label for="position">Chức vụ:</label>
+                <input type="text" id="position" name="position" placeholder="Nhập chức vụ">
+              </div>
+
+              <!-- Học vấn -->
+              <div class="form-group">
+                <label for="education">Học vấn:</label>
+                <select id="education" name="education">
+                  <option value="" disabled selected>Chọn học vấn</option>
+                  <option value="highschool">Trung học</option>
+                  <option value="bachelor">Đại học</option>
+                  <option value="master">Thạc sĩ</option>
+                  <option value="phd">Tiến sĩ</option>
+                </select>
+              </div>
+
+              <!-- Làm chủ -->
+              <div class="form-group">
+                <label for="ownership">Làm chủ:</label>
+                <select id="ownership" name="ownership">
+                  <option value="" disabled selected>Chọn trạng thái</option>
+                  <option value="yes">Có</option>
+                  <option value="no">Không</option>
+                </select>
+              </div>
+
+              <!-- Nơi công tác -->
+              <div class="form-group">
+                <label for="workplace">Nơi công tác:</label>
+                <input type="text" id="workplace" name="workplace" placeholder="Nhập nơi công tác">
+              </div>
+
+              <!-- Tình trạng hôn nhân -->
+              <div class="form-group">
+                <label for="marital-status">Tình trạng hôn nhân:</label>
+                <select id="marital-status" name="marital-status">
+                  <option value="" disabled selected>Chọn tình trạng</option>
+                  <option value="single">Độc thân</option>
+                  <option value="married">Đã kết hôn</option>
+                  <option value="divorced">Ly hôn</option>
+                </select>
+              </div>
+
+              <!-- Thu nhập chính -->
+              <div class="form-group">
+                <label for="main-income">Thu nhập chính:</label>
+                <input type="text" id="main-income" name="main-income" placeholder="Nhập thu nhập chính (VNĐ)">
+              </div>
+
+              <!-- Thu nhập khác -->
+              <div class="form-group">
+                <label for="other-income">Thu nhập khác:</label>
+                <input type="text" id="other-income" name="other-income" placeholder="Nhập thu nhập khác (VNĐ)">
+              </div>
+
+              <!-- Tổng thu nhập -->
+              <div class="form-group">
+                <label for="total-income">Tổng thu nhập:</label>
+                <input type="text" id="total-income" name="total-income" placeholder="Nhập tổng thu nhập (VNĐ)">
+              </div>
+
+              <!-- Các ngân hàng cấp thẻ tín dụng -->
+              <div class="form-group">
+                <label for="credit-card-banks">Các ngân hàng cấp thẻ tín dụng:</label>
+                <textarea id="credit-card-banks" name="credit-card-banks" placeholder="Nhập danh sách ngân hàng" rows="2"></textarea>
+              </div>
+
+              <!-- Form actions -->
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Thoát</button>
+              </div>
+            </form>
+          </div>
+          <div class="form-column">
+            <h2>Đơn mở thẻ</h2>
+            <div id="credit-card-application-modal" >
+              <div class="modal-content">
+                <div class="tabs">
+                  <button class="tab-button active" data-tab="dmt-application-info">Thông tin đơn mở thẻ</button>
+                  <!-- <button class="tab-button" data-tab="credit-limit">Hạn mức chủ thẻ</button> -->
+                  <button class="tab-button" data-tab="dmt-cardholder-info">Thông tin chủ thẻ</button>
+                  <button class="tab-button" data-tab="dmt-company-info">Thông tin công ty chủ thẻ</button>
+                  <!-- <button class="tab-button" data-tab="dmt-related-info">Thông tin liên quan</button> -->
+                  <button class="tab-button" data-tab="dmt-other-info">Thông tin khác liên quan đến thẻ tín dụng</button>
+                </div>
+            
+                <!-- Tab 1: Thông tin đơn mở thẻ -->
+                <div class="tab-content active" id="dmt-application-info">
+                  <form id="application-info-form">
+                    <!-- <div class="form-group">
+                      <label for="application-id">Mã đơn mở thẻ (*):</label>
+                      <input type="text" id="application-id" name="application-id" value="Hệ thống tự động sinh" readonly>
+                    </div> -->
+
+                    <h3>Thông tin thẻ</h3>
+                    <hr>
+                    <div class="form-group">
+                      <div>
+                        <strong>Thẻ chính:&nbsp;</strong>
+                      <input type="checkbox" id="is-primary-card" name="is-primary-card" checked>
+                      </div>
+                      
+                    </div>
+                    <div class="form-group">
+                      <label for="parent-application">Đơn mở thẻ gốc:</label>
+                      <input type="text" id="parent-application" name="parent-application" placeholder="Nhập mã đơn mở thẻ gốc" disabled>
+                    </div>
+                    <!-- <div class="form-group">
+                      <label for="application-status">Tình trạng đơn mở thẻ:</label>
+                      <select id="application-status" name="application-status" readonly>
+                        <option value="pending">Chờ duyệt</option>
+                        <option value="approved">Đã duyệt</option>
+                        <option value="rejected">Thoái duyệt</option>
+                      </select>
+                    </div> -->
+                    <div class="form-group">
+                      <label for="branch">Chi nhánh:</label>
+                      <select id="branch" name="branch" readonly>
+                        <option value="" disabled selected>Chọn chi nhánh</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="card-type">Thẻ (*):</label>
+                      <select id="card-type" name="card-type" required>
+                        <option value="" disabled selected>Chọn loại thẻ</option>
+                        <option value="credit">Tín dụng</option>
+                        <option value="combo">Combo</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="debit-application-id">Đơn mở thẻ ghi nợ (*):</label>
+                      <input type="text" id="debit-application-id" name="debit-application-id" placeholder="Nhập mã đơn mở thẻ ghi nợ">
+                    </div>
+                    <div class="form-group">
+                      <label for="card-tier">Hạng thẻ (*):</label>
+                      <select id="card-tier" name="card-tier" required>
+                        <option value="" disabled selected>Chọn hạng thẻ</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="card-product">Sản phẩm thẻ (*):</label>
+                      <select id="card-product" name="card-product" required>
+                        <option value="" disabled selected>Chọn sản phẩm thẻ</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="card-duration">Thời hạn thẻ (*):</label>
+                      <input type="number" id="card-duration" name="card-duration" placeholder="Nhập thời hạn mở thẻ (tháng)" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="linked-account">Tài khoản tiền gửi (*):</label>
+                      <input type="text" id="linked-account" name="linked-account" placeholder="Nhập tài khoản tiền gửi" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="currency">Tiền tệ (*):</label>
+                      <select id="currency" name="currency" required>
+                        <option value="vnd" selected>VNĐ</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="statement-date">Ngày sao kê (*):</label>
+                      <input type="text" id="statement-date" name="statement-date" placeholder="Nhập ngày nhận sao kê" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="credit-limit-max">Hạn mức tín dụng tối đa (*):</label>
+                      <input type="number" id="credit-limit-max" name="credit-limit-max" placeholder="Nhập hạn mức tín dụng tối đa" required>
+                    </div>
+                  </form>
+                </div>
+                       
+                <!-- Tab 3: Thông tin chủ thẻ -->
+                <!-- <h3>Thông tin chủ thẻ</h3>
+                <hr> -->
+                <div class="tab-content" id="dmt-cardholder-info">
+                  <form id="cardholder-info-form">
+                    <!-- Mã khách hàng -->
+                    <div class="form-group">
+                      <label for="customer-id">Mã khách hàng (*):</label>
+                      <input type="text" id="customer-id" name="customer-id" placeholder="Nhập mã khách hàng" required>
+                    </div>
+                  
+                    <!-- Loại khách hàng -->
+                    <div class="form-group">
+                      <label for="customer-type">Loại khách hàng (*):</label>
+                      <select id="customer-type" name="customer-type" required>
+                        <option value="" disabled selected>Chọn loại khách hàng</option>
+                        <option value="individual">Cá nhân</option>
+                        <option value="business">Doanh nghiệp</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Tên khách hàng -->
+                    <div class="form-group">
+                      <label for="customer-name">Tên khách hàng (*):</label>
+                      <input type="text" id="customer-name" name="customer-name" placeholder="Nhập tên khách hàng" required>
+                    </div>
+                  
+                    <!-- Tên tiếng Anh -->
+                    <div class="form-group">
+                      <label for="customer-name-en">Tên tiếng Anh:</label>
+                      <input type="text" id="customer-name-en" name="customer-name-en" placeholder="Nhập tên tiếng Anh">
+                    </div>
+                  
+                    <!-- Tình trạng hôn nhân -->
+                    <div class="form-group">
+                      <label for="marital-status">Tình trạng hôn nhân:</label>
+                      <select id="marital-status" name="marital-status">
+                        <option value="" disabled selected>Chọn tình trạng</option>
+                        <option value="single">Độc thân</option>
+                        <option value="married">Đã kết hôn</option>
+                        <option value="divorced">Ly hôn</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Ngày sinh -->
+                    <div class="form-group">
+                      <label for="birth-date">Ngày sinh (*):</label>
+                      <input type="date" id="birth-date" name="birth-date" required>
+                    </div>
+                  
+                    <!-- Nơi sinh -->
+                    <div class="form-group">
+                      <label for="birth-place">Nơi sinh:</label>
+                      <input type="text" id="birth-place" name="birth-place" placeholder="Nhập nơi sinh">
+                    </div>
+                  
+                    <!-- Số CMND/CCCD -->
+                    <div class="form-group">
+                      <label for="id-card">Số CMND/CCCD (*):</label>
+                      <input type="text" id="id-card" name="id-card" placeholder="Nhập số CMND/CCCD" required>
+                    </div>
+                  
+                    <!-- Ngày cấp -->
+                    <div class="form-group">
+                      <label for="issue-date">Ngày cấp (*):</label>
+                      <input type="date" id="issue-date" name="issue-date" required>
+                    </div>
+                  
+                    <!-- Nơi cấp -->
+                    <div class="form-group">
+                      <label for="issue-place">Nơi cấp (*):</label>
+                      <input type="text" id="issue-place" name="issue-place" placeholder="Nhập nơi cấp" required>
+                    </div>
+                  
+                    <!-- Ngày hết hạn -->
+                    <div class="form-group">
+                      <label for="expiry-date">Ngày hết hạn:</label>
+                      <input type="text" id="expiry-date" name="expiry-date" placeholder="Nhập ngày hết hạn">
+                    </div>
+                  
+                    <!-- Địa chỉ -->
+                    <div class="form-group">
+                      <label for="address">Địa chỉ (*):</label>
+                      <input type="text" id="address" name="address" placeholder="Nhập địa chỉ" required>
+                    </div>
+                  
+                    <!-- Mã tỉnh/thành phố -->
+                    <div class="form-group">
+                      <label for="province-code">Mã tỉnh/thành phố:</label>
+                      <select id="province-code" name="province-code">
+                        <option value="" disabled selected>Chọn mã tỉnh/thành phố</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Tên quốc gia -->
+                    <div class="form-group">
+                      <label for="country-name">Tên quốc gia:</label>
+                      <select id="country-name" name="country-name">
+                        <option value="" disabled selected>Chọn tên quốc gia</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Địa chỉ liên hệ 2 -->
+                    <div class="form-group">
+                      <label for="secondary-address">Địa chỉ liên hệ 2:</label>
+                      <input type="text" id="secondary-address" name="secondary-address" placeholder="Nhập địa chỉ liên hệ 2">
+                    </div>
+                  
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                      <label for="phone">Số điện thoại (*):</label>
+                      <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+                    </div>
+                  
+                    <!-- Email -->
+                    <div class="form-group">
+                      <label for="email">Email (*):</label>
+                      <input type="email" id="email" name="email" placeholder="Nhập email" required>
+                    </div>
+                  
+                    <!-- Số di động -->
+                    <div class="form-group">
+                      <label for="mobile-phone">Số di động (*):</label>
+                      <input type="text" id="mobile-phone" name="mobile-phone" placeholder="Nhập số di động" required>
+                    </div>
+                  
+                    <!-- Số fax -->
+                    <div class="form-group">
+                      <label for="fax">Số fax:</label>
+                      <input type="text" id="fax" name="fax" placeholder="Nhập số fax">
+                    </div>
+                  
+                    <!-- Giới tính -->
+                    <div class="form-group">
+                      <label for="gender">Giới tính (*):</label>
+                      <select id="gender" name="gender" required>
+                        <option value="" disabled selected>Chọn giới tính</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Địa chỉ thông báo -->
+                    <div class="form-group">
+                      <label for="notification-address">Địa chỉ thông báo:</label>
+                      <input type="text" id="notification-address" name="notification-address" placeholder="Nhập địa chỉ thông báo">
+                    </div>
+                  </form>
+                </div>
+            
+                <!-- Tab 4: Thông tin công ty chủ thẻ -->
+                <!-- <h3>Thông tin thêm</h3>
+                <hr> -->
+                <div class="tab-content" id="dmt-company-info">
+                  <form id="company-info-form">
+                    <!-- Tên công ty -->
+                    <div class="form-group">
+                      <label for="company-name">Tên công ty:</label>
+                      <input type="text" id="company-name" name="company-name" placeholder="Nhập tên công ty">
+                    </div>
+                  
+                    <!-- Địa chỉ -->
+                    <div class="form-group">
+                      <label for="company-address">Địa chỉ:</label>
+                      <input type="text" id="company-address" name="company-address" placeholder="Nhập địa chỉ công ty">
+                    </div>
+                  
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                      <label for="company-phone">Số điện thoại:</label>
+                      <input type="text" id="company-phone" name="company-phone" placeholder="Nhập số điện thoại công ty">
+                    </div>
+                  
+                    <!-- Số fax -->
+                    <div class="form-group">
+                      <label for="company-fax">Số fax:</label>
+                      <input type="text" id="company-fax" name="company-fax" placeholder="Nhập số fax công ty">
+                    </div>
+                  
+                    <!-- Số hợp đồng chi lương -->
+                    <div class="form-group">
+                      <label for="payroll-contract-number">Số hợp đồng chi lương:</label>
+                      <input type="text" id="payroll-contract-number" name="payroll-contract-number" placeholder="Nhập số hợp đồng chi lương">
+                    </div>
+                  
+                    <!-- Ngày ký hợp đồng chi lương -->
+                    <div class="form-group">
+                      <label for="payroll-contract-date">Ngày ký hợp đồng chi lương:</label>
+                      <input type="date" id="payroll-contract-date" name="payroll-contract-date">
+                    </div>
+                  
+                    <!-- Mã Client của đơn vị chi lương -->
+                    <div class="form-group">
+                      <label for="payroll-client-id">Mã Client của đơn vị chi lương:</label>
+                      <input type="text" id="payroll-client-id" name="payroll-client-id" placeholder="Nhập mã Client của đơn vị chi lương">
+                    </div>
+                  </form>
+                </div>
+            
+                <!-- Tab 5: Thông tin liên quan -->
+                <!-- <h3>Thông tin người liên lạc</h3>
+                <hr> -->
+            
+                <!-- Tab 6: Thông tin khác liên quan đến thẻ tín dụng -->
+                <div class="tab-content" id="dmt-other-info">
+                  <form id="other-info-form">
+                    <!-- Nghề nghiệp -->
+                    <div class="form-group">
+                      <label for="occupation">Nghề nghiệp:</label>
+                      <input type="text" id="occupation" name="occupation" placeholder="Nhập nghề nghiệp">
+                    </div>
+                  
+                    <!-- Chức vụ -->
+                    <div class="form-group">
+                      <label for="position">Chức vụ:</label>
+                      <input type="text" id="position" name="position" placeholder="Nhập chức vụ">
+                    </div>
+                  
+                    <!-- Tên người liên hệ -->
+                    <div class="form-group">
+                      <label for="contact-name">Tên người liên hệ (*):</label>
+                      <input type="text" id="contact-name" name="contact-name" placeholder="Nhập họ tên người liên hệ" required>
+                    </div>
+                  
+                    <!-- Mối quan hệ -->
+                    <div class="form-group">
+                      <label for="relationship">Mối quan hệ (*):</label>
+                      <select id="relationship" name="relationship" required>
+                        <option value="" disabled selected>Chọn mối quan hệ</option>
+                        <option value="father">Cha</option>
+                        <option value="mother">Mẹ</option>
+                        <option value="spouse">Vợ/Chồng</option>
+                        <option value="friend">Bạn bè</option>
+                        <option value="other">Khác</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                      <label for="contact-phone">Số điện thoại (*):</label>
+                      <input type="text" id="contact-phone" name="contact-phone" placeholder="Nhập số điện thoại" required>
+                    </div>
+                  
+                    <!-- Số CCCD -->
+                    <div class="form-group">
+                      <label for="contact-id-card">Số CCCD:</label>
+                      <input type="text" id="contact-id-card" name="contact-id-card" placeholder="Nhập số căn cước công dân">
+                    </div>
+                  
+                    <!-- Giới tính -->
+                    <div class="form-group">
+                      <label for="contact-gender">Giới tính:</label>
+                      <select id="contact-gender" name="contact-gender">
+                        <option value="" disabled selected>Chọn giới tính</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Ngày sinh -->
+                    <div class="form-group">
+                      <label for="contact-birth-date">Ngày sinh:</label>
+                      <input type="date" id="contact-birth-date" name="contact-birth-date">
+                    </div>
+                  
+                    <!-- Địa chỉ -->
+                    <div class="form-group">
+                      <label for="contact-address">Địa chỉ:</label>
+                      <input type="text" id="contact-address" name="contact-address" placeholder="Nhập địa chỉ">
+                    </div>
+                  
+                    <!-- Số fax -->
+                    <div class="form-group">
+                      <label for="contact-fax">Số fax:</label>
+                      <input type="text" id="contact-fax" name="contact-fax" placeholder="Nhập số fax">
+                    </div>
+                  
+                    <!-- Tên công ty -->
+                    <div class="form-group">
+                      <label for="contact-company">Tên công ty:</label>
+                      <input type="text" id="contact-company" name="contact-company" placeholder="Nhập tên công ty">
+                    </div>
+
+                    <!-- Form actions -->
+                    <div class="actions">
+                      <button type="submit" class="save">Lưu</button>
+                      <button type="submit" class="save">Thêm người liên hệ</button>
+                    </div>
+                  </form>
+                  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                      <tr>
+                        <th>Họ tên</th>
+                        <th>Mối quan hệ</th>
+                        <th>Số điện thoại</th>
+                        <th>Chức vụ</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Nguyễn Văn A</td>
+                        <td>Cha</td>
+                        <td>0901234567</td>
+                        <td>Giám đốc</td>
+                        <td>
+                          <button type="button" class="edit">Sửa</button>
+                          <button type="button" class="delete">Xóa</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="forms-wrapper">
+
+          <div class="form-column">
+            <h2>Cập nhật đơn mở thẻ</h2>
+            <div id="credit-card-application-modal" >
+              <div class="modal-content">
+                <div class="tabs">
+                  <button class="tab-button active" data-tab="cndmt-application-info">Thông tin đơn mở thẻ</button>
+                  <!-- <button class="tab-button" data-tab="credit-limit">Hạn mức chủ thẻ</button> -->
+                  <button class="tab-button" data-tab="cndmt-cardholder-info">Thông tin chủ thẻ</button>
+                  <button class="tab-button" data-tab="cndmt-company-info">Thông tin công ty chủ thẻ</button>
+                  <!-- <button class="tab-button" data-tab="dmt-related-info">Thông tin liên quan</button> -->
+                  <button class="tab-button" data-tab="cndmt-other-info">Thông tin khác liên quan đến thẻ tín dụng</button>
+                </div>
+            
+                <!-- Tab 1: Thông tin đơn mở thẻ -->
+                <div class="tab-content active" id="cndmt-application-info">
+                  <form id="application-info-form">
+                    <div class="form-group">
+                      <label for="application-id">Mã đơn mở thẻ (*):</label>
+                      <input type="text" id="application-id" disabled name="application-id" value="Hệ thống tự động sinh" readonly>
+                    </div>
+                    <!-- <h3>Thông tin thẻ</h3>
+                    <hr> -->
+                    <div class="form-group">
+                      <div>
+                        <strong>Thẻ chính:&nbsp;</strong>
+                      <input type="checkbox" id="is-primary-card" name="is-primary-card" checked>
+                      </div>
+                      
+                    </div>
+                    <div class="form-group">
+                      <label for="parent-application">Đơn mở thẻ gốc:</label>
+                      <input type="text" id="parent-application" name="parent-application" placeholder="Nhập mã đơn mở thẻ gốc" disabled>
+                    </div>
+                    <!-- <div class="form-group">
+                      <label for="application-status">Tình trạng đơn mở thẻ:</label>
+                      <select id="application-status" name="application-status" readonly>
+                        <option value="pending">Chờ duyệt</option>
+                        <option value="approved">Đã duyệt</option>
+                        <option value="rejected">Thoái duyệt</option>
+                      </select>
+                    </div> -->
+                    <div class="form-group">
+                      <label for="branch">Chi nhánh:</label>
+                      <select id="branch" name="branch" readonly>
+                        <option value="" disabled selected>Chọn chi nhánh</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="card-type">Thẻ (*):</label>
+                      <select id="card-type" name="card-type" required>
+                        <option value="" disabled selected>Chọn loại thẻ</option>
+                        <option value="credit">Tín dụng</option>
+                        <option value="combo">Combo</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="debit-application-id">Đơn mở thẻ ghi nợ (*):</label>
+                      <input type="text" id="debit-application-id" name="debit-application-id" placeholder="Nhập mã đơn mở thẻ ghi nợ">
+                    </div>
+                    <div class="form-group">
+                      <label for="card-tier">Hạng thẻ (*):</label>
+                      <select id="card-tier" name="card-tier" required>
+                        <option value="" disabled selected>Chọn hạng thẻ</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="card-product">Sản phẩm thẻ (*):</label>
+                      <select id="card-product" name="card-product" required>
+                        <option value="" disabled selected>Chọn sản phẩm thẻ</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="card-duration">Thời hạn thẻ (*):</label>
+                      <input type="number" id="card-duration" name="card-duration" placeholder="Nhập thời hạn mở thẻ (tháng)" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="linked-account">Tài khoản tiền gửi (*):</label>
+                      <input type="text" id="linked-account" name="linked-account" placeholder="Nhập tài khoản tiền gửi" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="currency">Tiền tệ (*):</label>
+                      <select id="currency" name="currency" required>
+                        <option value="vnd" selected>VNĐ</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="statement-date">Ngày sao kê (*):</label>
+                      <input type="text" id="statement-date" name="statement-date" placeholder="Nhập ngày nhận sao kê" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="credit-limit-max">Hạn mức tín dụng tối đa (*):</label>
+                      <input type="number" id="credit-limit-max" name="credit-limit-max" placeholder="Nhập hạn mức tín dụng tối đa" required>
+                    </div>
+                  </form>
+                </div>
+                       
+                <!-- Tab 3: Thông tin chủ thẻ -->
+                <!-- <h3>Thông tin chủ thẻ</h3>
+                <hr> -->
+                <div class="tab-content" id="cndmt-cardholder-info">
+                  <form id="cardholder-info-form">
+                    <!-- Mã khách hàng -->
+                    <div class="form-group">
+                      <label for="customer-id">Mã khách hàng (*):</label>
+                      <input type="text" id="customer-id" name="customer-id" placeholder="Nhập mã khách hàng" required>
+                    </div>
+                  
+                    <!-- Loại khách hàng -->
+                    <div class="form-group">
+                      <label for="customer-type">Loại khách hàng (*):</label>
+                      <select id="customer-type" name="customer-type" required>
+                        <option value="" disabled selected>Chọn loại khách hàng</option>
+                        <option value="individual">Cá nhân</option>
+                        <option value="business">Doanh nghiệp</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Tên khách hàng -->
+                    <div class="form-group">
+                      <label for="customer-name">Tên khách hàng (*):</label>
+                      <input type="text" id="customer-name" name="customer-name" placeholder="Nhập tên khách hàng" required>
+                    </div>
+                  
+                    <!-- Tên tiếng Anh -->
+                    <div class="form-group">
+                      <label for="customer-name-en">Tên tiếng Anh:</label>
+                      <input type="text" id="customer-name-en" name="customer-name-en" placeholder="Nhập tên tiếng Anh">
+                    </div>
+                  
+                    <!-- Tình trạng hôn nhân -->
+                    <div class="form-group">
+                      <label for="marital-status">Tình trạng hôn nhân:</label>
+                      <select id="marital-status" name="marital-status">
+                        <option value="" disabled selected>Chọn tình trạng</option>
+                        <option value="single">Độc thân</option>
+                        <option value="married">Đã kết hôn</option>
+                        <option value="divorced">Ly hôn</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Ngày sinh -->
+                    <div class="form-group">
+                      <label for="birth-date">Ngày sinh (*):</label>
+                      <input type="date" id="birth-date" name="birth-date" required>
+                    </div>
+                  
+                    <!-- Nơi sinh -->
+                    <div class="form-group">
+                      <label for="birth-place">Nơi sinh:</label>
+                      <input type="text" id="birth-place" name="birth-place" placeholder="Nhập nơi sinh">
+                    </div>
+                  
+                    <!-- Số CMND/CCCD -->
+                    <div class="form-group">
+                      <label for="id-card">Số CMND/CCCD (*):</label>
+                      <input type="text" id="id-card" name="id-card" placeholder="Nhập số CMND/CCCD" required>
+                    </div>
+                  
+                    <!-- Ngày cấp -->
+                    <div class="form-group">
+                      <label for="issue-date">Ngày cấp (*):</label>
+                      <input type="date" id="issue-date" name="issue-date" required>
+                    </div>
+                  
+                    <!-- Nơi cấp -->
+                    <div class="form-group">
+                      <label for="issue-place">Nơi cấp (*):</label>
+                      <input type="text" id="issue-place" name="issue-place" placeholder="Nhập nơi cấp" required>
+                    </div>
+                  
+                    <!-- Ngày hết hạn -->
+                    <div class="form-group">
+                      <label for="expiry-date">Ngày hết hạn:</label>
+                      <input type="text" id="expiry-date" name="expiry-date" placeholder="Nhập ngày hết hạn">
+                    </div>
+                  
+                    <!-- Địa chỉ -->
+                    <div class="form-group">
+                      <label for="address">Địa chỉ (*):</label>
+                      <input type="text" id="address" name="address" placeholder="Nhập địa chỉ" required>
+                    </div>
+                  
+                    <!-- Mã tỉnh/thành phố -->
+                    <div class="form-group">
+                      <label for="province-code">Mã tỉnh/thành phố:</label>
+                      <select id="province-code" name="province-code">
+                        <option value="" disabled selected>Chọn mã tỉnh/thành phố</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Tên quốc gia -->
+                    <div class="form-group">
+                      <label for="country-name">Tên quốc gia:</label>
+                      <select id="country-name" name="country-name">
+                        <option value="" disabled selected>Chọn tên quốc gia</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Địa chỉ liên hệ 2 -->
+                    <div class="form-group">
+                      <label for="secondary-address">Địa chỉ liên hệ 2:</label>
+                      <input type="text" id="secondary-address" name="secondary-address" placeholder="Nhập địa chỉ liên hệ 2">
+                    </div>
+                  
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                      <label for="phone">Số điện thoại (*):</label>
+                      <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+                    </div>
+                  
+                    <!-- Email -->
+                    <div class="form-group">
+                      <label for="email">Email (*):</label>
+                      <input type="email" id="email" name="email" placeholder="Nhập email" required>
+                    </div>
+                  
+                    <!-- Số di động -->
+                    <div class="form-group">
+                      <label for="mobile-phone">Số di động (*):</label>
+                      <input type="text" id="mobile-phone" name="mobile-phone" placeholder="Nhập số di động" required>
+                    </div>
+                  
+                    <!-- Số fax -->
+                    <div class="form-group">
+                      <label for="fax">Số fax:</label>
+                      <input type="text" id="fax" name="fax" placeholder="Nhập số fax">
+                    </div>
+                  
+                    <!-- Giới tính -->
+                    <div class="form-group">
+                      <label for="gender">Giới tính (*):</label>
+                      <select id="gender" name="gender" required>
+                        <option value="" disabled selected>Chọn giới tính</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Địa chỉ thông báo -->
+                    <div class="form-group">
+                      <label for="notification-address">Địa chỉ thông báo:</label>
+                      <input type="text" id="notification-address" name="notification-address" placeholder="Nhập địa chỉ thông báo">
+                    </div>
+                  </form>
+                </div>
+            
+                <!-- Tab 4: Thông tin công ty chủ thẻ -->
+                <!-- <h3>Thông tin thêm</h3>
+                <hr> -->
+                <div class="tab-content" id="cndmt-company-info">
+                  <form id="company-info-form">
+                    <!-- Tên công ty -->
+                    <div class="form-group">
+                      <label for="company-name">Tên công ty:</label>
+                      <input type="text" id="company-name" name="company-name" placeholder="Nhập tên công ty">
+                    </div>
+                  
+                    <!-- Địa chỉ -->
+                    <div class="form-group">
+                      <label for="company-address">Địa chỉ:</label>
+                      <input type="text" id="company-address" name="company-address" placeholder="Nhập địa chỉ công ty">
+                    </div>
+                  
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                      <label for="company-phone">Số điện thoại:</label>
+                      <input type="text" id="company-phone" name="company-phone" placeholder="Nhập số điện thoại công ty">
+                    </div>
+                  
+                    <!-- Số fax -->
+                    <div class="form-group">
+                      <label for="company-fax">Số fax:</label>
+                      <input type="text" id="company-fax" name="company-fax" placeholder="Nhập số fax công ty">
+                    </div>
+                  
+                    <!-- Số hợp đồng chi lương -->
+                    <div class="form-group">
+                      <label for="payroll-contract-number">Số hợp đồng chi lương:</label>
+                      <input type="text" id="payroll-contract-number" name="payroll-contract-number" placeholder="Nhập số hợp đồng chi lương">
+                    </div>
+                  
+                    <!-- Ngày ký hợp đồng chi lương -->
+                    <div class="form-group">
+                      <label for="payroll-contract-date">Ngày ký hợp đồng chi lương:</label>
+                      <input type="date" id="payroll-contract-date" name="payroll-contract-date">
+                    </div>
+                  
+                    <!-- Mã Client của đơn vị chi lương -->
+                    <div class="form-group">
+                      <label for="payroll-client-id">Mã Client của đơn vị chi lương:</label>
+                      <input type="text" id="payroll-client-id" name="payroll-client-id" placeholder="Nhập mã Client của đơn vị chi lương">
+                    </div>
+                  </form>
+                </div>
+            
+                <!-- Tab 5: Thông tin liên quan -->
+                <!-- <h3>Thông tin người liên lạc</h3>
+                <hr> -->
+            
+                <!-- Tab 6: Thông tin khác liên quan đến thẻ tín dụng -->
+                <div class="tab-content" id="cndmt-other-info">
+                  <form id="other-info-form">
+                    <!-- Nghề nghiệp -->
+                    <div class="form-group">
+                      <label for="occupation">Nghề nghiệp:</label>
+                      <input type="text" id="occupation" name="occupation" placeholder="Nhập nghề nghiệp">
+                    </div>
+                  
+                    <!-- Chức vụ -->
+                    <div class="form-group">
+                      <label for="position">Chức vụ:</label>
+                      <input type="text" id="position" name="position" placeholder="Nhập chức vụ">
+                    </div>
+                  
+                    <!-- Tên người liên hệ -->
+                    <div class="form-group">
+                      <label for="contact-name">Tên người liên hệ (*):</label>
+                      <input type="text" id="contact-name" name="contact-name" placeholder="Nhập họ tên người liên hệ" required>
+                    </div>
+                  
+                    <!-- Mối quan hệ -->
+                    <div class="form-group">
+                      <label for="relationship">Mối quan hệ (*):</label>
+                      <select id="relationship" name="relationship" required>
+                        <option value="" disabled selected>Chọn mối quan hệ</option>
+                        <option value="father">Cha</option>
+                        <option value="mother">Mẹ</option>
+                        <option value="spouse">Vợ/Chồng</option>
+                        <option value="friend">Bạn bè</option>
+                        <option value="other">Khác</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                      <label for="contact-phone">Số điện thoại (*):</label>
+                      <input type="text" id="contact-phone" name="contact-phone" placeholder="Nhập số điện thoại" required>
+                    </div>
+                  
+                    <!-- Số CCCD -->
+                    <div class="form-group">
+                      <label for="contact-id-card">Số CCCD:</label>
+                      <input type="text" id="contact-id-card" name="contact-id-card" placeholder="Nhập số căn cước công dân">
+                    </div>
+                  
+                    <!-- Giới tính -->
+                    <div class="form-group">
+                      <label for="contact-gender">Giới tính:</label>
+                      <select id="contact-gender" name="contact-gender">
+                        <option value="" disabled selected>Chọn giới tính</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                      </select>
+                    </div>
+                  
+                    <!-- Ngày sinh -->
+                    <div class="form-group">
+                      <label for="contact-birth-date">Ngày sinh:</label>
+                      <input type="date" id="contact-birth-date" name="contact-birth-date">
+                    </div>
+                  
+                    <!-- Địa chỉ -->
+                    <div class="form-group">
+                      <label for="contact-address">Địa chỉ:</label>
+                      <input type="text" id="contact-address" name="contact-address" placeholder="Nhập địa chỉ">
+                    </div>
+                  
+                    <!-- Số fax -->
+                    <div class="form-group">
+                      <label for="contact-fax">Số fax:</label>
+                      <input type="text" id="contact-fax" name="contact-fax" placeholder="Nhập số fax">
+                    </div>
+                  
+                    <!-- Tên công ty -->
+                    <div class="form-group">
+                      <label for="contact-company">Tên công ty:</label>
+                      <input type="text" id="contact-company" name="contact-company" placeholder="Nhập tên công ty">
+                    </div>
+
+                    <!-- Form actions -->
+                    <div class="actions">
+                      <button type="submit" class="save">Lưu</button>
+                      <button type="submit" class="save">Thêm người liên hệ</button>
+                    </div>
+                  </form>
+                  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                      <tr>
+                        <th>Họ tên</th>
+                        <th>Mối quan hệ</th>
+                        <th>Số điện thoại</th>
+                        <th>Chức vụ</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Nguyễn Văn A</td>
+                        <td>Cha</td>
+                        <td>0901234567</td>
+                        <td>Giám đốc</td>
+                        <td>
+                          <button type="button" class="edit">Sửa</button>
+                          <button type="button" class="delete">Xóa</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-column">
+            <div class="forms-wrapper">
+              <div class="form-column">
+                <h2>Thêm/Sửa Ngày nghỉ</h2>
+                <form id="holiday-form">
+                  <!-- Loại ngày nghỉ -->
+                  <div class="form-group">
+                    <label for="holiday-type">Loại ngày nghỉ (*):</label>
+                    <select id="holiday-type" name="holiday-type" required>
+                      <option value="" disabled selected>Chọn loại ngày nghỉ</option>
+                      <option value="specific-date">Ngày cụ thể</option>
+                      <option value="weekly">Ngày cố định trong tuần</option>
+                    </select>
+                  </div>
+            
+                  <!-- Ngày nghỉ -->
+                  <div class="form-group">
+                    <label for="holiday-date">Ngày nghỉ (*):</label>
+                    <input type="date" id="holiday-date" name="holiday-date" placeholder="Chọn ngày cụ thể không tính lãi">
+                  </div>
+            
+                  <!-- Ngày nghỉ cố định trong tuần -->
+                  <div class="form-group">
+                    <label for="weekly-holiday">Ngày nghỉ cố định trong tuần (*):</label>
+                    <select id="weekly-holiday" name="weekly-holiday">
+                      <option value="" disabled selected>Chọn ngày trong tuần</option>
+                      <option value="monday">Thứ Hai</option>
+                      <option value="tuesday">Thứ Ba</option>
+                      <option value="wednesday">Thứ Tư</option>
+                      <option value="thursday">Thứ Năm</option>
+                      <option value="friday">Thứ Sáu</option>
+                      <option value="saturday">Thứ Bảy</option>
+                      <option value="sunday">Chủ Nhật</option>
+                    </select>
+                  </div>
+            
+                  <!-- Mô tả -->
+                  <div class="form-group">
+                    <label for="holiday-description">Mô tả (*):</label>
+                    <input type="text" id="holiday-description" name="holiday-description" placeholder="Nhập lý do hoặc tên ngày nghỉ">
+                  </div>
+            
+                  <!-- Form actions -->
+                  <div class="actions">
+                    <button type="submit" class="save">Lưu</button>
+                    <button type="button" class="cancel">Thoát</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </main>
+  </div>
+  <script>
+    fetch('../partials/nav.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+
+    // Show the tab content on page load
+    document.getElementById('personal-info').style.display = 'block';
+    // Hide the company-info tab content
+    document.getElementById('company-info').style.display = 'none';
+    // Hide the related-info tab content
+    document.getElementById('related-info').style.display = 'none';
+    // Hide the attachments tab content
+    document.getElementById('attachments').style.display = 'none';
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="personal-info"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('personal-info').style.display = 'block';
+      // Show the company-info tab content
+      document.getElementById('company-info').style.display = 'none';
+      // Show the related-info tab content
+      document.getElementById('related-info').style.display = 'none';
+      // Show the attachments tab content
+      document.getElementById('attachments').style.display = 'none';
+    });
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="company-info"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('personal-info').style.display = 'none';
+      // Show the company-info tab content
+      document.getElementById('company-info').style.display = 'block';
+      // Show the related-info tab content
+       document.getElementById('related-info').style.display = 'none';
+      // Show the attachments tab content
+      document.getElementById('attachments').style.display = 'none';
+    });
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="related-info"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('personal-info').style.display = 'none';
+      // Show the company-info tab content
+      document.getElementById('company-info').style.display = 'none';
+      // Show the related-info tab content
+       document.getElementById('related-info').style.display = 'block';
+      // Show the attachments tab content
+      document.getElementById('attachments').style.display = 'none';
+    });
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="attachments"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('personal-info').style.display = 'none';
+      // Show the company-info tab content
+      document.getElementById('company-info').style.display = 'none';
+      // Show the related-info tab content
+       document.getElementById('related-info').style.display = 'none';
+      // Show the attachments tab content
+      document.getElementById('attachments').style.display = 'block';
+    });
+
+
+    // <button class="tab-button active" data-tab="application-info">Thông tin đơn mở thẻ</button>
+    //               <!-- <button class="tab-button" data-tab="credit-limit">Hạn mức chủ thẻ</button> -->
+    //               <button class="tab-button" data-tab="cardholder-info">Thông tin chủ thẻ</button>
+    //               <button class="tab-button" data-tab="company-info">Thông tin công ty chủ thẻ</button>
+    //               <button class="tab-button" data-tab="related-info">Thông tin liên quan</button>
+    //               <button class="tab-button" data-tab="other-info">Thông tin khác liên quan đến thẻ tín dụng</button>
+
+    // Show the tab content on page load
+    document.getElementById('dmt-application-info').style.display = 'block';
+    // Hide the company-info tab content
+    document.getElementById('dmt-cardholder-info').style.display = 'none';
+    // Hide the related-info tab content
+    document.getElementById('dmt-company-info').style.display = 'none';
+    // Hide the attachments tab content
+    //document.getElementById('dmt-related-info').style.display = 'none';
+    // Hide the attachments tab content
+    document.getElementById('dmt-other-info').style.display = 'none';
+
+    // Add an event listener to the dmt-application-info
+    document.querySelector('.tab-button[data-tab="dmt-application-info"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('dmt-application-info').style.display = 'block';
+      // Hide the company-info tab content
+      document.getElementById('dmt-cardholder-info').style.display = 'none';
+      // Hide the related-info tab content
+      document.getElementById('dmt-company-info').style.display = 'none';
+      // Hide the attachments tab content
+      //document.getElementById('dmt-related-info').style.display = 'none';
+      // Hide the attachments tab content
+      document.getElementById('dmt-other-info').style.display = 'none';
+    });
+
+    // Add an event listener to the cardholder-info button
+    document.querySelector('.tab-button[data-tab="dmt-cardholder-info"]').addEventListener('click', function() {
+      document.getElementById('dmt-cardholder-info').style.display = 'block';
+      document.getElementById('dmt-application-info').style.display = 'none';
+      document.getElementById('dmt-company-info').style.display = 'none';
+      document.getElementById('dmt-other-info').style.display = 'none';
+    });
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="dmt-company-info"]').addEventListener('click', function() {
+      document.getElementById('dmt-company-info').style.display = 'block';
+      document.getElementById('dmt-application-info').style.display = 'none';
+      document.getElementById('dmt-cardholder-info').style.display = 'none';
+      document.getElementById('dmt-other-info').style.display = 'none';
+    });
+
+    // Add an event listener to the other-info button
+    document.querySelector('.tab-button[data-tab="dmt-other-info"]').addEventListener('click', function() {
+      document.getElementById('dmt-other-info').style.display = 'block';
+      document.getElementById('dmt-application-info').style.display = 'none';
+      document.getElementById('dmt-cardholder-info').style.display = 'none';
+      document.getElementById('dmt-company-info').style.display = 'none';
+    });
+
+    /////////////////////////////////////////
+    // Show the tab content on page load
+    document.getElementById('cndmt-application-info').style.display = 'block';
+    // Hide the company-info tab content
+    document.getElementById('cndmt-cardholder-info').style.display = 'none';
+    // Hide the related-info tab content
+    document.getElementById('cndmt-company-info').style.display = 'none';
+    // Hide the attachments tab content
+    //document.getElementById('dmt-related-info').style.display = 'none';
+    // Hide the attachments tab content
+    document.getElementById('cndmt-other-info').style.display = 'none';
+
+    // Add an event listener to the dmt-application-info
+    document.querySelector('.tab-button[data-tab="cndmt-application-info"]').addEventListener('click', function() {
+      // Hide the personal-info tab content
+      document.getElementById('cndmt-application-info').style.display = 'block';
+      // Hide the company-info tab content
+      document.getElementById('cndmt-cardholder-info').style.display = 'none';
+      // Hide the related-info tab content
+      document.getElementById('cndmt-company-info').style.display = 'none';
+      // Hide the attachments tab content
+      //document.getElementById('dmt-related-info').style.display = 'none';
+      // Hide the attachments tab content
+      document.getElementById('cndmt-other-info').style.display = 'none';
+    });
+
+    // Add an event listener to the cardholder-info button
+    document.querySelector('.tab-button[data-tab="cndmt-cardholder-info"]').addEventListener('click', function() {
+      document.getElementById('cndmt-cardholder-info').style.display = 'block';
+      document.getElementById('cndmt-application-info').style.display = 'none';
+      document.getElementById('cndmt-company-info').style.display = 'none';
+      document.getElementById('cndmt-other-info').style.display = 'none';
+    });
+
+    // Add an event listener to the company-info button
+    document.querySelector('.tab-button[data-tab="cndmt-company-info"]').addEventListener('click', function() {
+      document.getElementById('cndmt-company-info').style.display = 'block';
+      document.getElementById('cndmt-application-info').style.display = 'none';
+      document.getElementById('cndmt-cardholder-info').style.display = 'none';
+      document.getElementById('cndmt-other-info').style.display = 'none';
+    });
+
+    // Add an event listener to the other-info button
+    document.querySelector('.tab-button[data-tab="cndmt-other-info"]').addEventListener('click', function() {
+      document.getElementById('cndmt-other-info').style.display = 'block';
+      document.getElementById('cndmt-application-info').style.display = 'none';
+      document.getElementById('cndmt-cardholder-info').style.display = 'none';
+      document.getElementById('cndmt-company-info').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

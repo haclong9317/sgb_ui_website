@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Credit Card</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        html, body {
+            font-family: Arial, sans-serif;
+            background: rgba(0, 0, 0, 0.2);
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+        }
+        nav {
+            width: 200px;
+            background-color: #f4f4f9;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            height: 100vh;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin-bottom: 15px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center;     /* Center vertically */
+            padding: 20px;
+        }
+        .modal {
+            background: white;
+            width: 700px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px 30px;
+        }
+        .modal h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        /* Uniform input styling */
+        form input,
+        form textarea {
+            padding: 6px 10px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 300px;  /* Set a fixed width */
+            box-sizing: border-box;
+        }
+        form textarea {
+            resize: vertical;
+        }
+        form button {
+            padding: 8px 16px;
+            border: none;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include the navigation -->
+    <div id="nav-placeholder"></div>
+    
+    <main>
+        <div class="modal">
+            <h1>Issue a New Credit Card</h1>
+            <form id="issue-card-form">
+                <label for="full-name">Full Name:</label>
+                <input type="text" id="full-name" name="full-name" required>
+    
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+    
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+    
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" required></textarea>
+    
+                <label for="credit-limit">Desired Credit Limit:</label>
+                <input type="number" id="credit-limit" name="credit-limit" required>
+    
+                <button type="submit">Submit Application</button>
+            </form>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2023 Credit Card Management System</p>
+    </footer>
+    
+    <script>
+        // Load the navigation menu dynamically
+        fetch('../partials/nav.html')
+          .then(response => response.text())
+          .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+    </script>
+</body>
+</html>

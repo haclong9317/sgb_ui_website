@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        nav {
+            width: 200px;
+            background-color: #f4f4f9;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            height: 100vh;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin-bottom: 15px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f4f4f9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include the navigation -->
+    <div id="nav-placeholder"></div>
+
+    <main>
+        <h2>Welcome to the Credit Card Management System</h2>
+        <p>Please select an option from the navigation menu to get started.</p>
+    </main>
+    <footer>
+        <p>&copy; 2023 Credit Card Management System</p>
+    </footer>
+    <script>
+        // Load the navigation menu dynamically
+        fetch('partials/nav.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+    </script>
+</body>
+</html>

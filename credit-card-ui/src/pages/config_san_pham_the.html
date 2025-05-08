@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Thêm/Sửa Cấu Hình</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    html, body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    #container {
+      display: flex;
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+    }
+    #nav-placeholder {
+      width: 20%;
+    }
+    nav {
+      width: 100%;
+      background-color: #f4f4f9;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      margin-bottom: 15px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    main {
+      width: 80%;
+      display: block;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .modal {
+    width: 100%; /* Occupy full width of the parent container */
+    margin-bottom: 20px; /* Add spacing between modals */
+    background-color: #fff; /* White background */
+    border: 1px solid #ddd; /* Add a border */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden; /* Prevent content overflow */
+    display: block; /* Ensure modals are block-level elements */
+  }
+
+  .modal .header {
+    padding: 10px 20px;
+    background-color: #f4f4f9;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal .content {
+    padding: 20px;
+  }
+
+  .modal .card {
+    margin-bottom: 20px;
+  }
+
+  .modal .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .modal .row {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 4px;
+  }
+
+  .modal .row span {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .modal .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+    
+    .modal h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .forms-wrapper {
+      display: flex;
+      gap: 40px;
+      align-items: stretch; /* Ensure both columns stretch to the same height */
+    }
+    .form-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* Ensure form takes full height of its parent */
+    }
+    form .form-group {
+      margin-bottom: 15px;
+    }
+    form .form-group label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    .input-with-unit {
+      display: inline-flex;
+      align-items: center;
+    }
+    .input-with-unit input {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+    }
+    .input-with-unit span {
+      margin-left: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    form input:not(.input-with-unit input),
+    form select {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    .actions {
+      margin-top: 20px;
+      text-align: right;
+    }
+    .actions button {
+      padding: 8px 16px;
+      border: none;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .actions .save {
+      background-color: #007bff;
+      color: white;
+    }
+    .actions .cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+    hr {
+      margin: 40px 0;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+    .form-group div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .form-group div input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin: 0;
+        position: relative;
+        cursor: pointer;
+        flex-shrink: 0;
+
+    }
+    .form-group div input[type="checkbox"]:checked::before {
+        content: '✔';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 12px;
+        color: #007bff;
+    }
+    .form-group div label {
+        margin: 0;
+        padding-left: 10px;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .form-group div input[type="radio"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      margin: 0;
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .form-group div input[type="radio"]:checked {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .form-group div input[type="radio"]:checked::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background-color: #fff;
+      border-radius: 50%;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f5f6f8;
+    }
+
+    .header, .footer {
+      padding: 10px 20px;
+      background: #fff;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .language {
+      display: flex;
+      align-items: center;
+    }
+
+    .language img {
+      width: 20px;
+      margin-right: 5px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .card-header, .card-footer {
+      padding: 10px;
+      background: #f1f1f1;
+      font-weight: bold;
+    }
+
+    .filter-btn {
+      float: right;
+      padding: 5px 10px;
+      background: #666;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .row {
+      padding: 10px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .row a {
+      color: #0d6efd;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .row span {
+      display: block;
+    }
+
+    .edit-btn {
+      background-color: #4caf50; /* Green background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .edit-btn:hover {
+      background-color: #45a049; /* Darker green on hover */
+    }
+
+    .delete-btn {
+      background-color: #f44336; /* Red background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .delete-btn:hover {
+      background-color: #d32f2f; /* Darker red on hover */
+    }
+
+    .checkbox {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: #ccc;
+      border-radius: 3px;
+      position: relative;
+      top: 3px;
+    }
+
+    .fab {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #4caf50;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .pagination {
+      padding: 10px 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .pagination button {
+      background: none;
+      border: none;
+      font-size: 18px;
+    }
+
+    .footer {
+      font-size: 12px;
+      text-align: center;
+      color: #666;
+    }
+
+    .form-group div label {
+      display: block; /* Ensures each label is on a new line */
+      margin-bottom: 5px; /* Adds spacing between labels */
+    }
+
+    .form-group div input[type="checkbox"] {
+      margin-right: 5px; /* Adds spacing between the checkbox and label */
+      display: inline-block; /* Ensures checkboxes are inline with labels */
+    }
+
+    .edit-btn {
+      background-color: #4caf50; /* Green background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .edit-btn:hover {
+      background-color: #45a049; /* Darker green on hover */
+    }
+
+    .delete-btn {
+      background-color: #f44336; /* Red background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .delete-btn:hover {
+      background-color: #d32f2f; /* Darker red on hover */
+    }
+
+    .tab-button {
+      background-color: #f4f4f9; /* Default background color */
+      color: #333; /* Default text color */
+      border: 1px solid #ddd;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-right: 10px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .tab-button.active {
+      background-color: #4caf50; /* Green background for active tab */
+      color: white; /* White text for active tab */
+      border-color: #4caf50;
+    }
+
+    .tab-button:hover {
+      background-color: #e0e0e0; /* Light gray on hover */
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="nav-placeholder"></div>
+    <main>
+
+      <div class="modal">
+        <div class="header">
+          <h3>Danh sách Cấu Hình Sản Phẩm Thẻ</h3>
+        </div>
+        <div class="content">
+          <table id="card-product-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+              <tr>
+                <th>Mã sản phẩm</th>
+                <th>Tên sản phẩm</th>
+                <th>Loại thẻ</th>
+                <th>Số ngày miễn lãi</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example Row -->
+              <tr>
+                <td>TDNĐ-001</td>
+                <td>Visa Signature</td>
+                <td>Thẻ tín dụng</td>
+                <td>45</td>
+                <td>
+                  <button class="edit-btn">Sửa</button>
+                  <button class="delete-btn">Xóa</button>
+                </td>
+              </tr>
+              <tr>
+                <td>TDNĐ-002</td>
+                <td>Visa Signature</td>
+                <td>Thẻ combo</td>
+                <td>45</td>
+                <td>
+                  <button class="edit-btn">Sửa</button>
+                  <button class="delete-btn">Xóa</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h2 style="text-align:center;">Thêm/Sửa Cấu Hình Sản Phẩm Thẻ</h2>
+            <div class="tabs">
+              <button class="tab-button active" data-tab="card-product-info">Thông tin sản phẩm thẻ</button>
+              <!-- <button class="tab-button" data-tab="credit-limit">Hạn mức chủ thẻ</button> -->
+              <button class="tab-button" data-tab="config-card">Cấu hình liên quan</button>
+            </div>
+            <form id="card-product-form">
+            <div class="tab-content active" id="card-product-info">
+              <!-- Mã sản phẩm -->
+              <div class="form-group">
+                <label for="product-code">Mã sản phẩm (*):</label>
+                <input type="text" id="product-code" name="product-code" placeholder="Nhập mã sản phẩm (ví dụ: TDNĐ-001)" maxlength="10" pattern="[A-Za-z0-9]{10}" required>
+              </div>
+      
+              <!-- Tên sản phẩm -->
+              <div class="form-group">
+                <label for="product-name">Tên sản phẩm (*):</label>
+                <input type="text" id="product-name" name="product-name" placeholder="Nhập tên sản phẩm (ví dụ: Visa Signature)" required>
+              </div>
+      
+              <!-- Loại thẻ -->
+              <div class="form-group">
+                <label for="card-type">Loại thẻ (*):</label>
+                <select id="card-type" name="card-type" required>
+                  <option value="" disabled selected>Chọn loại thẻ</option>
+                  <option value="credit-card">Thẻ tín dụng</option>
+                  <option value="debit-card">Thẻ ghi nợ</option>
+                </select>
+              </div>
+      
+              <!-- Số ngày miễn lãi -->
+              <div class="form-group">
+                <label for="grace-period">Số ngày miễn lãi (*):</label>
+                <input type="text" id="grace-period" name="grace-period" placeholder="Nhập số ngày miễn lãi (ví dụ: 45)" required>
+              </div>
+      
+              <!-- Thời hạn thẻ -->
+              <div class="form-group">
+                <label for="card-duration">Thời hạn thẻ (*):</label>
+                <input type="text" id="card-duration" name="card-duration" placeholder="Nhập thời hạn thẻ (ví dụ: 12 tháng)" required>
+              </div>
+      
+              <!-- Ngày sao kê -->
+              <div class="form-group">
+                <label for="statement-date">Ngày sao kê (*):</label>
+                <input type="text" id="statement-date" name="statement-date" placeholder="Nhập ngày sao kê (ví dụ: ngày 10)" required>
+              </div>
+      
+              <!-- Tỷ lệ thanh toán tối thiểu -->
+              <div class="form-group">
+                <label for="min-payment-rate">Tỷ lệ thanh toán tối thiểu (*):</label>
+                <input type="text" id="min-payment-rate" name="min-payment-rate" placeholder="Nhập tỷ lệ thanh toán tối thiểu (ví dụ: 5%)" required>
+              </div>
+      
+              <!-- Số năm được miễn phí thường niên -->
+              <div class="form-group">
+                <label for="annual-fee-free-years">Số năm được miễn phí thường niên:</label>
+                <input type="text" id="annual-fee-free-years" name="annual-fee-free-years" placeholder="Nhập số năm miễn phí thường niên">
+              </div>
+      
+              <!-- Số tiền phí thường niên -->
+              <div class="form-group">
+                <label for="annual-fee">Số tiền phí thường niên (*):</label>
+                <input type="text" id="annual-fee" name="annual-fee" placeholder="Nhập số tiền phí thường niên (>= 0)" required>
+              </div>
+      
+              <!-- Hạn mức tín dụng tối thiểu -->
+              <div class="form-group">
+                <label for="min-credit-limit">Hạn mức tín dụng tối thiểu (*):</label>
+                <input type="text" id="min-credit-limit" name="min-credit-limit" placeholder="Nhập hạn mức tín dụng tối thiểu (ví dụ: 10,000,000 VNĐ)" required>
+              </div>
+      
+              <!-- Hạn mức tín dụng tối đa -->
+              <div class="form-group">
+                <label for="max-credit-limit">Hạn mức tín dụng tối đa (*):</label>
+                <input type="text" id="max-credit-limit" name="max-credit-limit" placeholder="Nhập hạn mức tín dụng tối đa (ví dụ: 30,000,000 VNĐ)" required>
+              </div>
+      
+              <!-- Lãi suất trả chậm -->
+              <div class="form-group">
+                <label for="late-payment-rate">Lãi suất trả chậm (*) (%):</label>
+                <input type="text" id="late-payment-rate" name="late-payment-rate" placeholder="Nhập lãi suất trả chậm (%)" required>
+              </div>
+      
+              <!-- Mã ngân hàng -->
+              <div class="form-group">
+                <label for="bank-code">Mã ngân hàng (*):</label>
+                <input type="text" id="bank-code" name="bank-code" placeholder="Nhập mã ngân hàng (ví dụ: BANK02)" required>
+              </div>
+      
+              <!-- Loại thẻ đẹp -->
+              <div class="form-group">
+                <label for="beautiful-card">Loại thẻ đẹp:<input type="checkbox" id="beautiful-card" name="beautiful-card"></label>
+                
+              </div>
+      
+              <!-- Độ tuổi phát hành -->
+              <div class="form-group">
+                <label for="age-limit">Độ tuổi phát hành:</label>
+                <input type="text" id="age-limit" name="age-limit" placeholder="Nhập độ tuổi tối thiểu để phát hành thẻ">
+              </div>
+      
+              <!-- Số đơn mở thẻ phụ -->
+              <div class="form-group">
+                <label for="additional-card-requests">Số đơn mở thẻ phụ (*):</label>
+                <input type="text" id="additional-card-requests" name="additional-card-requests" placeholder="Nhập số lượng đơn thẻ phụ" required>
+              </div>
+      
+              <!-- Rule rút tiền mặt -->
+              <div class="form-group">
+                <label for="cash-withdrawal-rule">Rule rút tiền mặt (*):</label>
+                <select id="cash-withdrawal-rule" name="cash-withdrawal-rule" required>
+                  <option value="" disabled selected>Chọn rule rút tiền mặt</option>
+                  <option value="rule1">Rule 1</option>
+                  <option value="rule2">Rule 2</option>
+                </select>
+              </div>
+
+              
+            </div>
+            <div class="tab-content" id="config-card">
+                <!-- Quy định giao dịch -->
+                <div class="form-group">
+                  <label for="transaction-rule">Giao dịch:</label>
+                  <select id="transaction-rule" name="transaction-rule" required>
+                    <option value="" disabled selected>Chọn giao dịch</option>
+                    <option value="rule1">Thanh toán</option>
+                    <option value="rule2">Rút tiền mặt</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <button class="edit-btn">Thêm</button>
+                </div>
+                <h3>Danh sách giao dịch</h3>
+                <table id="transaction-rule-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Giao dịch</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Example Row -->
+                    <tr>
+                      <td>Thanh toán</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Rút tiền mặt</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <hr>
+        
+                <!-- Phí giao dịch -->
+                <h3>Phí giao dịch</h3>
+                <div class="form-group">
+                  <label for="transaction-type">Loại giao dịch:</label>
+                  <select id="transaction-type" name="transaction-type" required>
+                    <option value="" disabled selected>Chọn loại giao dịch</option>
+                    <option value="type1">Loại 1</option>
+                    <option value="type2">Loại 2</option>
+                  </select>
+
+                </div>
+                <div class="form-group">
+                  <label for="fee-list">Danh sách phí:</label>
+                  <select id="fee-list" name="fee-list" required>
+                    <option value="" disabled selected>Chọn danh sách phí</option>
+                    <option value="fee1">Phí 1</option>
+                    <option value="fee2">Phí 2</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="fee-percentage">Giá trị phí (%):</label>
+                  <input type="text" id="fee-percentage" name="fee-percentage" placeholder="Nhập giá trị phí (%)" required>
+                </div>
+                <div class="form-group">
+                  <label for="fixed-fee">Giá trị phí cố định:</label>
+                  <input type="text" id="fixed-fee" name="fixed-fee" placeholder="Nhập giá trị phí cố định">
+                </div>
+                <div class="form-group">
+                  <button class="edit-btn">Thêm</button>
+                </div>
+                <h3>Danh sách phí giao dịch</h3>
+                <table id="transaction-fee-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Loại giao dịch</th>
+                      <th>Danh sách phí</th>
+                      <th>Giá trị phí (%)</th>
+                      <th>Giá trị phí cố định</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Example Row -->
+                    <tr>
+                      <td>Loại 1</td>
+                      <td>Phí 1</td>
+                      <td>2.5%</td>
+                      <td>50,000 VNĐ</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Loại 2</td>
+                      <td>Phí 2</td>
+                      <td>1.8%</td>
+                      <td>30,000 VNĐ</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <hr>
+                <!-- Lãi suất -->
+                <h3>Lãi suất</h3>
+                <div class="form-group">
+                  <label for="interest-transaction-type">Loại giao dịch:</label>
+                  <select id="interest-transaction-type" name="interest-transaction-type" required>
+                    <option value="" disabled selected>Chọn loại giao dịch</option>
+                    <option value="type1">Loại 1</option>
+                    <option value="type2">Loại 2</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="debt-group">Nhóm nợ:</label>
+                  <select id="debt-group" name="debt-group" required>
+                    <option value="" disabled selected>Chọn nhóm nợ</option>
+                    <option value="group1">Nhóm 1</option>
+                    <option value="group2">Nhóm 2</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="interest-rate">Lãi suất (%):</label>
+                  <input type="text" id="interest-rate" name="interest-rate" placeholder="Nhập lãi suất (%)" required>
+                </div>
+                <div class="form-group">
+                  <button class="edit-btn">Thêm</button>
+                </div>
+                <h3>Danh sách Lãi Suất</h3>
+                <table id="interest-rate-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Loại giao dịch</th>
+                      <th>Nhóm nợ</th>
+                      <th>Lãi suất (%)</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Example Row -->
+                    <tr>
+                      <td>Loại 1</td>
+                      <td>Nhóm 1</td>
+                      <td>2.5%</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Loại 2</td>
+                      <td>Nhóm 2</td>
+                      <td>1.8%</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <hr>
+            </div>
+              <!-- Form actions -->
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>
+          <div class="form-column">
+            
+          </div>
+        </div>
+      </div>
+      <div class="modal">
+        <!-- <div class="header">
+          <h3>Danh sách Cấu Hình Tài Liệu</h3>
+        </div> -->
+        <div class="content">
+          <h3>Danh sách Cấu Hình Tài Liệu</h3>
+          <table id="document-config-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+              <tr>
+                <th>Mã tài liệu</th>
+                <th>Tên tài liệu</th>
+                <th>Mô tả</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example Row -->
+              <tr>
+                <td>DOC001</td>
+                <td>CCCD</td>
+                <td>Chứng minh nhân dân hoặc căn cước công dân</td>
+                <td style="text-align: right;">
+                  <button class="edit-btn">Sửa</button>
+                  <button class="delete-btn">Xóa</button>
+                </td>
+              </tr>
+              <tr>
+                <td>DOC002</td>
+                <td>Hợp đồng lao động</td>
+                <td>Hợp đồng lao động của nhân viên</td>
+                <td style="text-align: right;">
+                  <button class="edit-btn">Sửa</button>
+                  <button class="delete-btn">Xóa</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <div class="batch-form">
+              <form id="document-form">
+                <h3>Thêm Cấu hình Tài Liệu</h3>
+                <!-- Mã tài liệu -->
+                <div class="form-group">
+                  <label for="document-id">Mã tài liệu:</label>
+                  <input type="text" id="document-id" name="document-id" placeholder="Nhập mã tài liệu" required>
+                </div>
+          
+                <!-- Tên tài liệu -->
+                <div class="form-group">
+                  <label for="document-name">Tên tài liệu:</label>
+                  <input type="text" id="document-name" name="document-name" placeholder="Nhập tên tài liệu" required>
+                </div>
+          
+                <!-- Mô tả -->
+                <div class="form-group">
+                  <label for="document-description">Mô tả:</label>
+                  <textarea id="document-description" name="document-description" placeholder="Nhập mô tả chi tiết" style="height: 60px;"></textarea>
+                </div>
+          
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="form-column">
+            <div class="batch-form">
+              <form id="document-form-update">
+                <h3>Cập nhật Cấu hình Tài Liệu</h3>
+                <!-- Mã tài liệu -->
+                <div class="form-group">
+                  <label for="document-id">Mã tài liệu:</label>
+                  <input type="text" id="document-id" name="document-id" placeholder="DOC001" disabled required>
+                </div>
+          
+                <!-- Tên tài liệu -->
+                <div class="form-group">
+                  <label for="document-name">Tên tài liệu:</label>
+                  <input type="text" id="document-name" name="document-name" placeholder="Nhập tên tài liệu" required>
+                </div>
+          
+                <!-- Mô tả -->
+                <div class="form-group">
+                  <label for="document-description">Mô tả:</label>
+                  <textarea id="document-description" name="document-description" placeholder="Nhập mô tả chi tiết" style="height: 60px;"></textarea>
+                </div>
+          
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    fetch('../partials/nav.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+
+    // Show the first tab content on page load
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.getElementById('card-product-info').style.display = 'block';
+
+    // Add event listeners to all tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', function () {
+        // Remove the active class from all buttons
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+
+        // Show the selected tab content
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).style.display = 'block';
+
+        // Add the active class to the clicked button
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

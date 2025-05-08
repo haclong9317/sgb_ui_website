@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Thêm/Sửa Cấu Hình</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    html, body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    #container {
+      display: flex;
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+    }
+    #nav-placeholder {
+      width: 20%;
+    }
+    nav {
+      width: 100%;
+      background-color: #f4f4f9;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      margin-bottom: 15px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    main {
+      width: 80%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .modal {
+      background: white;
+      width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      padding: 20px 30px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .forms-wrapper {
+      display: flex;
+      gap: 40px;
+      align-items: stretch; /* Ensure both columns stretch to the same height */
+    }
+    .form-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* Ensure form takes full height of its parent */
+    }
+    form .form-group {
+      margin-bottom: 15px;
+    }
+    form .form-group label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    .input-with-unit {
+      display: inline-flex;
+      align-items: center;
+    }
+    .input-with-unit input {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+    }
+    .input-with-unit span {
+      margin-left: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    form input:not(.input-with-unit input),
+    form select {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    .actions {
+      margin-top: 20px;
+      text-align: right;
+    }
+    .actions button {
+      padding: 8px 16px;
+      border: none;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .actions .save {
+      background-color: #007bff;
+      color: white;
+    }
+    .actions .cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+    hr {
+      margin: 40px 0;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+    .form-group div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .form-group div input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin: 0;
+        position: relative;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+    .form-group div input[type="checkbox"]:checked::before {
+        content: '✔';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 12px;
+        color: #007bff;
+    }
+    .form-group div label {
+        margin: 0;
+        padding-left: 10px;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .form-group div input[type="radio"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      margin: 0;
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .form-group div input[type="radio"]:checked {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .form-group div input[type="radio"]:checked::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background-color: #fff;
+      border-radius: 50%;
+    }
+
+    /* Style for button_add to match the submit button */
+    button[type="add_button"] {
+      background-color: #007bff; /* Same as the save button */
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button[type="add_button"]:hover {
+      background-color: #0056b3; /* Darker shade for hover effect */
+    }
+
+    button[type="delete_button"] {
+      background-color: #f44336; /* Red background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="nav-placeholder"></div>
+    <main>
+      <div class="modal">
+        <h2>Form Thêm/Sửa Cấu Hình</h2>
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h3>Configuration</h3>
+            <form id="config-form">
+              <div class="form-group">
+                <label for="statement-date">Ngày sao kê (*):</label>
+                <input type="text" id="statement-date" name="statement-date" placeholder="10">
+              </div>
+              <div class="form-group">
+                <label for="min-payment-rate">Tỷ lệ thanh toán tối thiểu (*):</label>
+                <div class="input-with-unit">
+                  <input type="text" id="min-payment-rate" name="min-payment-rate" placeholder="5">
+                  <span>%</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="monthly-withdrawal-limit">Hạn mức rút tiền hàng tháng (*):</label>
+                <div class="input-with-unit">
+                  <input type="text" id="monthly-withdrawal-limit" name="monthly-withdrawal-limit" placeholder="50,000,000">
+                  <span>VNĐ</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="min-withdrawal-limit">Giới hạn rút tiền tối thiểu (*):</label>
+                <div class="input-with-unit">
+                  <input type="text" id="min-withdrawal-limit" name="min-withdrawal-limit" placeholder="100,000">
+                  <span>VNĐ</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="max-withdrawal-limit">Giới hạn rút tiền tối đa (*):</label>
+                <div class="input-with-unit">
+                  <input type="text" id="max-withdrawal-limit" name="max-withdrawal-limit" placeholder="5,000,000">
+                  <span>VNĐ</span>
+                </div>
+              </div>
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>
+          <div class="form-column">
+            <h3>Batch Job</h3>
+            <form id="batch-job-form">
+              <div class="form-group">
+                <label for="batch-job-name">Tên Batch Job:</label>
+                <input type="text" id="batch-job-name" name="batch-job-name" placeholder="">
+              </div>
+              <div class="form-group">
+                <label for="job-time">Thời gian chạy:</label>
+                <input type="text" id="job-time" name="job-time" placeholder="HH:MM">
+              </div>
+              <div class="form-group">
+                <label for="frequency">Tần suất:</label>
+                <select id="frequency" name="frequency">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="daily">Hàng ngày</option>
+                  <option value="weekly">Hàng tuần</option>
+                  <option value="monthly">Hàng tháng</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="status">Trạng thái:</label>
+                <select id="status" name="status">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="active">Kích hoạt</option>
+                  <option value="inactive">Không kích hoạt</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="error-email">Email thông báo lỗi:</label>
+                <input type="text" id="error-email" name="error-email" placeholder="">
+              </div>
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <hr>
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h2 style="text-align:center;">Form Thêm/Sửa Cấu Hình Thông Báo</h2>
+            <form id="notification-form">
+              <div class="form-group">
+                <label for="transaction-type">Loại giao dịch/Chức năng:</label>
+                <select id="transaction-type" name="transaction-type">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="chiTieu">Giao dịch chi tiêu</option>
+                  <option value="atm">Rút tiền mặt tại ATM</option>
+                  <option value="saoKe">Sao kê giao dịch hàng tháng</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Hình thức thông báo:</label>
+                <div>
+                  <input type="checkbox" id="sms" name="notification-method" value="SMS">
+                  <label for="sms" style="display:inline;">    SMS</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="app" name="notification-method" value="app">
+                  <label for="app" style="display:inline;">    Ứng dụng SAIGONBANK</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="email" name="notification-method" value="email">
+                  <label for="email" style="display:inline;">    Email</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="notification-content">Nội dung thông báo:</label>
+                <textarea id="notification-content" name="notification-content" placeholder="Nhập nội dung thông báo" style="width:300px; height:100px; resize:vertical;"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="notification-status">Trạng thái:</label>
+                <select id="notification-status" name="notification-status">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="active">Hoạt động</option>
+                  <option value="inactive">Không hoạt động</option>
+                </select>
+              </div>
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>
+          <div class="form-column">
+            <h2 style="text-align:center;">Form Thêm/Sửa Cấu Hình Tham Số</h2>
+            <form id="parameter-form">
+              <div class="form-group">
+                <label for="overdue-days">Số ngày quá hạn khóa thẻ:</label>
+                <input type="text" id="overdue-days" name="overdue-days" placeholder="30">
+              </div>
+              <div class="form-group">
+                <label for="lock-method">Hình thức khóa thẻ:</label>
+                <select id="lock-method" name="lock-method">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="temp_lock_all">Tạm khóa toàn bộ giao dịch</option>
+                  <option value="lock_withdrawal">Khóa giao dịch rút tiền mặt</option>
+                  <option value="lock_payment">Khóa giao dịch thanh toán</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="card-type">Loại thẻ áp dụng:</label>
+                <select id="card-type" name="card-type">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="primary">Thẻ chính</option>
+                  <option value="secondary">Thẻ phụ</option>
+                  <option value="both">Cả hai</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="auto-recover">Khôi phục tự động:</label>
+                <select id="auto-recover" name="auto-recover">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="yes">Có</option>
+                  <option value="no">Không</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="check-time">Thời điểm kiểm tra:</label>
+                <select id="check-time" name="check-time">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="daily">Hàng ngày</option>
+                  <option value="weekly">Hàng tuần</option>
+                </select>
+              </div>
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <hr>
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h2 style="text-align:center;">Form Thêm/Sửa Hạng Thẻ</h2>
+            <form id="card-tier-form">
+              <div class="form-group">
+                <label for="card-tier-name">Tên hạng thẻ (*):</label>
+                <input type="text" id="card-tier-name" name="card-tier-name" placeholder="Nhập tên hạng thẻ">
+              </div>
+              <div class="form-group">
+                <label for="customer-type">Đối tượng KH (*):</label>
+                <select id="customer-type" name="customer-type">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="individual">Cá nhân</option>
+                  <option value="business">Doanh nghiệp</option>
+                  <option value="both">Cả hai</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Hạn mức tín dụng (*):</label>
+                <div style="display: flex; gap: 10px;">
+                  <div style="display: flex; align-items: center;">
+                    <label for="credit-limit-from" style="margin-right: 10px;">Từ:</label>
+                    <div class="input-with-unit">
+                      <input type="text" id="credit-limit-from" name="credit-limit-from" placeholder="Nhập giá trị">
+                      <span>VNĐ</span>
+                    </div>
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <label for="credit-limit-to" style="margin-right: 10px;">Đến:</label>
+                    <div class="input-with-unit">
+                      <input type="text" id="credit-limit-to" name="credit-limit-to" placeholder="Nhập giá trị">
+                      <span>VNĐ</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="annual-fee">Phí thường niên (*):</label>
+                <select id="annual-fee" name="annual-fee">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="500000">500,000 VNĐ</option>
+                  <option value="1500000">1,500,000 VNĐ</option>
+                  <!-- Add more options as needed -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="atm-withdrawal-limit">Hạn mức rút tiền mặt (*):</label>
+                <input type="text" id="atm-withdrawal-limit" name="atm-withdrawal-limit" placeholder="Nhập giá trị">
+              </div>
+              <div class="form-group">
+                <label for="priority">Mức độ ưu tiên (*):</label>
+                <input type="text" id="priority" name="priority" placeholder="Nhập mức độ ưu tiên">
+              </div>
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>
+          <div class="form-column">
+            <h2 style="text-align:center;">Form Thêm/Sửa Cấu Hình Phí</h2>
+            <form id="fee-config-form">
+              <div class="form-group">
+                <label for="fee-code">Mã phí:</label>
+                <input type="text" id="fee-code" name="fee-code" placeholder="Nhập mã phí">
+              </div>
+              <div class="form-group">
+                <label for="fee-name">Tên phí:</label>
+                <input type="text" id="fee-name" name="fee-name" placeholder="Nhập tên phí">
+              </div>
+              <div class="form-group">
+                <label for="fee-type">Loại phí:</label>
+                <select id="fee-type" name="fee-type">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="type1">Loại 1</option>
+                  <option value="type2">Loại 2</option>
+                  <!-- Add more options as needed -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="calculation-method">Hình thức tính phí:</label>
+                <select id="calculation-method" name="calculation-method">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="P">Phần trăm (P)</option>
+                  <option value="F">Số tiền cố định (F)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="percentage-value">Giá trị phần trăm:</label>
+                <input type="text" id="percentage-value" name="percentage-value" placeholder="Nhập giá trị phần trăm">
+              </div>
+              <div class="form-group">
+                <label for="fixed-value">Giá trị cố định:</label>
+                <div class="input-with-unit">
+                  <input type="text" id="fixed-value" name="fixed-value" placeholder="Nhập giá trị cố định">
+                  <span>VNĐ</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="fee-status">Trạng thái:</label>
+                <select id="fee-status" name="fee-status">
+                  <option value="" disabled selected>Chọn giá trị</option>
+                  <option value="active">Hoạt động</option>
+                  <option value="inactive">Không hoạt động</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <div>
+                  <input type="checkbox" id="apply-all" name="apply-all">
+                  <label for="apply-all" style="display:inline;">Áp dụng cho tất cả sản phẩm thẻ</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Danh sách sản phẩm thẻ:</label>
+                <div>
+                  <input type="checkbox" id="product1" name="products" value="TDND-001">
+                  <label for="product1" style="display:inline;">TDND-001</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="product2" name="products" value="TDND-002">
+                  <label for="product2" style="display:inline;">TDND-002</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="product3" name="products" value="TDND-003">
+                  <label for="product3" style="display:inline;">TDND-003</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="fee-description">Mô tả:</label>
+                <textarea id="fee-description" name="fee-description" placeholder="Nhập mô tả chi tiết" style="width:300px; height:100px; resize:vertical;"></textarea>
+              </div>
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>  
+        </div>
+        <hr>
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <h2 style="text-align:center;">Thêm/Sửa Nhóm Nợ</h2>
+            <form id="debt-group-form">
+              <!-- Tên nhóm nợ -->
+              <div class="form-group">
+                <label for="debt-group-name">Tên nhóm nợ (*):</label>
+                <input type="text" id="debt-group-name" name="debt-group-name" placeholder="Nhập tên nhóm nợ (tối đa 50 ký tự)" maxlength="50" required>
+              </div>
+
+              <!-- Diễn giải -->
+              <div class="form-group">
+                <label for="debt-group-description">Diễn giải:</label>
+                <textarea id="debt-group-description" name="debt-group-description" placeholder="Nhập mô tả chi tiết nhóm nợ (ví dụ: Nợ trong hạn, Nợ quá hạn 10-90 ngày)" style="width:300px; height:100px; resize:vertical;"></textarea>
+              </div>
+
+              <!-- Từ ngày -->
+              <div class="form-group">
+                <label for="start-day">Từ ngày (*):</label>
+                <input type="text" id="start-day" name="start-day" placeholder="Nhập số ngày bắt đầu (ví dụ: 0, 10, 91)" required>
+              </div>
+
+              <!-- Đến ngày -->
+              <div class="form-group">
+                <label for="end-day">Đến ngày (*):</label>
+                <input type="text" id="end-day" name="end-day" placeholder="Nhập số ngày kết thúc (ví dụ: 9, 90, 180)" required>
+              </div>
+
+              <!-- Trạng thái -->
+              <!-- <div class="form-group">
+                <label for="debt-group-status">Trạng thái (*):</label>
+                <select id="debt-group-status" name="debt-group-status" required>
+                  <option value="" disabled selected>Chọn trạng thái</option>
+                  <option value="active">Hoạt động</option>
+                  <option value="inactive">Ngừng hoạt động</option>
+                </select>
+              </div> -->
+
+              <!-- Form actions -->
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>
+          <div class="form-column">
+            <h2 style="text-align:center;">Form Thêm/Sửa Sản phẩm Thẻ</h2>
+            <form id="card-product-form">
+              <!-- Mã sản phẩm -->
+              <div class="form-group">
+                <label for="product-code">Mã sản phẩm (*):</label>
+                <input type="text" id="product-code" name="product-code" placeholder="Nhập mã sản phẩm (10 ký tự, chữ và số)" maxlength="10" pattern="[A-Za-z0-9]{10}" required>
+              </div>
+
+              <!-- Tên sản phẩm -->
+              <div class="form-group">
+                <label for="product-name">Tên sản phẩm (*):</label>
+                <input type="text" id="product-name" name="product-name" placeholder="Nhập tên sản phẩm thẻ" required>
+              </div>
+
+              <!-- Số ngày miễn lãi -->
+              <div class="form-group">
+                <label for="interest-free-days">Số ngày miễn lãi (*):</label>
+                <input type="text" id="interest-free-days" name="interest-free-days" placeholder="Nhập số ngày miễn lãi (ví dụ: 45)" required>
+              </div>
+
+              <!-- Thời hạn thẻ -->
+              <div class="form-group">
+                <label for="card-duration">Thời hạn thẻ (*):</label>
+                <input type="text" id="card-duration" name="card-duration" placeholder="Nhập thời hạn mở thẻ (tháng)" required>
+              </div>
+
+              <!-- Ngày sao kê -->
+              <div class="form-group">
+                <label for="statement-date">Ngày sao kê (*):</label>
+                <input type="text" id="statement-date" name="statement-date" placeholder="Nhập ngày sao kê (ví dụ: 10)" required>
+              </div>
+
+              <!-- Tỷ lệ thanh toán tối thiểu -->
+              <div class="form-group">
+                <label for="min-payment-rate">Tỷ lệ thanh toán tối thiểu (*):</label>
+                <input type="text" id="min-payment-rate" name="min-payment-rate" placeholder="Nhập tỷ lệ tối thiểu (ví dụ: 5%)" required>
+              </div>
+
+              <!-- Lãi suất rút tiền mặt -->
+              <div class="form-group">
+                <label for="cash-withdrawal-rate">Lãi suất rút tiền mặt (*):</label>
+                <input type="text" id="cash-withdrawal-rate" name="cash-withdrawal-rate" placeholder="Nhập lãi suất rút tiền mặt (ví dụ: 5%)" required>
+              </div>
+
+              <!-- Giới hạn rút tiền tối đa -->
+              <div class="form-group">
+                <label for="max-withdrawal-limit">Giới hạn rút tiền tối đa (*):</label>
+                <input type="text" id="max-withdrawal-limit" name="max-withdrawal-limit" placeholder="Nhập số tiền tối đa (ví dụ: 100,000,000 VNĐ)" required>
+              </div>
+
+              <!-- Giới hạn rút tiền tối thiểu -->
+              <div class="form-group">
+                <label for="min-withdrawal-limit">Giới hạn rút tiền tối thiểu (*):</label>
+                <input type="text" id="min-withdrawal-limit" name="min-withdrawal-limit" placeholder="Nhập số tiền tối thiểu (ví dụ: 200,000 VNĐ)" required>
+              </div>
+
+              <!-- Hạn mức rút tiền mặt tháng -->
+              <div class="form-group">
+                <label for="monthly-withdrawal-limit">Hạn mức rút tiền mặt tháng (*):</label>
+                <input type="text" id="monthly-withdrawal-limit" name="monthly-withdrawal-limit" placeholder="Nhập hạn mức tháng" required>
+              </div>
+
+              <!-- Số ngày quá hạn khóa thẻ -->
+              <div class="form-group">
+                <label for="overdue-days">Số ngày quá hạn khóa thẻ:</label>
+                <input type="text" id="overdue-days" name="overdue-days" placeholder="Nhập số ngày quá hạn">
+              </div>
+
+              <!-- Khôi phục tự động -->
+              <div class="form-group">
+                <div>
+                  <input type="checkbox" id="auto-recover" name="auto-recover">
+                  <label for="auto-recover" style="display:inline;">Khôi phục tự động</label>
+                </div>
+              </div>
+
+              <!-- Hạn mức tín dụng tối thiểu -->
+              <div class="form-group">
+                <label for="credit-min">Hạn mức tín dụng tối thiểu (*):</label>
+                <input type="text" id="credit-min" name="credit-min" placeholder="Nhập hạn mức tối thiểu (ví dụ: 10,000,000 VNĐ)" required>
+              </div>
+
+              <!-- Hạn mức tín dụng tối đa -->
+              <div class="form-group">
+                <label for="credit-max">Hạn mức tín dụng tối đa (*):</label>
+                <input type="text" id="credit-max" name="credit-max" placeholder="Nhập hạn mức tối đa (ví dụ: 30,000,000 VNĐ)" required>
+              </div>
+
+              <!-- Mã ngân hàng -->
+              <div class="form-group">
+                <label for="bank-code">Mã ngân hàng (*):</label>
+                <input type="text" id="bank-code" name="bank-code" placeholder="Nhập mã ngân hàng (ví dụ: BANK02)" required>
+              </div>
+
+              <!-- Loại thẻ đẹp -->
+              <div class="form-group">
+                <div>
+                  <input type="checkbox" id="card-type" name="card-type">
+                  <label for="card-type" style="display:inline;">Loại thẻ đẹp</label>
+                </div>
+              </div>
+
+              <!-- Độ tuổi phát hành -->
+              <div class="form-group">
+                <label for="age-limit">Độ tuổi phát hành:</label>
+                <input type="text" id="age-limit" name="age-limit" placeholder="Nhập độ tuổi tối thiểu">
+              </div>
+
+              
+
+              <!-- Số năm được miễn phí thường niên -->
+              <div class="form-group">
+                <label for="annual-fee-free-years">Số năm được miễn phí thường niên (*):</label>
+                <input type="text" id="annual-fee-free-years" name="annual-fee-free-years" placeholder="Nhập số năm miễn phí" required>
+              </div>
+
+              <!-- Số đơn mở thẻ phụ -->
+              <div class="form-group">
+                <label for="additional-card-requests">Số đơn mở thẻ phụ (*):</label>
+                <input type="text" id="additional-card-requests" name="additional-card-requests" placeholder="Nhập số lượng đơn thẻ phụ" required>
+              </div>
+
+              <!-- Các loại phí -->
+              <div class="form-group">
+                <label for="additional-card-requests">Các loại phí (*):</label>
+                <select id="fee-type" name="fee-type" required>
+                  <option value="" disabled selected>Chọn loại phí</option>
+                  <option value="annual-fee">Phí thường niên</option>
+                  <option value="transaction-fee">Phí giao dịch</option>
+                  <option value="cash-withdrawal-fee">Phí rút tiền mặt</option>
+                  <option value="late-payment-fee">Phí trễ hạn</option>
+                </select>
+              </div>
+              <!-- Add Fee Button -->
+              <div class="form-group">
+                <button type="add_button" id="add-fee-button" class="save">Thêm phí</button>
+              </div>
+
+              <!-- Fee Table -->
+              <div class="form-group">
+                <h3>Danh sách phí</h3>
+                <table id="fee-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Loại phí</th>
+                      <th>Hình thức tính</th>
+                      <th>Giá trị</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    <!-- Example Fee -->
+                    <tr>
+                      <td>Phí thường niên</td>
+                      <td>Cố định</td>
+                      <td>1.200.000 VND</td>
+                      <td><button type="delete_button" class="remove-fee-button">Xóa</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
+              <!-- Nhóm Nợ -->
+              <div class="form-group">
+                <label for="debt-group-name">Tên nhóm nợ (*):</label>
+                <select id="debt-group-name" name="debt-group-name" required>
+                  <option value="" disabled selected>Chọn tên nhóm nợ</option>
+                  <option value="group1">Nhóm 1</option>
+                  <option value="group2">Nhóm 2</option>
+                  <option value="group3">Nhóm 3</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="debt-group-description">Giá trị phần trăm:</label>
+                <input type="text" id="debt-group-description" name="debt-group-description" placeholder="Nhập giá trị % (ví dụ: 5, 10)"> %
+              </div>
+
+              <!-- Add Debt Group Button -->
+              <div class="form-group">
+                <button type="add_button" id="add-debt-group-button" class="save">Thêm Nhóm Nợ</button>
+              </div>
+              <!-- Nhóm Nợ Table -->
+              <div class="form-group">
+                <h3>Danh sách Nhóm Nợ</h3>
+                <table id="debt-group-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Tên nhóm nợ</th>
+                      <th>Diễn giải</th>
+                      <th>Từ ngày</th>
+                      <th>Đến ngày</th>
+                      <th>Giá trị %</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Example Debt Group -->
+                    <tr>
+                      <td>Nhóm 1</td>
+                      <td>Nợ trong hạn</td>
+                      <td>0</td>
+                      <td>30</td>
+                      <td>5%</td>
+                      <td><button type="delete_button" class="remove-debt-group-button">Xóa</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Cho phép trả góp -->
+              <div class="form-group">
+                <div>
+                  <input type="checkbox" id="installment-allowed" name="installment-allowed">
+                  <label for="installment-allowed" style="display:inline;">Có cho phép trả góp</label>
+                </div>
+              </div>
+
+              <!-- Hạn mức tối thiểu trả góp -->
+              <div class="form-group">
+                <label for="installment-min">Hạn mức tối thiểu trả góp:</label>
+                <input type="text" id="installment-min" name="installment-min" placeholder="Nhập hạn mức tối thiểu trả góp">
+              </div>
+
+              <!-- Nhóm Nợ -->
+              <div class="form-group">
+                <label for="debt-group-name">Tên cấu hình trả góp:</label>
+                <select id="debt-group-name" name="debt-group-name" required>
+                  <option value="" disabled selected>Chọn trả góp</option>
+                  <option value="group1">3 tháng</option>
+                  <option value="group2">6 tháng</option>
+                  <option value="group3">9 tháng</option>
+                  <option value="group3">12 tháng</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="debt-group-description">Phí chuyển đổi:</label>
+                <input type="text" id="debt-group-description" name="debt-group-description" placeholder="Nhập giá trị % (ví dụ: 5, 10)"> %
+              </div>
+
+              <!-- Add Debt Group Button -->
+              <div class="form-group">
+                <button type="add_button" id="add-debt-group-button" class="save">Thêm</button>
+              </div>
+              <!-- Nhóm Nợ Table -->
+              <div class="form-group">
+                <h3>Danh sách cấu hình trả góp</h3>
+                <table id="debt-group-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Tên </th>
+                      <th>Diễn giải</th>
+                      <th>Phí chuyển đổi (%)</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Example Debt Group -->
+                    <tr>
+                      <td>3 tháng</td>
+                      <td>Trả góp 3 tháng</td>
+                      <td>5%</td>
+                      <td><button type="delete_button" class="remove-debt-group-button">Xóa</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
+              <!-- Form actions -->
+              <div class="actions">
+                <button type="submit" class="save">Lưu</button>
+                <button type="button" class="cancel">Hủy</button>
+              </div>
+            </form>
+          </div>
+        </div>  
+    </main>
+  </div>
+  <script>
+    fetch('../partials/nav.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+  </script>
+</body>
+</html>

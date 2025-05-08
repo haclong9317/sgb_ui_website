@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Thêm/Sửa Cấu Hình</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    html, body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    #container {
+      display: flex;
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+    }
+    #nav-placeholder {
+      width: 20%;
+    }
+    nav {
+      width: 100%;
+      background-color: #f4f4f9;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      margin-bottom: 15px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    main {
+      width: 80%;
+      display: block;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .modal {
+    width: 100%; /* Occupy full width of the parent container */
+    margin-bottom: 20px; /* Add spacing between modals */
+    background-color: #fff; /* White background */
+    border: 1px solid #ddd; /* Add a border */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden; /* Prevent content overflow */
+    display: block; /* Ensure modals are block-level elements */
+  }
+
+  .modal .header {
+    padding: 10px 20px;
+    background-color: #f4f4f9;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal .content {
+    padding: 20px;
+  }
+
+  .modal .card {
+    margin-bottom: 20px;
+  }
+
+  .modal .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .modal .row {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 4px;
+  }
+
+  .modal .row span {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .modal .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+    
+    .modal h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .forms-wrapper {
+      display: flex;
+      gap: 40px;
+      align-items: stretch; /* Ensure both columns stretch to the same height */
+    }
+    .form-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* Ensure form takes full height of its parent */
+    }
+    form .form-group {
+      margin-bottom: 15px;
+    }
+    form .form-group label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    .input-with-unit {
+      display: inline-flex;
+      align-items: center;
+    }
+    .input-with-unit input {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+    }
+    .input-with-unit span {
+      margin-left: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    form input:not(.input-with-unit input),
+    form select {
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    .actions {
+      margin-top: 20px;
+      text-align: right;
+    }
+    .actions button {
+      padding: 8px 16px;
+      border: none;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .actions .save {
+      background-color: #007bff;
+      color: white;
+    }
+    .actions .cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+    hr {
+      margin: 40px 0;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+    .form-group div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .form-group div input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin: 0;
+        position: relative;
+        cursor: pointer;
+        flex-shrink: 0;
+
+    }
+    .form-group div input[type="checkbox"]:checked::before {
+        content: '✔';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 12px;
+        color: #007bff;
+    }
+    .form-group div label {
+        margin: 0;
+        padding-left: 10px;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .form-group div input[type="radio"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      margin: 0;
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .form-group div input[type="radio"]:checked {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .form-group div input[type="radio"]:checked::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background-color: #fff;
+      border-radius: 50%;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f5f6f8;
+    }
+
+    .header, .footer {
+      padding: 10px 20px;
+      background: #fff;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .language {
+      display: flex;
+      align-items: center;
+    }
+
+    .language img {
+      width: 20px;
+      margin-right: 5px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .card-header, .card-footer {
+      padding: 10px;
+      background: #f1f1f1;
+      font-weight: bold;
+    }
+
+    .filter-btn {
+      float: right;
+      padding: 5px 10px;
+      background: #666;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .row {
+      padding: 10px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .row a {
+      color: #0d6efd;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .row span {
+      display: block;
+    }
+
+    .edit-btn {
+      background-color: #4caf50; /* Green background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .edit-btn:hover {
+      background-color: #45a049; /* Darker green on hover */
+    }
+
+    .delete-btn {
+      background-color: #f44336; /* Red background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      padding: 8px 16px; /* Add padding */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+    .delete-btn:hover {
+      background-color: #d32f2f; /* Darker red on hover */
+    }
+
+    .checkbox {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: #ccc;
+      border-radius: 3px;
+      position: relative;
+      top: 3px;
+    }
+
+    .fab {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #4caf50;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .pagination {
+      padding: 10px 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .pagination button {
+      background: none;
+      border: none;
+      font-size: 18px;
+    }
+
+    .footer {
+      font-size: 12px;
+      text-align: center;
+      color: #666;
+    }
+
+    .form-group div label {
+      display: block; /* Ensures each label is on a new line */
+      margin-bottom: 5px; /* Adds spacing between labels */
+    }
+
+    .form-group div input[type="checkbox"] {
+      margin-right: 5px; /* Adds spacing between the checkbox and label */
+      display: inline-block; /* Ensures checkboxes are inline with labels */
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="nav-placeholder"></div>
+    <main>
+      <div class="modal">
+        <div class="header">
+          <div><strong>Danh sách ngày không hoạt động</strong></div>
+          <div class="language">
+            <img src="https://flagcdn.com/vn.svg" alt="VN">
+            <span>giaodichvien@sgb.com</span>
+          </div>
+        </div>
+        <!-- <div class="fab">+</div> -->
+        <div class="content">
+          <table id="inactive-dates-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+              <tr>
+                <th>Ngày</th>
+                <th>Loại</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01/01/2025</td>
+                <td>Nghỉ lễ</td>
+                <td><button class="delete-btn">Xóa</button></td>
+              </tr>
+              <tr>
+                <td>02/09/2025</td>
+                <td>Nghỉ lễ</td>
+                <td><button class="delete-btn">Xóa</button></td>
+              </tr>
+              <tr>
+                <td>31/05/2025</td>
+                <td>Cuối tuần</td>
+                <td><button class="delete-btn">Xóa</button></td>
+              </tr>
+              <tr>
+                <td>01/06/2025</td>
+                <td>Cuối tuần</td>
+                <td><button class="delete-btn">Xóa</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <div class="content">
+              <h3>Thêm ngày nghỉ</h3>
+              <form id="holiday-form">
+                <!-- Loại ngày -->
+                <div class="form-group">
+                  <label>Loại ngày:</label>
+                  <br>
+                  <div style="display: inline-block; flex-direction: column;">
+                    <div>
+                      <input type="radio" id="holiday-type-holiday" name="holiday" value="holiday">
+                      <label for="holiday-type-holiday">Nghỉ lễ</label>
+                    </div>
+                    <div>
+                      <input type="radio" id="holiday-type-weekend" name="holiday" value="weekend" checked>
+                      <label for="holiday-type-weekend">Cuối tuần</label>
+                    </div>
+                  </div>
+                </div>
+          
+                <!-- Ngày -->
+                <div class="form-group">
+                  <label for="holiday-date">Ngày:</label>
+                  <input type="date" id="holiday-date" name="holiday-date" required>
+                </div>
+          
+                <!-- Ngày trong tuần -->
+                <div class="form-group">
+                  <label>Ngày trong tuần:</label>
+                  <div style="display: inline-block; flex-direction: column;">
+                      <div>
+                        <input type="checkbox" id="weekday-monday" name="weekday" value="monday">
+                        <label for="weekday-monday">Thứ Hai</label>
+                      </div>
+                      <div>
+                        <input type="checkbox" id="weekday-tuesday" name="weekday" value="tuesday">
+                        <label for="weekday-tuesday">Thứ Ba</label>
+                      </div>
+                      <div>
+                        <input type="checkbox" id="weekday-wednesday" name="weekday" value="wednesday">
+                        <label for="weekday-wednesday">Thứ Tư</label>
+                      </div>
+                      <div>
+                        <input type="checkbox" id="weekday-thursday" name="weekday" value="thursday">
+                        <label for="weekday-thursday">Thứ Năm</label>
+                      </div>
+                      <div>
+                        <input type="checkbox" id="weekday-friday" name="weekday" value="friday">
+                        <label for="weekday-friday">Thứ Sáu</label>
+                      </div>
+                      <div>
+                        <input type="checkbox" id="weekday-saturday" name="weekday" value="saturday" checked>
+                        <label for="weekday-saturday">Thứ Bảy</label>
+                      </div>
+                      <div>
+                        <input type="checkbox" id="weekday-sunday" name="weekday" value="sunday" checked>
+                        <label for="weekday-sunday">Chủ Nhật</label>
+                      </div>
+                  </div>
+                </div>
+          
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Hủy</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="form-column">
+            
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    fetch('../partials/nav.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+  </script>
+</body>
+</html>
