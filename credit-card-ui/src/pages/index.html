@@ -57,13 +57,9 @@
     </footer>
     <script>
         // Load the navigation menu dynamically
-        fetch('partials/nav.html')
+        fetch('../partials/nav.html')
             .then(response => response.text())
             .then(data => document.getElementById('nav-placeholder').innerHTML = data);
-    </script>
-    <script>
-        // Redirect to pages/index.html
-        window.location.href = "../pages/index.html";
     </script>
 </body>
 </html>
