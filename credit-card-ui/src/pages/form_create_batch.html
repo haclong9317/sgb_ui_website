@@ -173,7 +173,14 @@
       <div class="modal">
         <div class="forms-wrapper">
           <div class="form-column">
-            <h3>Danh sách Lô</h3>
+            <div class="header">
+              <div><strong>Danh sách Lô</strong></div>
+              <div class="language">
+                <img src="https://flagcdn.com/vn.svg" alt="VN">
+                <span>giaodichvien@sgb.com</span>
+              </div>
+            </div>
+            <br>
             <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
               <thead>
                 <tr style="background-color: #f2f2f2;">
@@ -181,6 +188,7 @@
                   <th>Tên lô</th>
                   <th>Loại lô</th>
                   <th>Thẻ</th>
+                  <th>Số lượng đơn mở thẻ</th>
                   <th>Tên chi nhánh</th>
                   <th>Giai đoạn xử lý</th>
                   <th>Trạng thái lô</th>
@@ -195,6 +203,7 @@
                   <td>Lô mở mới tháng 9</td>
                   <td>Mở mới</td>
                   <td>Tín dụng</td>
+                  <td>10</td>
                   <td>Chi nhánh 1</td>
                   <td>Mới</td>
                   <td>Chờ duyệt</td>
@@ -212,6 +221,7 @@
                   <td>Lô cấp lại tháng 9</td>
                   <td>Cấp lại</td>
                   <td>Combo</td>
+                  <td>5</td>
                   <td>Chi nhánh 1</td>
                   <td>Xét duyệt lô yêu cầu</td>
                   <td>Duyệt</td>
@@ -229,15 +239,16 @@
                   <td>Lô thay thế tháng 9</td>
                   <td>Thay thế</td>
                   <td>Tín dụng</td>
+                  <td>8</td>
                   <td>Chi nhánh 1</td>
-                  <td>Giao thẻ cho chi nhánh</td>
+                  <td>Xét duyệt lô yêu cầu</td>
                   <td>Thoái lô</td>
                   <td>Lỗi dữ liệu</td>
                   <td>
-                    <button class="edit-btn">Sửa</button>
-                    <button class="edit-btn">Xem</button>
-                    <button class="edit-btn">Thêm</button>
-                    <button class="delete-btn">Xóa</button>
+                    <button class="edit-btn" disabled>Sửa</button>
+                    <button class="edit-btn" >Xem</button>
+                    <button class="edit-btn" disabled>Thêm</button>
+                    <button class="delete-btn" disabled>Xóa</button>
                   </td>
                 </tr>
                 <!-- Example Row 4 -->
@@ -246,9 +257,10 @@
                   <td>Lô gia hạn tháng 9</td>
                   <td>Gia hạn</td>
                   <td>Combo</td>
+                  <td>15</td>
                   <td>Chi nhánh 1</td>
-                  <td>Giao thẻ cho chủ thẻ</td>
-                  <td>Từ chối duyệt</td>
+                  <td>Xét duyệt lô yêu cầu</td>
+                  <td>Phủ quyết</td>
                   <td>Thông tin không hợp lệ</td>
                   <td>
                     <button class="edit-btn">Sửa</button>
@@ -266,7 +278,20 @@
       <div class="modal">
         <div class="forms-wrapper">
           <div class="form-column">
-            <h3>Danh sách Đơn Mở Thẻ</h3>
+            <!-- <h3>Danh sách Đơn Mở Thẻ</h3>
+            <div class="language">
+              <img src="https://flagcdn.com/vn.svg" alt="VN">
+              <span>giaodichvien@sgb.com</span>
+            </div> -->
+
+            <div class="header">
+              <div><strong>Danh sách đơn mở thẻ</strong></div>
+              <div class="language">
+                <img src="https://flagcdn.com/vn.svg" alt="VN">
+                <span>giaodichvien@sgb.com</span>
+              </div>
+            </div>
+
             <h4>Mã lô: 20250501-CN001-000001</h4>
             <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
               <thead>
@@ -288,7 +313,6 @@
                   <td>1234-5678-9012-3456</td>
                   <td>Chờ duyệt</td>
                   <td>
-                    <button class="edit-btn">Sửa</button>
                     <button class="delete-btn">Xóa</button>
                   </td>
                 </tr>
@@ -300,7 +324,6 @@
                   <td>2345-6789-0123-4567</td>
                   <td>Đã duyệt</td>
                   <td>
-                    <button class="edit-btn">Sửa</button>
                     <button class="delete-btn">Xóa</button>
                   </td>
                 </tr>
@@ -312,7 +335,6 @@
                   <td>3456-7890-1234-5678</td>
                   <td>Thoái duyệt</td>
                   <td>
-                    <button class="edit-btn">Sửa</button>
                     <button class="delete-btn">Xóa</button>
                   </td>
                 </tr>
@@ -325,7 +347,15 @@
       <div class="modal">
         <div class="forms-wrapper">
           <div class="form-column">
-            <h3>Thêm đơn mở thẻ vào Lô</h3>
+            <!-- <h3>Thêm đơn mở thẻ vào Lô</h3> -->
+            <div class="header">
+              <div><strong>Thêm đơn mở thẻ vào Lô</strong></div>
+              <div class="language">
+                <img src="https://flagcdn.com/vn.svg" alt="VN">
+                <span>giaodichvien@sgb.com</span>
+              </div>
+            </div>
+
             <h4>Mã lô: 20250501-CN001-000001</h4>
 
             <!-- Filters -->
@@ -383,6 +413,210 @@
         </div>
       </div>
 
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <div class="header">
+              <div><strong>Danh sách lô</strong></div>
+              <div class="language">
+                <img src="https://flagcdn.com/vn.svg" alt="VN">
+                <span>kiemsoatvien@sgb.com</span>
+              </div>
+            </div>
+            <br>
+            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr style="background-color: #f2f2f2;">
+                  <th>Mã lô</th>
+                  <th>Tên lô</th>
+                  <th>Loại lô</th>
+                  <th>Thẻ</th>
+                  <th>Số lượng đơn mở thẻ</th>
+                  <th>Tên chi nhánh</th>
+                  <th>Giai đoạn xử lý</th>
+                  <th>Trạng thái lô</th>
+                  <th>Ghi chú</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Example Row 1 -->
+                <tr>
+                  <td>20250501-CN001-000001</td>
+                  <td>Lô mở mới tháng 9</td>
+                  <td>Mở mới</td>
+                  <td>Tín dụng</td>
+                  <td>10</td>
+                  <td>Chi nhánh 1</td>
+                  <td>Mới</td>
+                  <td>Chờ duyệt</td>
+                  <td>-</td>
+                  <td>
+                    <button class="edit-btn">Duyệt</button>
+                    <button class="edit-btn" disabled>Xác nhận gửi hồ sơ</button>
+                    <button class="delete-btn">Phủ quyết</button>
+                  </td>
+                </tr>
+                <!-- Example Row 2 -->
+                <tr>
+                  <td>20250501-CN001-000002</td>
+                  <td>Lô cấp lại tháng 9</td>
+                  <td>Cấp lại</td>
+                  <td>Combo</td>
+                  <td>5</td>
+                  <td>Chi nhánh 1</td>
+                  <td>Xét duyệt lô yêu cầu</td>
+                  <td>Duyệt</td>
+                  <td>-</td>
+                  <td>
+                    <button class="edit-btn" disabled>Duyệt</button>
+                    <button class="edit-btn">Xác nhận gửi hồ sơ</button>
+                    <button class="delete-btn" disabled>Phủ quyết</button>
+                  </td>
+                </tr>
+                <!-- Example Row 3 -->
+                <tr>
+                  <td>20250501-CN001-000003</td>
+                  <td>Lô thay thế tháng 9</td>
+                  <td>Thay thế</td>
+                  <td>Tín dụng</td>
+                  <td>8</td>
+                  <td>Chi nhánh 1</td>
+                  <td>Xét duyệt lô yêu cầu</td>
+                  <td>Thoái lô</td>
+                  <td>Lỗi dữ liệu</td>
+                  <td>
+                    <button class="edit-btn">Duyệt</button>
+                    <button class="edit-btn" disabled>Xác nhận gửi hồ sơ</button>
+                    <button class="delete-btn">Phủ quyết</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+          <div class="header">
+            <div><strong>Danh sách khách hàng</strong></div>
+            <div class="language">
+              <img src="https://flagcdn.com/vn.svg" alt="VN">
+              <span>kiemsoatvien@sgb.com</span>
+            </div>
+          </div>
+          <h3>Mã lô: 20250501-CN001-000001</h3>
+          <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+              <tr>
+                <th>Mã khách hàng</th>
+                <th>Tên khách hàng</th>
+                <th>Số CMND/CCCD</th>
+                <th>Ngày sinh</th>
+                <th>Trạng thái</th>
+                <th>Lý do</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>KH001</td>
+                <td>Nguyễn Văn A</td>
+                <td>123456789</td>
+                <td>01/01/1980</td>
+                <td>Đã duyệt</td>
+                <td>-</td>
+                <td>
+                  <button class="edit-btn" >Chi tiết</button>
+                  <button class="edit-btn" disabled>Duyệt</button>
+                  <button class="delete-btn" disabled>Phủ quyết</button>
+                </td>
+              </tr>
+              <tr>
+                <td>KH002</td>
+                <td>Trần Thị B</td>
+                <td>987654321</td>
+                <td>15/05/1990</td>
+                <td>Chờ duyệt</td>
+                <td>-</td>
+                <td>
+                  <button class="edit-btn" onclick="viewDetails('KH001')">Chi tiết</button>
+                  <button class="edit-btn" onclick="viewCardApplications('KH001')">Duyệt</button>
+                  <button class="delete-btn" onclick="showReasonPopup()">Phủ quyết</button>
+                </td>
+              </tr>
+              <tr>
+                <td>KH003</td>
+                <td>Trần Văn C</td>
+                <td>987654322</td>
+                <td>15/05/1991</td>
+                <td>Phủ quyết</td>
+                <td>Thông tin không hợp lệ</td>
+                <td>
+                  <button class="edit-btn" onclick="viewDetails('KH001')">Chi tiết</button>
+                  <button class="edit-btn" onclick="viewCardApplications('KH001')" disabled>Duyệt</button>
+                  <button class="delete-btn" onclick="viewCardApplications('KH001')" disabled>Phủ quyết</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <div class="header">
+              <div><strong>Danh sách đơn mở thẻ</strong></div>
+              <div class="language">
+                <img src="https://flagcdn.com/vn.svg" alt="VN">
+                <span>kiemsoatvien@sgb.com</span>
+              </div>
+            </div>
+            <h3>Mã khách hàng: KH001</h3>
+            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr>
+                  <th>Mã đơn mở thẻ</th>
+                  <th>Sản phẩm thẻ</th>
+                  <th>Loại thẻ</th>
+                  <th>Thẻ</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>D001</td>
+                  <td>NAPAS Platinum</td>
+                  <td>Tín dụng</td>
+                  <td>Thẻ chính</td>
+                  <td>Đã duyệt</td>
+                  <td>
+                    <button class="edit-btn" onclick="viewCardDetails('D001')">Chi tiết</button>
+                    <button class="edit-btn" onclick="viewCardApplications('KH001')" disabled>Duyệt</button>
+                  <button class="delete-btn" onclick="viewCardApplications('KH001')" disabled>Phủ quyết</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Popup Modal -->
+      <div id="reason-popup" class="modal1" style="display: none;">
+        <div class="modal-content">
+          <h3>Nhập lý do</h3>
+          <textarea id="reason-textarea" placeholder="Nhập lý do tại đây..." rows="5" style="width: 100%;"></textarea>
+          <div class="actions">
+            <button onclick="submitReason()" class="edit-btn">OK</button>
+            <button onclick="closeReasonPopup()" class="delete-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
   <script>
@@ -446,6 +680,24 @@
       // Show the attachments tab content
       document.getElementById('attachments').style.display = 'block';
     });
+
+    function showReasonPopup() {
+      document.getElementById('reason-popup').style.display = 'flex';
+    }
+
+    function closeReasonPopup() {
+      document.getElementById('reason-popup').style.display = 'none';
+    }
+
+    function submitReason() {
+      const reason = document.getElementById('reason-textarea').value;
+      if (reason.trim() === '') {
+        alert('Vui lòng nhập lý do!');
+        return;
+      }
+      alert('Lý do của bạn: ' + reason);
+      closeReasonPopup();
+    }
   </script>
 </body>
 </html>

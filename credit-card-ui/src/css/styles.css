@@ -207,6 +207,16 @@ html, body {
     display: flex;
     flex-direction: column;
   }
+  .form-column-in {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Create responsive columns */
+    gap: 20px; /* Add spacing between fields */
+    padding: 20px; /* Add padding inside the column */
+    background-color: #fff; /* Optional: Adds a white background */
+    border: 1px solid #ddd; /* Optional: Adds a border */
+    border-radius: 4px; /* Optional: Rounds the corners */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+  }
   form {
     display: flex;
     flex-direction: column;
@@ -558,3 +568,71 @@ html, body {
     cursor: not-allowed; /* Change cursor to indicate the button is not clickable */
     opacity: 0.7; /* Optional: Reduce opacity for a disabled effect */
   }
+
+  .tab-button1 {
+    background-color: #f4f4f9; /* Default background color */
+    color: #333; /* Default text color */
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .tab-button1.active {
+    background-color: #4caf50; /* Green background for active tab */
+    color: white; /* White text for active tab */
+    border-color: #4caf50;
+  }
+
+  .tab-button1:hover {
+    background-color: #e0e0e0; /* Light gray on hover */
+  }
+
+  form input,
+  form select,
+  form textarea {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 300px; /* Ensure the width matches the textboxes */
+    box-sizing: border-box; /* Include padding and border in the width */
+  }
+
+    /* Modal overlay to block interactions */
+    .modal1 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; /* Ensure it appears above all other elements */
+    }
+  
+    /* Modal content box */
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  
+    /* Disable scrolling when modal is active */
+    body.modal-active {
+      overflow: hidden;
+    }
+  
+    /* Action buttons */
+    .actions button {
+      margin: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
