@@ -271,6 +271,9 @@
                 </tr>
               </tbody>
             </table>
+            <div class="actions">
+              <button class="add-btn" onclick="addNewBatch()">+</button>
+            </div>
           </div>
         </div>
       </div>
@@ -577,6 +580,99 @@
               </div>
             </div>
             <h3>Mã khách hàng: KH001</h3>
+            <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr>
+                  <th>Mã đơn mở thẻ</th>
+                  <th>Sản phẩm thẻ</th>
+                  <th>Loại thẻ</th>
+                  <th>Thẻ</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>D001</td>
+                  <td>NAPAS Platinum</td>
+                  <td>Tín dụng</td>
+                  <td>Thẻ chính</td>
+                  <td>Đã duyệt</td>
+                  <td>
+                    <button class="edit-btn" onclick="viewCardDetails('D001')">Chi tiết</button>
+                    <button class="edit-btn" onclick="viewCardApplications('KH001')" disabled>Duyệt</button>
+                  <button class="delete-btn" onclick="viewCardApplications('KH001')" disabled>Phủ quyết</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+          <div class="header">
+            <div><strong>Danh sách khách hàng</strong></div>
+            <div class="language">
+              <img src="https://flagcdn.com/vn.svg" alt="VN">
+              <span>kiemsoatvien@sgb.com</span>
+            </div>
+          </div>
+          <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+              <tr>
+                <th>Mã khách hàng</th>
+                <th>Tên khách hàng</th>
+                <th>Số CMND/CCCD</th>
+                <th>Ngày sinh</th>
+                <th>Trạng thái</th>
+                <th>Lý do</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>KH002</td>
+                <td>Trần Thị B</td>
+                <td>987654321</td>
+                <td>15/05/1990</td>
+                <td>Chờ duyệt</td>
+                <td>-</td>
+                <td>
+                  <button class="edit-btn" onclick="viewCardApplications('KH001')">Duyệt</button>
+                  <button class="delete-btn" onclick="showReasonPopup()">Phủ quyết</button>
+                </td>
+              </tr>
+              <tr>
+                <td>KH003</td>
+                <td>Trần Văn C</td>
+                <td>987654322</td>
+                <td>15/05/1991</td>
+                <td>Phủ quyết</td>
+                <td>Thông tin không hợp lệ</td>
+                <td>
+                  <button class="edit-btn" onclick="viewCardApplications('KH001')" disabled>Duyệt</button>
+                  <button class="delete-btn" onclick="viewCardApplications('KH001')" disabled>Phủ quyết</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <div class="header">
+              <div><strong>Danh sách đơn mở thẻ</strong></div>
+              <div class="language">
+                <img src="https://flagcdn.com/vn.svg" alt="VN">
+                <span>kiemsoatvien@sgb.com</span>
+              </div>
+            </div>
             <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
               <thead>
                 <tr>
