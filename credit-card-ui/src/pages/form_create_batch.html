@@ -92,6 +92,7 @@
               </form>
             </div>
           </div>
+
           <div class="form-column">
             <div class="batch-form">
               <h3>Cập nhật Lô</h3>
@@ -702,6 +703,72 @@
           </div>
         </div>
       </div>
+
+      <div class="modal">
+        <div class="forms-wrapper">
+          <div class="form-column">
+            <div class="batch-form">
+              <h3>Thêm Lô</h3>
+              <form id="batch-form">
+
+                <!-- Loại lô -->
+                <div class="form-group">
+                  <label for="batch-type">Loại lô:</label>
+                  <select id="batch-type" name="batch-type">
+                    <option value="" disabled selected>Chọn loại lô</option>
+                    <option value="type1">Cấp mới</option>
+                    <option value="type2">Cấp lại</option>
+                    <option value="type3">Thay thế</option>
+                    <option value="type4">Gia hạn</option>
+                  </select>
+                </div>
+            
+                <!-- Chọn lô mở thẻ -->
+                <div class="form-group">
+                  <label for="batch-open">Chọn lô mở thẻ:</label>
+                  <select id="batch-open" name="batch-open">
+                    <option value="" disabled selected>Chọn lô mở thẻ</option>
+                    <option value="batch1">Lô 1</option>
+                    <option value="batch2">Lô 2</option>
+                  </select>
+                </div>
+            
+                <!-- Chọn sản phẩm thẻ -->
+                <div class="form-group">
+                  <label for="card-product">Chọn sản phẩm thẻ:</label>
+                  <select id="card-product" name="card-product">
+                    <option value="" disabled selected>Chọn sản phẩm thẻ</option>
+                    <option value="product1">Sản phẩm 1</option>
+                    <option value="product2">Sản phẩm 2</option>
+                  </select>
+                </div>
+            
+                <!-- File upload -->
+                <div class="form-group">
+                  <label for="csv-file">Chọn file CSV:</label>
+                  <input type="file" id="csv-file" name="csv-file" accept=".csv">
+                </div>
+            
+              
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Hủy</button>
+                </div>
+              </form>
+            </div>
+            
+            <script>
+              function downloadSampleCSV() {
+                // Logic to download a sample CSV file
+                window.location.href = '/path/to/sample.csv';
+              }
+            </script>
+          </div>
+        </div>
+      </div>
+
+
       <!-- Popup Modal -->
       <div id="reason-popup" class="modal1" style="display: none;">
         <div class="modal-content">
