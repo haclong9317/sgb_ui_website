@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Form Thêm/Sửa Cấu Hình</title>
   <link rel="stylesheet" href="../css/styles.css">
-  
 </head>
 <body>
   <div id="container">
     <div id="nav-placeholder"></div>
     <main>
-
       <div class="modal">
         <div class="header">
           <h3>Danh sách Cấu Hình Sản Phẩm Thẻ</h3>
@@ -64,282 +62,280 @@
               <button class="tab-button" data-tab="config-card">Cấu hình liên quan</button>
             </div>
             <form id="card-product-form">
-            <div class="tab-content active" id="card-product-info">
-              <div class="form-column-in">
-                <!-- Mã sản phẩm -->
-                <div class="form-group">
-                  <label for="product-code">Mã sản phẩm (*):</label>
-                  <input type="text" id="product-code" name="product-code" placeholder="Nhập mã sản phẩm (ví dụ: TDNĐ-001)" maxlength="10" pattern="[A-Za-z0-9]{10}" required>
-                </div>
+              <div class="tab-content active" id="card-product-info">
+                <div class="form-column-in">
+                  <!-- Mã sản phẩm -->
+                  <div class="form-group">
+                    <label for="product-code">Mã sản phẩm (*):</label>
+                    <input type="text" id="product-code" name="product-code" placeholder="Nhập mã sản phẩm (ví dụ: TDNĐ-001)" maxlength="10" pattern="[A-Za-z0-9]{10}" required>
+                  </div>
 
-                <!-- Tên sản phẩm -->
-                <div class="form-group">
-                  <label for="product-name">Tên sản phẩm (*):</label>
-                  <input type="text" id="product-name" name="product-name" placeholder="Nhập tên sản phẩm (ví dụ: NAPAS Signature)" required>
-                </div>
+                  <!-- Tên sản phẩm -->
+                  <div class="form-group">
+                    <label for="product-name">Tên sản phẩm (*):</label>
+                    <input type="text" id="product-name" name="product-name" placeholder="Nhập tên sản phẩm (ví dụ: NAPAS Signature)" required>
+                  </div>
 
-                <!-- Loại thẻ -->
-                <div class="form-group">
-                  <label for="card-type">Loại thẻ (*):</label>
-                  <select id="card-type" name="card-type" required>
-                    <option value="" disabled selected>Chọn loại thẻ</option>
-                    <option value="credit-card">VCCS-01</option>
-                    <option value="debit-card">VCCS-02</option>
-                  </select>
-                </div>
+                  <!-- Loại thẻ -->
+                  <div class="form-group">
+                    <label for="card-type">Loại thẻ (*):</label>
+                    <select id="card-type" name="card-type" required>
+                      <option value="" disabled selected>Chọn loại thẻ</option>
+                      <option value="credit-card">VCCS-01</option>
+                      <option value="debit-card">VCCS-02</option>
+                    </select>
+                  </div>
 
-                <!-- Số ngày miễn lãi -->
-                <div class="form-group">
-                  <label for="grace-period">Số ngày miễn lãi (*):</label>
-                  <input type="text" id="grace-period" name="grace-period" placeholder="Nhập số ngày miễn lãi (ví dụ: 45)" required>
-                </div>
+                  <!-- Số ngày miễn lãi -->
+                  <div class="form-group">
+                    <label for="grace-period">Số ngày miễn lãi (*):</label>
+                    <input type="text" id="grace-period" name="grace-period" placeholder="Nhập số ngày miễn lãi (ví dụ: 45)" required>
+                  </div>
 
-                <!-- Thời hạn thẻ -->
-                <div class="form-group">
-                  <label for="card-duration">Thời hạn thẻ (*):</label>
-                  <input type="text" id="card-duration" name="card-duration" placeholder="Nhập thời hạn thẻ (ví dụ: 12 tháng)" required>
-                </div>
+                  <!-- Thời hạn thẻ -->
+                  <div class="form-group">
+                    <label for="card-duration">Thời hạn thẻ (*):</label>
+                    <input type="text" id="card-duration" name="card-duration" placeholder="Nhập thời hạn thẻ (ví dụ: 12 tháng)" required>
+                  </div>
 
-                <!-- Ngày sao kê -->
-                <div class="form-group">
-                  <label for="statement-date">Ngày sao kê (*):</label>
-                  <input type="text" id="statement-date" name="statement-date" placeholder="Nhập ngày sao kê (ví dụ: ngày 10)" required>
-                </div>
+                  <!-- Ngày sao kê -->
+                  <div class="form-group">
+                    <label for="statement-date">Ngày sao kê (*):</label>
+                    <input type="text" id="statement-date" name="statement-date" placeholder="Nhập ngày sao kê (ví dụ: ngày 10)" required>
+                  </div>
 
-                <!-- Tỷ lệ thanh toán tối thiểu -->
-                <div class="form-group">
-                  <label for="min-payment-rate">Tỷ lệ thanh toán tối thiểu (*):</label>
-                  <input type="text" id="min-payment-rate" name="min-payment-rate" placeholder="Nhập tỷ lệ thanh toán tối thiểu (ví dụ: 5%)" required>
-                </div>
+                  <!-- Tỷ lệ thanh toán tối thiểu -->
+                  <div class="form-group">
+                    <label for="min-payment-rate">Tỷ lệ thanh toán tối thiểu (*):</label>
+                    <input type="text" id="min-payment-rate" name="min-payment-rate" placeholder="Nhập tỷ lệ thanh toán tối thiểu (ví dụ: 5%)" required>
+                  </div>
 
-                <!-- Số năm được miễn phí thường niên -->
-                <div class="form-group">
-                  <label for="annual-fee-free-years">Số năm được miễn phí thường niên:</label>
-                  <input type="text" id="annual-fee-free-years" name="annual-fee-free-years" placeholder="Nhập số năm miễn phí thường niên">
-                </div>
+                  <!-- Số năm được miễn phí thường niên -->
+                  <div class="form-group">
+                    <label for="annual-fee-free-years">Số năm được miễn phí thường niên:</label>
+                    <input type="text" id="annual-fee-free-years" name="annual-fee-free-years" placeholder="Nhập số năm miễn phí thường niên">
+                  </div>
 
-                <!-- Số tiền phí thường niên -->
-                <div class="form-group">
-                  <label for="annual-fee">Số tiền phí thường niên (*):</label>
-                  <input type="text" id="annual-fee" name="annual-fee" placeholder="Nhập số tiền phí thường niên (>= 0)" required>
-                </div>
+                  <!-- Số tiền phí thường niên -->
+                  <div class="form-group">
+                    <label for="annual-fee">Số tiền phí thường niên (*):</label>
+                    <input type="text" id="annual-fee" name="annual-fee" placeholder="Nhập số tiền phí thường niên (>= 0)" required>
+                  </div>
 
-                <!-- Hạn mức tín dụng tối thiểu -->
-                <div class="form-group">
-                  <label for="min-credit-limit">Hạn mức tín dụng tối thiểu (*):</label>
-                  <input type="text" id="min-credit-limit" name="min-credit-limit" placeholder="Nhập hạn mức tín dụng tối thiểu (ví dụ: 10,000,000 VNĐ)" required>
-                </div>
+                  <!-- Hạn mức tín dụng tối thiểu -->
+                  <div class="form-group">
+                    <label for="min-credit-limit">Hạn mức tín dụng tối thiểu (*):</label>
+                    <input type="text" id="min-credit-limit" name="min-credit-limit" placeholder="Nhập hạn mức tín dụng tối thiểu (ví dụ: 10,000,000 VNĐ)" required>
+                  </div>
 
-                <!-- Hạn mức tín dụng tối đa -->
-                <div class="form-group">
-                  <label for="max-credit-limit">Hạn mức tín dụng tối đa (*):</label>
-                  <input type="text" id="max-credit-limit" name="max-credit-limit" placeholder="Nhập hạn mức tín dụng tối đa (ví dụ: 30,000,000 VNĐ)" required>
-                </div>
+                  <!-- Hạn mức tín dụng tối đa -->
+                  <div class="form-group">
+                    <label for="max-credit-limit">Hạn mức tín dụng tối đa (*):</label>
+                    <input type="text" id="max-credit-limit" name="max-credit-limit" placeholder="Nhập hạn mức tín dụng tối đa (ví dụ: 30,000,000 VNĐ)" required>
+                  </div>
 
-                <!-- Lãi suất trả chậm -->
-                <div class="form-group">
-                  <label for="late-payment-rate">Lãi suất trả chậm (*) (%):</label>
-                  <input type="text" id="late-payment-rate" name="late-payment-rate" placeholder="Nhập lãi suất trả chậm (%)" required>
-                </div>
+                  <!-- Lãi suất trả chậm -->
+                  <div class="form-group">
+                    <label for="late-payment-rate">Lãi suất trả chậm (*) (%):</label>
+                    <input type="text" id="late-payment-rate" name="late-payment-rate" placeholder="Nhập lãi suất trả chậm (%)" required>
+                  </div>
 
-                <!-- Mã ngân hàng -->
-                <div class="form-group">
-                  <label for="bank-code">Mã ngân hàng (*):</label>
-                  <input type="text" id="bank-code" name="bank-code" placeholder="Nhập mã ngân hàng (ví dụ: BANK02)" required>
-                </div>
+                  <!-- Mã ngân hàng -->
+                  <div class="form-group">
+                    <label for="bank-code">Mã ngân hàng (*):</label>
+                    <input type="text" id="bank-code" name="bank-code" placeholder="Nhập mã ngân hàng (ví dụ: BANK02)" required>
+                  </div>
 
-                <!-- Loại thẻ đẹp -->
-                <div class="form-group">
-                  <label for="beautiful-card">Loại thẻ đẹp:<input type="checkbox" id="beautiful-card" name="beautiful-card"></label>
-                  
-                </div>
+                  <!-- Loại thẻ đẹp -->
+                  <div class="form-group">
+                    <label for="beautiful-card">Loại thẻ đẹp:<input type="checkbox" id="beautiful-card" name="beautiful-card"></label>
+                    
+                  </div>
 
-                <!-- Độ tuổi phát hành -->
-                <div class="form-group">
-                  <label for="age-limit">Độ tuổi phát hành:</label>
-                  <input type="text" id="age-limit" name="age-limit" placeholder="Nhập độ tuổi tối thiểu để phát hành thẻ">
-                </div>
+                  <!-- Độ tuổi phát hành -->
+                  <div class="form-group">
+                    <label for="age-limit">Độ tuổi phát hành:</label>
+                    <input type="text" id="age-limit" name="age-limit" placeholder="Nhập độ tuổi tối thiểu để phát hành thẻ">
+                  </div>
 
-                <!-- Số đơn mở thẻ phụ -->
-                <div class="form-group">
-                  <label for="additional-card-requests">Số đơn mở thẻ phụ (*):</label>
-                  <input type="text" id="additional-card-requests" name="additional-card-requests" placeholder="Nhập số lượng đơn thẻ phụ" required>
-                </div>
+                  <!-- Số đơn mở thẻ phụ -->
+                  <div class="form-group">
+                    <label for="additional-card-requests">Số đơn mở thẻ phụ (*):</label>
+                    <input type="text" id="additional-card-requests" name="additional-card-requests" placeholder="Nhập số lượng đơn thẻ phụ" required>
+                  </div>
 
-                <!-- Rule rút tiền mặt -->
-                <div class="form-group">
-                  <label for="cash-withdrawal-rule">Rule rút tiền mặt (*):</label>
-                  <select id="cash-withdrawal-rule" name="cash-withdrawal-rule" required>
-                    <option value="" disabled selected>Chọn rule rút tiền mặt</option>
-                    <option value="rule1">Rule 1</option>
-                    <option value="rule2">Rule 2</option>
-                  </select>
+                  <!-- Rule rút tiền mặt -->
+                  <div class="form-group">
+                    <label for="cash-withdrawal-rule">Rule rút tiền mặt (*):</label>
+                    <select id="cash-withdrawal-rule" name="cash-withdrawal-rule" required>
+                      <option value="" disabled selected>Chọn rule rút tiền mặt</option>
+                      <option value="rule1">Rule 1</option>
+                      <option value="rule2">Rule 2</option>
+                    </select>
+                  </div>
                 </div>
               </div>
               
+              <div class="tab-content" id="config-card">
+                  <!-- Quy định giao dịch -->
+                  <div class="form-group">
+                    <label for="transaction-rule">Giao dịch:</label>
+                    <select id="transaction-rule" name="transaction-rule" required>
+                      <option value="" disabled selected>Chọn giao dịch</option>
+                      <option value="rule1">Thanh toán</option>
+                      <option value="rule2">Rút tiền mặt</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <button class="edit-btn">Thêm</button>
+                  </div>
+                  <h3>Danh sách giao dịch</h3>
+                  <table id="transaction-rule-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                      <tr>
+                        <th>Giao dịch</th>
+                        <th>Hành động</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Example Row -->
+                      <tr>
+                        <td>Thanh toán</td>
+                        <td style="text-align: right;">
+                          <button class="delete-btn">Xóa</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Rút tiền mặt</td>
+                        <td style="text-align: right;">
+                          <button class="delete-btn">Xóa</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <hr>
+          
+                  <!-- Phí giao dịch -->
+                  <h3>Phí giao dịch</h3>
+                  <div class="form-group">
+                    <label for="transaction-type">Loại giao dịch:</label>
+                    <select id="transaction-type" name="transaction-type" required>
+                      <option value="" disabled selected>Chọn loại giao dịch</option>
+                      <option value="type1">Loại 1</option>
+                      <option value="type2">Loại 2</option>
+                    </select>
 
-              
-            </div>
-            <div class="tab-content" id="config-card">
-                <!-- Quy định giao dịch -->
-                <div class="form-group">
-                  <label for="transaction-rule">Giao dịch:</label>
-                  <select id="transaction-rule" name="transaction-rule" required>
-                    <option value="" disabled selected>Chọn giao dịch</option>
-                    <option value="rule1">Thanh toán</option>
-                    <option value="rule2">Rút tiền mặt</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <button class="edit-btn">Thêm</button>
-                </div>
-                <h3>Danh sách giao dịch</h3>
-                <table id="transaction-rule-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-                  <thead>
-                    <tr>
-                      <th>Giao dịch</th>
-                      <th>Hành động</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- Example Row -->
-                    <tr>
-                      <td>Thanh toán</td>
-                      <td style="text-align: right;">
-                        <button class="delete-btn">Xóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Rút tiền mặt</td>
-                      <td style="text-align: right;">
-                        <button class="delete-btn">Xóa</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <hr>
-        
-                <!-- Phí giao dịch -->
-                <h3>Phí giao dịch</h3>
-                <div class="form-group">
-                  <label for="transaction-type">Loại giao dịch:</label>
-                  <select id="transaction-type" name="transaction-type" required>
-                    <option value="" disabled selected>Chọn loại giao dịch</option>
-                    <option value="type1">Loại 1</option>
-                    <option value="type2">Loại 2</option>
-                  </select>
-
-                </div>
-                <div class="form-group">
-                  <label for="fee-list">Danh sách phí:</label>
-                  <select id="fee-list" name="fee-list" required>
-                    <option value="" disabled selected>Chọn danh sách phí</option>
-                    <option value="fee1">Phí 1</option>
-                    <option value="fee2">Phí 2</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="fee-percentage">Giá trị phí (%):</label>
-                  <input type="text" id="fee-percentage" name="fee-percentage" placeholder="Nhập giá trị phí (%)" required>
-                </div>
-                <div class="form-group">
-                  <label for="fixed-fee">Giá trị phí cố định:</label>
-                  <input type="text" id="fixed-fee" name="fixed-fee" placeholder="Nhập giá trị phí cố định">
-                </div>
-                <div class="form-group">
-                  <button class="edit-btn">Thêm</button>
-                </div>
-                <h3>Danh sách phí giao dịch</h3>
-                <table id="transaction-fee-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-                  <thead>
-                    <tr>
-                      <th>Loại giao dịch</th>
-                      <th>Danh sách phí</th>
-                      <th>Giá trị phí (%)</th>
-                      <th>Giá trị phí cố định</th>
-                      <th>Hành động</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- Example Row -->
-                    <tr>
-                      <td>Loại 1</td>
-                      <td>Phí 1</td>
-                      <td>2.5%</td>
-                      <td></td>
-                      <td style="text-align: right;">
-                        <button class="delete-btn">Xóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Loại 2</td>
-                      <td>Phí 2</td>
-                      <td></td>
-                      <td>30,000 VNĐ</td>
-                      <td style="text-align: right;">
-                        <button class="delete-btn">Xóa</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <hr>
-                <!-- Lãi suất -->
-                <h3>Lãi suất</h3>
-                <div class="form-group">
-                  <label for="interest-transaction-type">Loại giao dịch:</label>
-                  <select id="interest-transaction-type" name="interest-transaction-type" required>
-                    <option value="" disabled selected>Chọn loại giao dịch</option>
-                    <option value="type1">Loại 1</option>
-                    <option value="type2">Loại 2</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="debt-group">Nhóm nợ:</label>
-                  <select id="debt-group" name="debt-group" required>
-                    <option value="" disabled selected>Chọn nhóm nợ</option>
-                    <option value="group1">Nhóm 1</option>
-                    <option value="group2">Nhóm 2</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="interest-rate">Lãi suất (%):</label>
-                  <input type="text" id="interest-rate" name="interest-rate" placeholder="Nhập lãi suất (%)" required>
-                </div>
-                <div class="form-group">
-                  <button class="edit-btn">Thêm</button>
-                </div>
-                <h3>Danh sách Lãi Suất</h3>
-                <table id="interest-rate-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-                  <thead>
-                    <tr>
-                      <th>Loại giao dịch</th>
-                      <th>Nhóm nợ</th>
-                      <th>Lãi suất (%)</th>
-                      <th>Hành động</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- Example Row -->
-                    <tr>
-                      <td>Loại 1</td>
-                      <td>Nhóm 1</td>
-                      <td>2.5%</td>
-                      <td style="text-align: right;">
-                        <button class="delete-btn">Xóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Loại 2</td>
-                      <td>Nhóm 2</td>
-                      <td>1.8%</td>
-                      <td style="text-align: right;">
-                        <button class="delete-btn">Xóa</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <hr>
-            </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="fee-list">Danh sách phí:</label>
+                    <select id="fee-list" name="fee-list" required>
+                      <option value="" disabled selected>Chọn danh sách phí</option>
+                      <option value="fee1">Phí 1</option>
+                      <option value="fee2">Phí 2</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="fee-percentage">Giá trị phí (%):</label>
+                    <input type="text" id="fee-percentage" name="fee-percentage" placeholder="Nhập giá trị phí (%)" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="fixed-fee">Giá trị phí cố định:</label>
+                    <input type="text" id="fixed-fee" name="fixed-fee" placeholder="Nhập giá trị phí cố định">
+                  </div>
+                  <div class="form-group">
+                    <button class="edit-btn">Thêm</button>
+                  </div>
+                  <h3>Danh sách phí giao dịch</h3>
+                  <table id="transaction-fee-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                      <tr>
+                        <th>Loại giao dịch</th>
+                        <th>Danh sách phí</th>
+                        <th>Giá trị phí (%)</th>
+                        <th>Giá trị phí cố định</th>
+                        <th>Hành động</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Example Row -->
+                      <tr>
+                        <td>Loại 1</td>
+                        <td>Phí 1</td>
+                        <td>2.5%</td>
+                        <td></td>
+                        <td style="text-align: right;">
+                          <button class="delete-btn">Xóa</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Loại 2</td>
+                        <td>Phí 2</td>
+                        <td></td>
+                        <td>30,000 VNĐ</td>
+                        <td style="text-align: right;">
+                          <button class="delete-btn">Xóa</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <hr>
+                  <!-- Lãi suất -->
+                  <h3>Lãi suất</h3>
+                  <div class="form-group">
+                    <label for="interest-transaction-type">Loại giao dịch:</label>
+                    <select id="interest-transaction-type" name="interest-transaction-type" required>
+                      <option value="" disabled selected>Chọn loại giao dịch</option>
+                      <option value="type1">Loại 1</option>
+                      <option value="type2">Loại 2</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="debt-group">Nhóm nợ:</label>
+                    <select id="debt-group" name="debt-group" required>
+                      <option value="" disabled selected>Chọn nhóm nợ</option>
+                      <option value="group1">Nhóm 1</option>
+                      <option value="group2">Nhóm 2</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="interest-rate">Lãi suất (%):</label>
+                    <input type="text" id="interest-rate" name="interest-rate" placeholder="Nhập lãi suất (%)" required>
+                  </div>
+                  <div class="form-group">
+                    <button class="edit-btn">Thêm</button>
+                  </div>
+                  <h3>Danh sách Lãi Suất</h3>
+                  <table id="interest-rate-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                      <tr>
+                        <th>Loại giao dịch</th>
+                        <th>Nhóm nợ</th>
+                        <th>Lãi suất (%)</th>
+                        <th>Hành động</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Example Row -->
+                      <tr>
+                        <td>Loại 1</td>
+                        <td>Nhóm 1</td>
+                        <td>2.5%</td>
+                        <td style="text-align: right;">
+                          <button class="delete-btn">Xóa</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Loại 2</td>
+                        <td>Nhóm 2</td>
+                        <td>1.8%</td>
+                        <td style="text-align: right;">
+                          <button class="delete-btn">Xóa</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <hr>
+              </div>
               <!-- Form actions -->
               <div class="actions">
                 <button type="submit" class="save">Lưu</button>
@@ -347,9 +343,7 @@
               </div>
             </form>
           </div>
-          <div class="form-column">
-            
-          </div>
+
         </div>
       </div>
       <div class="modal">
