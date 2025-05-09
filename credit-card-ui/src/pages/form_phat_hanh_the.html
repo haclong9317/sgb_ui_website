@@ -391,7 +391,7 @@
                 <span>Số thẻ: <strong style="color: #4caf50;">970412*****9101</strong> &nbsp; Ngày hết hạn: <strong style="color: #4caf50;">04/31</strong></span>
                 <span>Tình trạng thẻ: <strong style="color: #4caf50;">Chờ kích hoạt</strong></span>
                 <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
-                  <button class="edit-btn">Kích hoạt</button>
+                  <button class="edit-btn" onclick="showConfirmPopup1();">Kích hoạt</button>
                 </div>
               </div>
             </div>
@@ -555,6 +555,23 @@
         </div>
       </div>
 
+      <div id="confirm-popup1" class="modal1" style="display: none;">
+        <div class="modal-content">
+          <h3>Chọn kênh kích hoạt</h3>
+          <div class="form-group">
+            <select id="education-level" name="education-level">
+              <option value="" disabled selected>Chọn kênh kích hoạt</option>
+              <option value="intermediate">SMS</option>
+              <option value="college">Email</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button onclick="confirmReason1()" class="edit-btn">OK</button>
+            <button onclick="confirmReason1()" class="delete-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
   <script>
@@ -675,11 +692,14 @@
     }
 
 /*************  ✨ Windsurf Command ⭐  *************/
-    /**
 
 /*******  a28389b3-86ae-47c8-bfc4-1a3d4dec5f86  *******/    
-function closeConfirmPopup() {
+    function closeConfirmPopup() {
       document.getElementById('confirm-popup').style.display = 'none';
+    }
+
+    function showConfirmPopup1() {
+      document.getElementById('confirm-popup1').style.display = 'flex';
     }
 
     function confirmReason() {
@@ -691,6 +711,21 @@ function closeConfirmPopup() {
       // alert('Lý do của bạn: ' + reason);
       // closeReasonPopup();
       document.getElementById('confirm-popup').style.display = 'none';
+    }
+
+    function closeConfirmPopup1() {
+      document.getElementById('confirm-popup1').style.display = 'none';
+    }
+
+    function confirmReason1() {
+      //const reason = document.getElementById('reason-textarea').value;
+      // if (reason.trim() === '') {
+      //   alert('Vui lòng nhập lý do!');
+      //   return;
+      // }
+      // alert('Lý do của bạn: ' + reason);
+      // closeReasonPopup();
+      document.getElementById('confirm-popup1').style.display = 'none';
     }
   </script>
 </body>

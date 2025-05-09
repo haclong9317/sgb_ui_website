@@ -6,11 +6,11 @@
 
 2. **Install Application**:  
    - Move the task to the **Install App** stage.  
-   - The IT Support Team will install the required application.  
+   - The IT Support Team will receive the POS at this stage at warehouse - **check all information correct** (Ex: Serial number, Specification ...) before process next step - and will install the application.
    - Once the installation is complete, update the task status to **AUTH CODE**.
 
 3. **Generate Auth Code**:  
-   - The IT Installation Coordinator will receive the POS and initiate the process of obtaining the Auth Code from the IT Operations Team.  
+   - The IT Installation Coordinator will receive the POS at IT Support Department and initiate the process of obtaining the Auth Code from the IT Operations Team.  
    - After obtaining the Auth Code, update the task status to **SETUP BAIS**.
 
 4. **Setup BAIS**:  
