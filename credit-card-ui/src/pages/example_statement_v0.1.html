@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Giao Dịch</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div id="container">
+    <div id="nav-placeholder"></div>
+    <main>
+      <h2>Form Giao Dịch</h2>
+      <form id="transaction-form" action="javascript:void(0);" method="POST">
+        <!-- Loại giao dịch -->
+        <div class="form-group">
+          <label for="transaction-type">Loại giao dịch:</label>
+          <select id="transaction-type" name="transaction-type" required>
+            <option value="" disabled selected>Chọn loại giao dịch</option>
+            <option value="sale">Sale</option>
+            <option value="cash">Cash</option>
+            <option value="refund">Refund</option>
+            <!-- <option value="refund">Void</option> -->
+          </select>
+        </div>
+
+        <!-- Số tiền -->
+        <div class="form-group">
+          <label for="amount">Số tiền:</label>
+          <input type="number" id="amount" name="amount" placeholder="Nhập số tiền" required>
+        </div>
+
+        <!-- Combobox hiển thị các giao dịch Sale -->
+        <div class="form-group">
+          <label for="sale-transaction-id">Chọn ID Giao Dịch (Sale):</label>
+          <select id="sale-transaction-id" name="sale-transaction-id">
+            <option value="" disabled selected>Chọn ID Giao Dịch Sale</option>
+          </select>
+        </div>
+
+        <!-- Nút Submit -->
+        <div class="form-group">
+          <button type="submit" class="edit-btn">Lưu</button>
+        </div>
+
+        <!-- Bảng hiển thị giao dịch -->
+        <h2>Danh sách giao dịch</h2>
+        <table id="transaction-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>ID Giao Dịch Gốc</th>
+              <th>Loại Giao Dịch</th>
+              <th>Trạng Thái</th> <!-- Cột Trạng Thái -->
+              <th>Số Tiền</th>
+              <th>Ngày</th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Các giao dịch sẽ được thêm vào đây -->
+          </tbody>
+        </table>
+        <div style="margin-top: 20px;">
+          <button id="save-table-btn" class="edit-btn">Lưu tạm</button>
+          <button id="save-table-btn1" class="edit-btn">Lưu vào file</button>
+          <div style="margin-top: 20px;">
+            <button id="reset-localstorage-btn" class="edit-btn" style="background-color: red; color: white;">Reset Local Storage</button>
+          </div>
+          <div style="margin-top: 20px;">
+            <label for="upload-file" style="margin-right: 10px;">Tải file JSON:</label>
+            <input type="file" id="upload-file" accept=".json">
+          </div>
+        </div>
+      </form>      
+    </main>
+  </div>
+  <script>
+    // Biến để theo dõi ID và ngày
+    let transactionIdCounter = 0;
+    let dayCounter = 0;
+
+    document.getElementById('transaction-form').addEventListener('submit', function (event) {
+      event.preventDefault(); // Ngăn chặn reload trang
+
+      // Lấy giá trị từ form
+      const transactionType = document.getElementById('transaction-type').value;
+      const amount = document.getElementById('amount').value;
+      const saleTransactionId = document.getElementById('sale-transaction-id').value;
+
+      // Kiểm tra nếu các giá trị không hợp lệ
+      if (!transactionType || !amount) {
+        alert("Vui lòng nhập đầy đủ thông tin!");
+        return;
+      }
+
+      // Nếu loại giao dịch là refund, kiểm tra xem ID giao dịch gốc đã được chọn chưa
+      if (transactionType === "refund" && !saleTransactionId) {
+        alert("Vui lòng chọn ID Giao Dịch Gốc (Sale) để thực hiện Refund!");
+        return;
+      }
+
+      // Tăng ID giao dịch và ngày
+      transactionIdCounter++;
+      dayCounter++;
+      const transactionId = `T${transactionIdCounter}`;
+      const originalTransactionId = transactionType === "refund" ? saleTransactionId : ""; // Giao dịch gốc chỉ áp dụng cho Refund
+      const day = `T + ${dayCounter - 1}`;
+      const status = "new"; // Trạng thái mặc định là new
+
+      // Tạo một hàng mới trong bảng
+      const tableBody = document.querySelector('#transaction-table tbody');
+      const newRow = document.createElement('tr');
+      newRow.id = `row-${transactionIdCounter}`; // Gán ID duy nhất cho hàng
+      newRow.innerHTML = `
+        <td>${transactionId}</td>
+        <td>${originalTransactionId}</td>
+        <td>${transactionType}</td>
+        <td>${status}</td> <!-- Trạng thái -->
+        <td>${amount}</td>
+        <td>${day}</td>
+        <td>
+          <button class="edit-btn" onclick="voidTransaction('${transactionId}')">Void</button>
+          <button class="edit-btn" onclick="refundTransaction('${transactionId}')">Refund</button>
+        </td>
+      `;
+
+      // Thêm hàng mới vào bảng
+      tableBody.appendChild(newRow);
+
+      // Nếu loại giao dịch là refund, cập nhật trạng thái của giao dịch gốc
+      if (transactionType === "refund" && saleTransactionId) {
+        const currentRow = document.querySelector(`#row-${saleTransactionId.replace('T', '')}`);
+        if (currentRow) {
+          // Cập nhật trạng thái của giao dịch gốc
+          currentRow.children[3].textContent = "refunded"; // Cập nhật cột Trạng Thái (index 3)
+
+          // Disable các nút trong cột Hành Động của giao dịch gốc
+          const buttons = currentRow.querySelectorAll('button');
+          buttons.forEach(button => {
+            button.disabled = true;
+            button.style.opacity = 0.5; // Thêm hiệu ứng mờ để hiển thị nút bị disable
+            button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
+          });
+        }
+      }
+
+      // Cập nhật combobox giao dịch Sale
+      updateSaleTransactionDropdown();
+
+      // Reset form
+      document.getElementById('transaction-form').reset();
+    });
+
+    // Hàm cập nhật combobox với các giao dịch Sale
+    function updateSaleTransactionDropdown() {
+      const saleDropdown = document.getElementById('sale-transaction-id');
+      const tableRows = document.querySelectorAll('#transaction-table tbody tr');
+
+      // Xóa các tùy chọn cũ
+      saleDropdown.innerHTML = '<option value="" disabled selected>Chọn ID Giao Dịch Sale</option>';
+
+      // Duyệt qua các hàng trong bảng và thêm các giao dịch Sale có trạng thái "new" vào combobox
+      tableRows.forEach(row => {
+        const transactionType = row.children[2].textContent; // Cột Loại Giao Dịch
+        const status = row.children[3].textContent; // Cột Trạng Thái
+        const transactionId = row.children[0].textContent; // Cột ID
+
+        if (transactionType === 'sale' && status === 'new') {
+          const option = document.createElement('option');
+          option.value = transactionId;
+          option.textContent = transactionId;
+          saleDropdown.appendChild(option);
+        }
+      });
+    }
+
+    // Hàm xử lý Void
+    function voidTransaction(transactionId) {
+      // Lấy hàng hiện tại dựa trên transactionId
+      const currentRow = document.querySelector(`#row-${transactionId.replace('T', '')}`);
+      
+      // Lấy thông tin từ hàng hiện tại
+      const originalTransactionId = transactionId; // ID Giao Dịch Gốc là transactionId
+      const amount = currentRow.children[4].textContent; // Lấy số tiền từ cột thứ 5 (index 4)
+      
+      // Tăng ID giao dịch và ngày
+      transactionIdCounter++;
+      dayCounter++;
+      const newTransactionId = `T${transactionIdCounter}`;
+      const day = `T + ${dayCounter - 1}`;
+
+      // Tạo một hàng mới trong bảng
+      const tableBody = document.querySelector('#transaction-table tbody');
+      const newRow = document.createElement('tr');
+      newRow.id = `row-${transactionIdCounter}`; // Gán ID duy nhất cho hàng
+      newRow.innerHTML = `
+        <td>${newTransactionId}</td>
+        <td>${originalTransactionId}</td>
+        <td>void</td>
+        <td>new</td> <!-- Trạng thái là voided -->
+        <td>${amount}</td>
+        <td>${day}</td>
+        <td></td> <!-- Không có nút trong cột Hành Động -->
+      `;
+
+      // Thêm hàng mới vào bảng
+      tableBody.appendChild(newRow);
+
+      // Cập nhật trạng thái của hàng hiện tại
+      currentRow.children[3].textContent = "voided"; // Cập nhật cột Trạng Thái (index 3)
+
+      // Disable các nút trong cột Hành Động của hàng hiện tại
+      const buttons = currentRow.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.disabled = true;
+        button.style.opacity = 0.5; // Thêm hiệu ứng mờ để hiển thị nút bị disable
+        button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
+      });
+
+      // Cập nhật combobox giao dịch Sale
+      updateSaleTransactionDropdown();
+
+      //alert(`Bạn đã chọn Void cho giao dịch ${transactionId}`);
+    }
+
+    // Hàm xử lý Refund
+    function refundTransaction(transactionId) {
+      // Lấy hàng hiện tại dựa trên transactionId
+      const currentRow = document.querySelector(`#row-${transactionId.replace('T', '')}`);
+      
+      // Lấy thông tin từ hàng hiện tại
+      const originalTransactionId = transactionId; // ID Giao Dịch Gốc là transactionId
+      const amount = currentRow.children[4].textContent; // Lấy số tiền từ cột thứ 5 (index 4)
+      
+      // Tăng ID giao dịch và ngày
+      transactionIdCounter++;
+      dayCounter++;
+      const newTransactionId = `T${transactionIdCounter}`;
+      const day = `T + ${dayCounter - 1}`;
+
+      // Tạo một hàng mới trong bảng
+      const tableBody = document.querySelector('#transaction-table tbody');
+      const newRow = document.createElement('tr');
+      newRow.id = `row-${transactionIdCounter}`; // Gán ID duy nhất cho hàng
+      newRow.innerHTML = `
+        <td>${newTransactionId}</td>
+        <td>${originalTransactionId}</td>
+        <td>refund</td>
+        <td>new</td> <!-- Trạng thái là refunded -->
+        <td>${amount}</td>
+        <td>${day}</td>
+        <td></td> <!-- Không có nút trong cột Hành Động -->
+      `;
+
+      // Thêm hàng mới vào bảng
+      tableBody.appendChild(newRow);
+
+      // Cập nhật trạng thái của hàng hiện tại
+      currentRow.children[3].textContent = "refunded"; // Cập nhật cột Trạng Thái (index 3)
+
+      // Disable các nút trong cột Hành Động của hàng hiện tại
+      const buttons = currentRow.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.disabled = true;
+        button.style.opacity = 0.5; // Thêm hiệu ứng mờ để hiển thị nút bị disable
+        button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
+      });
+
+      // Cập nhật combobox giao dịch Sale
+      updateSaleTransactionDropdown();
+
+      //alert(`Bạn đã chọn Refund cho giao dịch ${transactionId}`);
+    }
+
+    function saveTableToLocalStorage() {
+      const tableRows = document.querySelectorAll('#transaction-table tbody tr');
+      const tableData = [];
+
+      // Duyệt qua các hàng trong bảng và lưu dữ liệu
+      tableRows.forEach(row => {
+        const rowData = {
+          id: row.children[0].textContent, // Cột ID
+          originalTransactionId: row.children[1].textContent, // Cột ID Giao Dịch Gốc
+          transactionType: row.children[2].textContent, // Cột Loại Giao Dịch
+          status: row.children[3].textContent, // Cột Trạng Thái
+          amount: row.children[4].textContent, // Cột Số Tiền
+          day: row.children[5].textContent // Cột Ngày
+        };
+        tableData.push(rowData);
+      });
+
+      // Lưu dữ liệu vào Local Storage
+      localStorage.setItem('transactionTable', JSON.stringify(tableData));
+      alert('Bảng đã được lưu!');
+    }
+
+    function saveTableToFile() {
+      const tableRows = document.querySelectorAll('#transaction-table tbody tr');
+      const tableData = [];
+
+      // Duyệt qua các hàng trong bảng và lưu dữ liệu
+      tableRows.forEach(row => {
+        const rowData = {
+          id: row.children[0].textContent, // Cột ID
+          originalTransactionId: row.children[1].textContent, // Cột ID Giao Dịch Gốc
+          transactionType: row.children[2].textContent, // Cột Loại Giao Dịch
+          status: row.children[3].textContent, // Cột Trạng Thái
+          amount: row.children[4].textContent, // Cột Số Tiền
+          day: row.children[5].textContent // Cột Ngày
+        };
+        tableData.push(rowData);
+      });
+
+      // Tạo file JSON
+      const blob = new Blob([JSON.stringify(tableData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      // Tạo link tải file
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'transactionTable.json'; // Tên file
+      a.click();
+
+      // Giải phóng URL
+      URL.revokeObjectURL(url);
+    }
+
+    function loadTableFromLocalStorage() {
+      const tableBody = document.querySelector('#transaction-table tbody');
+      const tableData = JSON.parse(localStorage.getItem('transactionTable'));
+
+      // Nếu không có dữ liệu, thoát
+      if (!tableData) return;
+
+      // Xóa nội dung cũ trong bảng
+      tableBody.innerHTML = '';
+
+      // Duyệt qua dữ liệu và thêm vào bảng
+      tableData.forEach(rowData => {
+        const newRow = document.createElement('tr');
+        newRow.id = `row-${rowData.id.replace('T', '')}`; // Gán ID duy nhất cho hàng
+        newRow.innerHTML = `
+          <td>${rowData.id}</td>
+          <td>${rowData.originalTransactionId}</td>
+          <td>${rowData.transactionType}</td>
+          <td>${rowData.status}</td>
+          <td>${rowData.amount}</td>
+          <td>${rowData.day}</td>
+          <td>
+            ${
+              rowData.transactionType === 'sale'
+                ? `
+                  <button class="edit-btn void-btn" onclick="voidTransaction('${rowData.id}')" 
+                    ${rowData.status === 'new' ? '' : 'disabled style="opacity: 0.5; cursor: not-allowed;"'}>
+                    Void
+                  </button>
+                  <button class="edit-btn refund-btn" onclick="refundTransaction('${rowData.id}')" 
+                    ${rowData.status === 'new' ? '' : 'disabled style="opacity: 0.5; cursor: not-allowed;"'}>
+                    Refund
+                  </button>
+                `
+                : ''
+            }
+          </td>
+        `;
+        tableBody.appendChild(newRow);
+      });
+
+      // Lấy ID cuối cùng trong bảng và cập nhật transactionIdCounter
+      const lastRow = tableData[tableData.length - 1];
+      if (lastRow) {
+        transactionIdCounter = parseInt(lastRow.id.replace('T', ''), 10); // Cập nhật transactionIdCounter
+
+        // Lấy ngày cuối cùng và cập nhật dayCounter
+        const lastDay = lastRow.day.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
+        dayCounter = parseInt(lastDay, 10) + 1; // Cập nhật dayCounter cho giao dịch tiếp theo
+      } else {
+        // Nếu không có dữ liệu, bắt đầu từ T + 0
+        dayCounter = 0;
+      }
+
+      // Cập nhật combobox giao dịch Sale
+      updateSaleTransactionDropdown();
+    }
+
+    function loadTableFromFile(event) {
+      const file = event.target.files[0]; // Lấy file được chọn
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const tableData = JSON.parse(e.target.result); // Parse nội dung file JSON
+        const tableBody = document.querySelector('#transaction-table tbody');
+
+        // Xóa nội dung cũ trong bảng
+        tableBody.innerHTML = '';
+
+        // Duyệt qua dữ liệu và thêm vào bảng
+        tableData.forEach(rowData => {
+          const newRow = document.createElement('tr');
+          newRow.id = `row-${rowData.id.replace('T', '')}`; // Gán ID duy nhất cho hàng
+          newRow.innerHTML = `
+            <td>${rowData.id}</td>
+            <td>${rowData.originalTransactionId}</td>
+            <td>${rowData.transactionType}</td>
+            <td>${rowData.status}</td>
+            <td>${rowData.amount}</td>
+            <td>${rowData.day}</td>
+            <td>
+              ${
+                rowData.transactionType === 'sale'
+                  ? `
+                    <button class="edit-btn void-btn" onclick="voidTransaction('${rowData.id}')" 
+                      ${rowData.status === 'new' ? '' : 'disabled style="opacity: 0.5; cursor: not-allowed;"'}>
+                      Void
+                    </button>
+                    <button class="edit-btn refund-btn" onclick="refundTransaction('${rowData.id}')" 
+                      ${rowData.status === 'new' ? '' : 'disabled style="opacity: 0.5; cursor: not-allowed;"'}>
+                      Refund
+                    </button>
+                  `
+                  : ''
+              }
+            </td>
+          `;
+          tableBody.appendChild(newRow);
+        });
+
+        // Lấy ID cuối cùng trong bảng và cập nhật transactionIdCounter
+        const lastRow = tableData[tableData.length - 1];
+        if (lastRow) {
+          transactionIdCounter = parseInt(lastRow.id.replace('T', ''), 10); // Cập nhật transactionIdCounter
+
+          // Lấy ngày cuối cùng và cập nhật dayCounter
+          const lastDay = lastRow.day.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
+          dayCounter = parseInt(lastDay, 10) + 1; // Cập nhật dayCounter cho giao dịch tiếp theo
+        } else {
+          // Nếu không có dữ liệu, bắt đầu từ T + 0
+          dayCounter = 0;
+        }
+
+        // Cập nhật combobox giao dịch Sale
+        updateSaleTransactionDropdown();
+
+        alert('Dữ liệu đã được tải từ file!');
+      };
+
+      reader.readAsText(file); // Đọc file JSON
+    }
+
+    function resetLocalStorage() {
+      // Xóa dữ liệu trong Local Storage
+      localStorage.removeItem('transactionTable');
+
+      // Làm trống bảng
+      const tableBody = document.querySelector('#transaction-table tbody');
+      tableBody.innerHTML = '';
+
+      // Đặt lại transactionIdCounter
+      transactionIdCounter = 0;
+      dayCounter = 0;
+
+      // Cập nhật combobox giao dịch Sale
+      updateSaleTransactionDropdown();
+
+      alert('Local Storage đã được reset và bảng đã được làm trống!');
+    }
+
+    function loadTableFromFile(event) {
+      const file = event.target.files[0]; // Lấy file được chọn
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const tableData = JSON.parse(e.target.result); // Parse nội dung file JSON
+        const tableBody = document.querySelector('#transaction-table tbody');
+
+        // Xóa nội dung cũ trong bảng
+        tableBody.innerHTML = '';
+
+        // Duyệt qua dữ liệu và thêm vào bảng
+        tableData.forEach(rowData => {
+          const newRow = document.createElement('tr');
+          newRow.id = `row-${rowData.id.replace('T', '')}`; // Gán ID duy nhất cho hàng
+          newRow.innerHTML = `
+            <td>${rowData.id}</td>
+            <td>${rowData.originalTransactionId}</td>
+            <td>${rowData.transactionType}</td>
+            <td>${rowData.status}</td>
+            <td>${rowData.amount}</td>
+            <td>${rowData.day}</td>
+            <td>
+              ${rowData.status === 'new' ? `
+                <button class="edit-btn" onclick="voidTransaction('${rowData.id}')">Void</button>
+                <button class="edit-btn" onclick="refundTransaction('${rowData.id}')">Refund</button>
+              ` : ''}
+            </td>
+          `;
+          tableBody.appendChild(newRow);
+        });
+
+        // Lấy ID cuối cùng trong bảng và cập nhật transactionIdCounter
+        const lastRow = tableData[tableData.length - 1];
+        if (lastRow) {
+          transactionIdCounter = parseInt(lastRow.id.replace('T', ''), 10); // Cập nhật transactionIdCounter
+        }
+
+        // Cập nhật combobox giao dịch Sale
+        updateSaleTransactionDropdown();
+
+        alert('Dữ liệu đã được tải từ file!');
+      };
+
+      reader.readAsText(file); // Đọc file JSON
+    }
+
+    // Gắn sự kiện cho nút Reset Local Storage
+    document.getElementById('reset-localstorage-btn').addEventListener('click', resetLocalStorage);
+    document.getElementById('save-table-btn').addEventListener('click', saveTableToLocalStorage);
+    document.getElementById('save-table-btn1').addEventListener('click', saveTableToFile);
+    document.addEventListener('DOMContentLoaded', loadTableFromLocalStorage);
+    document.getElementById('upload-file').addEventListener('change', loadTableFromFile);
+    // Load navigation bar
+    fetch('../partials/nav.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('nav-placeholder').innerHTML = data);
+  </script>
+</body>
+</html>
