@@ -9,75 +9,84 @@
 <body>
   <div id="container">
     <div id="nav-placeholder"></div>
+    <button id="toggle-nav-placeholder" class="arrow-btn" style="margin-top: 10px;" onclick="toggleNavigation();">&#9664;</button>
     <main>
-      <div class="modal">
-        <h2>Form Giao Dịch</h2>
-        <form id="transaction-form" action="javascript:void(0);" method="POST">
-          <!-- Loại giao dịch -->
-          <div class="form-group">
-            <label for="transaction-type">Loại giao dịch:</label>
-            <select id="transaction-type" name="transaction-type" required>
-              <option value="" disabled selected>Chọn loại giao dịch</option>
-              <option value="sale">Sale</option>
-              <option value="cash">Cash</option>
-              <option value="refund">Refund</option>
-              <!-- <option value="refund">Void</option> -->
-            </select>
-          </div>
-  
-          <!-- Số tiền -->
-          <div class="form-group">
-            <label for="amount">Số tiền:</label>
-            <input type="number" id="amount" name="amount" placeholder="Nhập số tiền" required>
-          </div>
-  
-          <!-- Combobox hiển thị các giao dịch Sale -->
-          <div class="form-group">
-            <label for="sale-transaction-id">Chọn ID Giao Dịch (Sale):</label>
-            <select id="sale-transaction-id" name="sale-transaction-id">
-              <option value="" disabled selected>Chọn ID Giao Dịch Sale</option>
-            </select>
-          </div>
-  
-          <!-- Nút Submit -->
-          <div class="form-group">
-            <button type="submit" class="edit-btn">Lưu</button>
-          </div>
-  
-          <!-- Bảng hiển thị giao dịch -->
-          <h2>Danh sách giao dịch</h2>
-          <table id="transaction-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>ID Giao Dịch Gốc</th>
-                <th>Loại Giao Dịch</th>
-                <th>Trạng Thái</th> <!-- Cột Trạng Thái -->
-                <th>Số Tiền gốc</th>
-                <th>Số Tiền cập nhật</th>
-                <th>Ngày</th>
-                <th>Hành Động</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Các giao dịch sẽ được thêm vào đây -->
-            </tbody>
-          </table>
-          <div style="margin-top: 20px;">
-            <button id="save-table-btn" class="edit-btn">Lưu tạm</button>
-            <button id="save-table-btn1" class="edit-btn">Lưu vào file</button>
-            <div style="margin-top: 20px;">
-              <button id="reset-localstorage-btn" class="edit-btn" style="background-color: red; color: white;">Reset Local Storage</button>
+      <div class="modal"> 
+        <div class="forms-wrapper">
+        <div class="form-column">
+          <h2>Form Giao Dịch</h2>
+          <form id="transaction-form" action="javascript:void(0);" method="POST">
+            <!-- Loại giao dịch -->
+            <div class="form-group">
+              <label for="transaction-type">Loại giao dịch:</label>
+              <select id="transaction-type" name="transaction-type" required>
+                <option value="" disabled selected>Chọn loại giao dịch</option>
+                <option value="sale">Sale</option>
+                <option value="cash">Cash</option>
+                <option value="refund">Refund</option>
+                <!-- <option value="refund">Void</option> -->
+              </select>
             </div>
-            <div style="margin-top: 20px;">
-              <label for="upload-file" style="margin-right: 10px;">Tải file JSON:</label>
-              <input type="file" id="upload-file" accept=".json">
+    
+            <!-- Số tiền -->
+            <div class="form-group">
+              <label for="amount">Số tiền:</label>
+              <input type="number" id="amount" name="amount" placeholder="Nhập số tiền" required>
             </div>
-          </div>
-        </form>      
-      </div>
-      <div class="modal">
-        <h2>Thông tin sao kê</h2>
+    
+            <!-- Combobox hiển thị các giao dịch Sale -->
+            <div class="form-group">
+              <label for="sale-transaction-id">Chọn ID Giao Dịch (Sale):</label>
+              <select id="sale-transaction-id" name="sale-transaction-id">
+                <option value="" disabled selected>Chọn ID Giao Dịch Sale</option>
+              </select>
+            </div>
+    
+            <!-- Nút Submit -->
+            <div class="form-group">
+              <button type="submit" class="edit-btn">Tạo giao dịch</button>
+            </div>
+    
+            <!-- Bảng hiển thị giao dịch -->
+            <h2>Danh sách giao dịch</h2>
+            <table id="transaction-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>ID Giao Dịch Gốc</th>
+                  <th>Loại Giao Dịch</th>
+                  <th>Trạng Thái</th> <!-- Cột Trạng Thái -->
+                  <th>Số Tiền gốc</th>
+                  <th>Số Tiền cập nhật</th>
+                  <th>Ngày</th>
+                  <th>Ngày void</th>
+                  <th>Ngày refund</th>
+                  <th>Hành Động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Các giao dịch sẽ được thêm vào đây -->
+              </tbody>
+            </table>
+            <div style="margin-top: 20px;">
+              <button id="save-table-btn" class="edit-btn">Lưu tạm</button>
+              <button id="save-table-btn1" class="edit-btn">Lưu vào file</button>
+              <button id="cal-statement" class="edit-btn" onclick="calculateStatement()">Tính sao kê</button>
+              <div style="margin-top: 20px;">
+                <button id="create-sample-btn" class="edit-btn" style="background-color: blue; color: white;">Tạo Giao Dịch Mẫu</button>
+              </div>
+              <div style="margin-top: 20px;">
+                <button id="reset-localstorage-btn" class="edit-btn" style="background-color: red; color: white;">Reset Local Storage</button>
+              </div>
+              <div style="margin-top: 20px;">
+                <label for="upload-file" style="margin-right: 10px;">Tải file JSON:</label>
+                <input type="file" id="upload-file" accept=".json">
+              </div>
+            </div>
+          </form>  
+        </div>
+        <div class="form-column">
+          <h2>Thông tin sao kê</h2>
         <table id="summary-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
           <thead>
             <tr>
@@ -98,10 +107,17 @@
               <td>Refunded</td>
               <td id="sum-refunded">0</td>
             </tr>
+            <tr>
+              <td>Cash</td>
+              <td id="sum-cash">0</td>
+            </tr>
           </tbody>
         </table>
         <br>
         <h2>Chi Tiết Tính Lãi</h2>
+        <br>
+        <label id="statement-date-label" style="font-weight: bold;">Ngày sao kê: Chưa xác định</label>
+        <br>
         <table id="interest-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
           <thead>
             <tr>
@@ -109,6 +125,8 @@
               <th>Loại Giao Dịch</th>
               <th>Số Tiền Gốc</th>
               <th>Số Ngày Tính Lãi</th>
+              <th>Từ ngày</th>
+              <th>Đến ngày</th>
               <th>Tiền Lãi</th>
             </tr>
           </thead>
@@ -116,6 +134,35 @@
             <!-- Các giao dịch sẽ được thêm vào đây -->
           </tbody>
         </table>
+        <br>
+        <label id="statement-original-amount-sale-label" style="font-weight: bold;">Số tiền sale: Chưa xác định</label>
+        <label id="statement-original-amount-cash-label" style="font-weight: bold;">Số tiền cash: Chưa xác định</label>
+        <label id="statement-original-amount-label" style="font-weight: bold;">Số tiền gốc: Chưa xác định</label>
+        <label id="statement-interest-label" style="font-weight: bold;">Số tiền lãi: Chưa xác định</label>
+        <label id="statement-min-amount-label" style="font-weight: bold;">Số tiền tối thiểu phải trả: Chưa xác định</label>
+        <br>
+        <h2>Danh Sách Bucket</h2>
+        <br>
+        <table id="bucket-list-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Mô tả</th>
+              <th>Số tiền tối thiểu</th>
+              <th>Số tiền</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Các giao dịch sẽ được thêm vào đây -->
+          </tbody>
+        </table>
+        <br>
+        </div>    
+      </div>
+      </div>
+      <div class="modal">
+        
       </div>  
     </main>
   </div>
@@ -164,9 +211,11 @@
         <td>${amount}</td>
         <td>${0}</td> <!-- Số tiền cập nhật -->
         <td>${day}</td>
+        <td>-</td>
+        <td>-</td>
         <td>
           ${
-            transactionType === "void" || transactionType === "refund"
+            transactionType === "void" || transactionType === "refund" || transactionType === "cash"
               ? "" // Không có nút nếu loại giao dịch là void hoặc refund
               : `
                 <button class="edit-btn" onclick="voidTransaction('${transactionId}')">Void</button>
@@ -195,6 +244,7 @@
 
           // Cập nhật trạng thái của giao dịch gốc
           currentRow.children[3].textContent = "refunded"; // Cập nhật cột Trạng Thái (index 3)
+          currentRow.children[8].textContent = day; // Cập nhật cột Ngày refunded (index 8)
 
           // Disable các nút trong cột Hành Động của giao dịch gốc
           const buttons = currentRow.querySelectorAll('button');
@@ -213,7 +263,7 @@
       document.getElementById('transaction-form').reset();
 
       // Kiểm tra nếu ngày đạt đến T + 25, T + 50, ...
-      if (dayCounter % 5 === 0) {
+      if (dayCounter % 25 === 0) {
         statement(day); // Gọi hàm statement
       }
     });
@@ -245,9 +295,12 @@
     function voidTransaction(transactionId) {
       // Lấy hàng hiện tại dựa trên transactionId
       const currentRow = document.querySelector(`#row-${transactionId.replace('T', '')}`);
+      //alert(currentRow);
       
       // Lấy thông tin từ hàng hiện tại
-      const originalTransactionId = transactionId; // ID Giao Dịch Gốc là transactionId
+      const originalTransactionId = `<span class="original-void">${transactionId}</span>`;; // ID Giao Dịch Gốc là transactionId
+      //originalTransactionId = `<span class="original-void">${selectedSale.id}</span>`; // Thêm class màu đỏ
+      //const originalTransactionId = transactionId; // ID Giao Dịch Gốc là transactionId
       const amount = currentRow.children[4].textContent; // Lấy số tiền từ cột thứ 5 (index 4)
       
       // Tăng ID giao dịch và ngày
@@ -268,6 +321,8 @@
         <td>${amount}</td>
         <th>0</th>
         <td>${day}</td>
+        <td>-</td>
+        <td>-</td>
         <td></td> <!-- Không có nút trong cột Hành Động -->
       `;
 
@@ -276,6 +331,7 @@
 
       // Cập nhật trạng thái của hàng hiện tại
       currentRow.children[3].textContent = "voided"; // Cập nhật cột Trạng Thái (index 3)
+      currentRow.children[7].textContent = day; // Cập nhật cột Ngày voided (index 7)
 
       // Disable các nút trong cột Hành Động của hàng hiện tại
       const buttons = currentRow.querySelectorAll('button');
@@ -301,7 +357,8 @@
       const currentRow = document.querySelector(`#row-${transactionId.replace('T', '')}`);
       
       // Lấy thông tin từ hàng hiện tại
-      const originalTransactionId = transactionId; // ID Giao Dịch Gốc là transactionId
+      // const originalTransactionId = transactionId; // ID Giao Dịch Gốc là transactionId
+      const originalTransactionId = `<span class="original-refund">${transactionId}</span>`;; // ID Giao Dịch Gốc là transactionId
       const amount = currentRow.children[4].textContent; // Lấy số tiền từ cột thứ 5 (index 4)
       
       // Tăng ID giao dịch và ngày
@@ -320,8 +377,10 @@
         <td>refund</td>
         <td>new</td> <!-- Trạng thái là refunded -->
         <td>${amount}</td>
-        <th></th>
+        <th>0</th>
         <td>${day}</td>
+        <td>-</td>
+        <td>-</td>
         <td></td> <!-- Không có nút trong cột Hành Động -->
       `;
 
@@ -330,6 +389,7 @@
 
       // Cập nhật trạng thái của hàng hiện tại
       currentRow.children[3].textContent = "refunded"; // Cập nhật cột Trạng Thái (index 3)
+      currentRow.children[8].textContent = day; // Cập nhật cột Ngày refunded (index 8)
 
       // Disable các nút trong cột Hành Động của hàng hiện tại
       const buttons = currentRow.querySelectorAll('button');
@@ -362,7 +422,9 @@
           status: row.children[3].textContent, // Cột Trạng Thái
           amount: row.children[4].textContent, // Cột Số Tiền
           amountUpdate: row.children[5].textContent, // Cột Số Tiền updated
-          day: row.children[6].textContent // Cột Ngày
+          day: row.children[6].textContent, // Cột Ngày
+          dayVoided: row.children[7].textContent, // Cột Ngày voided
+          dayRefunded: row.children[8].textContent // Cột Ngày refunded
         };
         tableData.push(rowData);
       });
@@ -385,7 +447,9 @@
           status: row.children[3].textContent, // Cột Trạng Thái
           amount: row.children[4].textContent, // Cột Số Tiền
           amountUpdate: row.children[5].textContent, // Cột Số Tiền updated
-          day: row.children[6].textContent // Cột Ngày
+          day: row.children[6].textContent, // Cột Ngày
+          dayVoided: row.children[7].textContent, // Cột Ngày voided
+          dayRefunded: row.children[8].textContent // Cột Ngày refunded
         };
         tableData.push(rowData);
       });
@@ -420,12 +484,22 @@
         newRow.id = `row-${rowData.id.replace('T', '')}`; // Gán ID duy nhất cho hàng
         newRow.innerHTML = `
           <td>${rowData.id}</td>
-          <td>${rowData.originalTransactionId}</td>
+          <td>
+            ${
+              rowData.transactionType === 'void'
+                ? `<span class="original-void">${rowData.originalTransactionId}</span>` // Màu đỏ cho void
+                : rowData.transactionType === 'refund'
+                ? `<span class="original-refund">${rowData.originalTransactionId}</span>` // Màu xanh cho refund
+                : rowData.originalTransactionId // Không thay đổi nếu không phải void hoặc refund
+            }
+          </td>
           <td>${rowData.transactionType}</td>
           <td>${rowData.status}</td>
           <td>${rowData.amount}</td>
           <td>${rowData.amountUpdate}</td>
           <td>${rowData.day}</td>
+          <td>${rowData.dayVoided}</td>
+          <td>${rowData.dayRefunded}</td>
           <td>
             ${
               rowData.transactionType === 'sale'
@@ -463,71 +537,71 @@
       updateSaleTransactionDropdown();
     }
 
-    function loadTableFromFile(event) {
-      const file = event.target.files[0]; // Lấy file được chọn
-      if (!file) return;
+    // function loadTableFromFile(event) {
+    //   const file = event.target.files[0]; // Lấy file được chọn
+    //   if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const tableData = JSON.parse(e.target.result); // Parse nội dung file JSON
-        const tableBody = document.querySelector('#transaction-table tbody');
+    //   const reader = new FileReader();
+    //   reader.onload = function (e) {
+    //     const tableData = JSON.parse(e.target.result); // Parse nội dung file JSON
+    //     const tableBody = document.querySelector('#transaction-table tbody');
 
-        // Xóa nội dung cũ trong bảng
-        tableBody.innerHTML = '';
+    //     // Xóa nội dung cũ trong bảng
+    //     tableBody.innerHTML = '';
 
-        // Duyệt qua dữ liệu và thêm vào bảng
-        tableData.forEach(rowData => {
-          const newRow = document.createElement('tr');
-          newRow.id = `row-${rowData.id.replace('T', '')}`; // Gán ID duy nhất cho hàng
-          newRow.innerHTML = `
-            <td>${rowData.id}</td>
-            <td>${rowData.originalTransactionId}</td>
-            <td>${rowData.transactionType}</td>
-            <td>${rowData.status}</td>
-            <td>${rowData.amount}</td>
-            <td>${rowData.amountUpdate}</td>
-            <td>${rowData.day}</td>
-            <td>
-              ${
-                rowData.transactionType === 'sale'
-                  ? `
-                    <button class="edit-btn void-btn" onclick="voidTransaction('${rowData.id}')" 
-                      ${rowData.status === 'new' ? '' : 'disabled style="opacity: 0.5; cursor: not-allowed;"'}>
-                      Void
-                    </button>
-                    <button class="edit-btn refund-btn" onclick="refundTransaction('${rowData.id}')" 
-                      ${rowData.status === 'new' ? '' : 'disabled style="opacity: 0.5; cursor: not-allowed;"'}>
-                      Refund
-                    </button>
-                  `
-                  : ''
-              }
-            </td>
-          `;
-          tableBody.appendChild(newRow);
-        });
+    //     // Duyệt qua dữ liệu và thêm vào bảng
+    //     tableData.forEach(rowData => {
+    //       const newRow = document.createElement('tr');
+    //       newRow.id = `row-${rowData.id.replace('T', '')}`; // Gán ID duy nhất cho hàng
+    //       newRow.innerHTML = `
+    //         <td>${rowData.id}</td>
+    //         <td>${rowData.originalTransactionId}</td>
+    //         <td>${rowData.transactionType}</td>
+    //         <td>${rowData.status}</td>
+    //         <td>${rowData.amount}</td>
+    //         <td>${rowData.amountUpdate}</td>
+    //         <td>${rowData.day}</td>
+    //         <td>
+    //           ${
+    //             rowData.transactionType === 'sale'
+    //               ? `
+    //                 <button class="edit-btn void-btn" onclick="voidTransaction('${rowData.id}')" 
+    //                   ${rowData.status === 'new' ? '' : 'disabled style="opacity: 0.5; cursor: not-allowed;"'}>
+    //                   Void
+    //                 </button>
+    //                 <button class="edit-btn refund-btn" onclick="refundTransaction('${rowData.id}')" 
+    //                   ${rowData.status === 'new' ? '' : 'disabled style="opacity: 0.5; cursor: not-allowed;"'}>
+    //                   Refund
+    //                 </button>
+    //               `
+    //               : ''
+    //           }
+    //         </td>
+    //       `;
+    //       tableBody.appendChild(newRow);
+    //     });
 
-        // Lấy ID cuối cùng trong bảng và cập nhật transactionIdCounter
-        const lastRow = tableData[tableData.length - 1];
-        if (lastRow) {
-          transactionIdCounter = parseInt(lastRow.id.replace('T', ''), 10); // Cập nhật transactionIdCounter
+    //     // Lấy ID cuối cùng trong bảng và cập nhật transactionIdCounter
+    //     const lastRow = tableData[tableData.length - 1];
+    //     if (lastRow) {
+    //       transactionIdCounter = parseInt(lastRow.id.replace('T', ''), 10); // Cập nhật transactionIdCounter
 
-          // Lấy ngày cuối cùng và cập nhật dayCounter
-          const lastDay = lastRow.day.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
-          dayCounter = parseInt(lastDay, 10) + 1; // Cập nhật dayCounter cho giao dịch tiếp theo
-        } else {
-          // Nếu không có dữ liệu, bắt đầu từ T + 0
-          dayCounter = 0;
-        }
+    //       // Lấy ngày cuối cùng và cập nhật dayCounter
+    //       const lastDay = lastRow.day.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
+    //       dayCounter = parseInt(lastDay, 10) + 1; // Cập nhật dayCounter cho giao dịch tiếp theo
+    //     } else {
+    //       // Nếu không có dữ liệu, bắt đầu từ T + 0
+    //       dayCounter = 0;
+    //     }
 
-        // Cập nhật combobox giao dịch Sale
-        updateSaleTransactionDropdown();
+    //     // Cập nhật combobox giao dịch Sale
+    //     updateSaleTransactionDropdown();
 
-        alert('Dữ liệu đã được tải từ file!');
-      };
+    //     alert('Dữ liệu đã được tải từ file!');
+    //   };
 
-      reader.readAsText(file); // Đọc file JSON
-    }
+    //   reader.readAsText(file); // Đọc file JSON
+    // }
 
     function resetLocalStorage() {
       // Xóa dữ liệu trong Local Storage
@@ -565,12 +639,22 @@
           newRow.id = `row-${rowData.id.replace('T', '')}`; // Gán ID duy nhất cho hàng
           newRow.innerHTML = `
             <td>${rowData.id}</td>
-            <td>${rowData.originalTransactionId}</td>
+            <td>
+            ${
+              rowData.transactionType === 'void'
+                ? `<span class="original-void">${rowData.originalTransactionId}</span>` // Màu đỏ cho void
+                : rowData.transactionType === 'refund'
+                ? `<span class="original-refund">${rowData.originalTransactionId}</span>` // Màu xanh cho refund
+                : rowData.originalTransactionId // Không thay đổi nếu không phải void hoặc refund
+            }
+          </td>
             <td>${rowData.transactionType}</td>
             <td>${rowData.status}</td>
             <td>${rowData.amount}</td>
             <td>${rowData.amountUpdate}</td>
             <td>${rowData.day}</td>
+            <td>${rowData.dayVoided}</td>
+            <td>${rowData.dayRefunded}</td>
             <td>
               ${rowData.status === 'new' ? `
                 <button class="edit-btn" onclick="voidTransaction('${rowData.id}')">Void</button>
@@ -628,42 +712,421 @@
       document.getElementById('sum-refunded').textContent = sumRefunded.toFixed(2);
     }
 
+    function calculateStatement() {
+      const tableRows = document.querySelectorAll('#transaction-table tbody tr');
+      let sumNew = 0;
+      let sumVoided = 0;
+      let sumRefunded = 0;
+      let sumCash = 0;
+
+      // Duyệt qua các hàng trong bảng giao dịch
+      tableRows.forEach(row => {
+        const transactionType = row.children[2].textContent; // Loại giao dịch
+        const status = row.children[3].textContent; // Trạng thái
+        const amount = parseInt(row.children[4].textContent) || 0; // Số tiền gốc
+
+         // Xử lý giao dịch sale
+        if (transactionType === 'sale') {
+          if (status === 'new') {
+            // Lấy số tiền gốc cho giao dịch sale có trạng thái new
+            sumNew += amount;
+          } else if (status === 'refunded') {
+            // Lấy số tiền cập nhật cho giao dịch sale có trạng thái refunded
+            const updatedAmount = parseInt(row.children[5].textContent) || 0; // Cột thứ 6 chứa số tiền cập nhật
+            sumNew += updatedAmount;
+          } else if (status === 'voided') {
+            // Không tính giao dịch sale đã voided
+            return;
+          }
+        }
+
+        // Tính tổng cho giao dịch voided (lấy từ cột Số Tiền Gốc)
+        if (transactionType === 'void') {
+          sumVoided += amount; // Lấy giá trị từ cột Số Tiền Gốc
+        }
+
+        // Tính tổng cho giao dịch refunded (lấy từ cột Số Tiền Gốc)
+        if (transactionType === 'refund') {
+          sumRefunded += amount; // Lấy giá trị từ cột Số Tiền Gốc
+        }
+
+        // Tính tổng cho giao dịch refunded (lấy từ cột Số Tiền Gốc)
+        if (transactionType === 'cash') {
+          sumCash += amount; // Lấy giá trị từ cột Số Tiền Gốc
+        }
+      });
+
+      // Cập nhật bảng tổng hợp
+      document.getElementById('sum-new').textContent = sumNew.toFixed(2);
+      document.getElementById('sum-voided').textContent = sumVoided.toFixed(2);
+      document.getElementById('sum-refunded').textContent = sumRefunded.toFixed(2);
+      document.getElementById('sum-cash').textContent = sumCash.toFixed(2);
+      // Hiển thị số tiền gốc trong bảng giao dịch
+      document.getElementById('statement-original-amount-sale-label').textContent = `Số tiền sale: ${(sumNew).toFixed(2)}`;
+      document.getElementById('statement-original-amount-cash-label').textContent = `Số tiền cash: ${(sumCash).toFixed(2)}`;
+      document.getElementById('statement-original-amount-label').textContent = `Số tiền gốc: ${(sumNew + sumCash).toFixed(2)}`;
+
+      updateInterestTable(); // Cập nhật bảng tính lãi
+    }
+
+
     function updateInterestTable() {
       const tableRows = document.querySelectorAll('#transaction-table tbody tr');
       const interestTableBody = document.querySelector('#interest-table tbody');
-      const interestRate = 0.05; // Lãi suất 5% mỗi ngày
-      const currentDate = new Date(); // Ngày hiện tại
+      const annualInterestRate = 0.05; // Lãi suất 5% mỗi năm
+      const interestRate = annualInterestRate / 365; // Lãi suất mỗi ngày
+
+      const annualInterestRateCash = 0.06; // Lãi suất 5% mỗi năm
+      const interestRateCash = annualInterestRateCash / 365; // Lãi suất mỗi ngày
+      totalInterest = 0; // Biến lưu tổng lãi suất
+      totalCashAmount = 0; // Biến lưu tổng số tiền cash
+
 
       // Xóa nội dung cũ trong bảng tính lãi
       interestTableBody.innerHTML = '';
+
+      // Lấy ngày cuối cùng trong bảng
+      let maxDay = 0;
+      tableRows.forEach(row => {
+        const dayString = row.children[6].textContent.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
+        const transactionDay = parseInt(dayString, 10); // Chuyển đổi thành số nguyên
+        if (transactionDay > maxDay) {
+          maxDay = transactionDay; // Cập nhật ngày cuối cùng
+        }
+      });
+      // Cộng thêm 1 vào ngày cuối cùng
+      maxDay += 1;
+
+      // Hiển thị ngày sao kê
+      document.getElementById('statement-date-label').textContent = `Ngày sao kê: T + ${maxDay}`;
 
       // Duyệt qua các hàng trong bảng giao dịch
       tableRows.forEach(row => {
         const transactionId = row.children[0].textContent; // ID Giao Dịch
         const transactionType = row.children[2].textContent; // Loại Giao Dịch
+        const status = row.children[3].textContent; // Trạng thái
         const amount = parseFloat(row.children[4].textContent) || 0; // Số Tiền Gốc
-        const dayString = row.children[5].textContent.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
+        const updatedAmount = parseFloat(row.children[5].textContent) || 0; // Số Tiền Cập Nhật
+        
+        const dayString = row.children[6].textContent.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
         const transactionDay = parseInt(dayString, 10); // Chuyển đổi thành số nguyên
+        const refundDayString = row.children[8].textContent.replace('T + ', ''); // Lấy ngày refund từ cột thứ 9
+        const refundDay = parseInt(refundDayString, 10) || 0; // Chuyển đổi thành số nguyên
 
         // Tính số ngày tính lãi
-        const daysElapsed = transactionDay; // Giả sử ngày giao dịch là T + X
-        const interest = amount * interestRate * daysElapsed; // Tiền lãi = Số tiền gốc * Lãi suất * Số ngày
+        let daysElapsed = 0;
 
-        // Chỉ thêm vào bảng nếu giao dịch là "sale"
-        if (transactionType === 'sale') {
+        if (transactionType === 'sale' && status === 'new') {
+          //alert('Tính lãi cho giao dịch sale mới ' + transactionDay + ' ' + maxDay);
+          daysElapsed = maxDay - transactionDay; // Ngày cuối cùng trừ đi ngày giao dịch
+          const interest = amount * interestRate * daysElapsed; // Tiền lãi = Số tiền gốc * Lãi suất * Số ngày
+
+          // Thêm dòng vào bảng chi tiết tính lãi
           const newRow = document.createElement('tr');
           newRow.innerHTML = `
             <td>${transactionId}</td>
             <td>${transactionType}</td>
             <td>${amount.toFixed(2)}</td>
             <td>${daysElapsed}</td>
+            <td>${row.children[6].textContent}</td>
+            <td>${'T + ' + maxDay}</td>
             <td>${interest.toFixed(2)}</td>
           `;
           interestTableBody.appendChild(newRow);
+          totalInterest += interest; // Cộng dồn lãi suất vào tổng
+        } else if (transactionType === 'sale' && status === 'refunded' && updatedAmount > 0) {
+          // Tính lãi cho dòng 1: Giao dịch gốc từ ngày giao dịch đến ngày refund
+          const daysToRefund = refundDay - transactionDay; // Số ngày từ ngày giao dịch đến ngày refund
+          const interestOriginal = amount * interestRate * daysToRefund; // Tiền lãi cho số tiền gốc
+
+          const newRow1 = document.createElement('tr');
+          newRow1.innerHTML = `
+            <td>${transactionId} (Gốc)</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysToRefund}</td>
+            <td>${row.children[6].textContent}</td>
+            <td>${row.children[8].textContent}</td>
+            <td>${interestOriginal.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow1);
+
+          // Tính lãi cho dòng 2: Số tiền cập nhật từ ngày refund đến ngày sao kê
+          const daysFromRefund = maxDay - refundDay; // Số ngày từ ngày refund đến ngày sao kê
+          const interestUpdated = updatedAmount * interestRate * daysFromRefund; // Tiền lãi cho số tiền cập nhật
+
+          const newRow2 = document.createElement('tr');
+          newRow2.innerHTML = `
+            <td>${transactionId} (Cập nhật)</td>
+            <td>${transactionType}</td>
+            <td>${updatedAmount.toFixed(2)}</td>
+            <td>${daysFromRefund}</td>
+            <td>${row.children[8].textContent}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interestUpdated.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow2);
+          totalInterest += interestOriginal + interestUpdated; // Cộng dồn lãi suất vào tổng
+        } else if (transactionType === 'cash'){
+          // Tính lãi cho giao dịch cash mới
+          daysElapsed = maxDay - transactionDay; // Ngày cuối cùng trừ đi ngày giao dịch
+          const interest = amount * interestRateCash * daysElapsed; // Tiền lãi = Số tiền gốc * Lãi suất * Số ngày
+
+          // Thêm dòng vào bảng chi tiết tính lãi
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+            <td>${transactionId}</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysElapsed}</td>
+            <td>${row.children[6].textContent}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interest.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow);
+          totalInterest += interest; // Cộng dồn lãi suất vào tổng
+          totalCashAmount += amount; // Cộng dồn số tiền cash vào tổng
         }
+
       });
+
+      // Hiển thị số tiền gốc trong bảng giao dịch
+      document.getElementById('statement-interest-label').textContent = `Số tiền lãi: ${totalInterest.toFixed(2)}`;
+      const originAmountLabel = document.getElementById('statement-original-amount-label').textContent; // Lấy nội dung của label
+      const originAmount = parseFloat(originAmountLabel.replace('Số tiền gốc: ', '').replace(/,/g, '').trim()) || 0; // Loại bỏ chữ và chuyển thành số
+      minimumAmount = (totalInterest + originAmount) * 0.05; // Số tiền tối thiểu phải trả , 5% tong so tien
+      document.getElementById('statement-min-amount-label').textContent = `Số tiền tối thiểu phải trả: 5% * (${originAmount.toFixed(2)} + ${totalInterest.toFixed(2)}) =  ${minimumAmount.toFixed(2)}`;
+      const saleAmountLabel = document.getElementById('statement-original-amount-sale-label').textContent; // Lấy nội dung của label sale
+      const saleAmount = parseFloat(saleAmountLabel.replace('Số tiền sale: ', '').replace(/,/g, '').trim()) || 0; // Loại bỏ chữ và chuyển thành số
+      ///////////////////////////////
+      description = 'Bucket ' + (bucketIdCounter) + ': <br> Sale bucket: '  + (saleAmount).toFixed(2) + '<br> Cash bucket: ' + totalCashAmount.toFixed(2);
+      addToBucketList(description, minimumAmount.toFixed(2));
+    }
+    function createSampleTransactions() {
+      const tableBody = document.querySelector('#transaction-table tbody');
+      const totalTransactions = 25; // Tổng số giao dịch cần tạo
+      let saleTransactions = []; // Lưu trữ các giao dịch sale để làm ID gốc cho void và refund
+
+      // Tạo giao dịch mẫu
+      for (let i = 1; i <= totalTransactions; i++) {
+        const transactionId = `T${transactionIdCounter + i}`;
+        const day = `T + ${dayCounter + i - 1}`;
+        let transactionType, originalTransactionId, status, amount;
+        dayVoided = '-';
+        dayRefunded = '-';
+
+
+        if (i <= 15) {
+          // Tạo 15 giao dịch sale
+          transactionType = 'sale';
+          originalTransactionId = '';
+          status = 'new';
+          amount = Math.floor(Math.random() * 10 + 1) * 1000; // Số tiền ngẫu nhiên là bội số của 1000
+          saleTransactions.push({ id: transactionId, status }); // Lưu ID và trạng thái giao dịch sale
+        } else if (i <= 20) {
+          // Tạo 5 giao dịch void
+          const validSales = saleTransactions.filter(sale => sale.status === 'new'); // Chỉ lấy các giao dịch sale có trạng thái new
+          if (validSales.length === 0) {
+            //alert('Không có giao dịch sale nào với trạng thái new để tạo void!');
+            break; // Thoát khỏi vòng lặp nếu không có giao dịch hợp lệ
+          }
+          const selectedSale = validSales[Math.floor(Math.random() * validSales.length)]; // Chọn ngẫu nhiên một giao dịch hợp lệ
+
+          // Kiểm tra nếu giao dịch đã được refund thì không cho void
+          const currentRow = document.querySelector(`#row-${selectedSale.id.replace('T', '')}`);
+          if (currentRow && currentRow.children[3].textContent === 'refunded') {
+            //alert(`Giao dịch ${selectedSale.id} đã được refund, không thể tạo void!`);
+            continue; // Bỏ qua giao dịch này
+          }
+
+          transactionType = 'void';
+          // originalTransactionId = selectedSale.id; // Lấy ID gốc từ giao dịch sale hợp lệ
+          originalTransactionId = `<span class="original-void">${selectedSale.id}</span>`; // Thêm class màu đỏ
+          //dayVoided = currentRow.children[6].textContent; // Ngày lấy từ gd sale
+          status = 'voided';
+          //amount = 0; // Void không có số tiền
+
+          // Lấy số tiền từ giao dịch sale gốc
+          const saleAmount = parseInt(currentRow.children[4].textContent) || 0; // Cột thứ 5 chứa số tiền gốc
+          amount = saleAmount; // Gán số tiền từ giao dịch sale gốc cho giao dịch void
+
+          // Cập nhật trạng thái của giao dịch sale gốc
+          if (currentRow) {
+            currentRow.children[3].textContent = "voided"; // Cập nhật trạng thái thành voided
+            currentRow.children[7].textContent = day; // Cập nhật ngày voided
+            const buttons = currentRow.querySelectorAll('button');
+            buttons.forEach(button => {
+              button.disabled = true;
+              button.style.opacity = 0.5; // Thêm hiệu ứng mờ
+              button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
+            });
+          }
+
+          // Cập nhật trạng thái của giao dịch sale gốc trong mảng saleTransactions
+          const saleIndex = saleTransactions.findIndex(sale => sale.id === selectedSale.id);
+          if (saleIndex !== -1) {
+            saleTransactions[saleIndex].status = 'voided'; // Cập nhật trạng thái thành voided
+          }
+        } else {
+          // Tạo 5 giao dịch refund
+          const validSales = saleTransactions.filter(sale => sale.status === 'new'); // Chỉ lấy các giao dịch sale có trạng thái new
+          if (validSales.length === 0) {
+            //alert('Không có giao dịch sale nào với trạng thái new để tạo refund!');
+            break; // Thoát khỏi vòng lặp nếu không có giao dịch hợp lệ
+          }
+          const selectedSale = validSales[Math.floor(Math.random() * validSales.length)]; // Chọn ngẫu nhiên một giao dịch hợp lệ
+
+          // Kiểm tra nếu giao dịch đã được voided thì không cho refund
+          const currentRow = document.querySelector(`#row-${selectedSale.id.replace('T', '')}`);
+          if (currentRow && currentRow.children[3].textContent === 'voided') {
+            //alert(`Giao dịch ${selectedSale.id} đã được voided, không thể tạo refund!`);
+            continue; // Bỏ qua giao dịch này
+          }
+
+          transactionType = 'refund';
+          // originalTransactionId = selectedSale.id; // Lấy ID gốc từ giao dịch sale hợp lệ
+          originalTransactionId = `<span class="original-refund">${selectedSale.id}</span>`; // Thêm class màu xanh
+          //dayRefunded = currentRow.children[6].textContent; // Ngày lấy từ gd sale
+          status = 'refunded';
+          //amount = Math.floor(Math.random() * 5 + 1) * 1000; // Số tiền ngẫu nhiên là bội số của 1000
+
+          // Lấy số tiền từ giao dịch sale gốc
+          const saleAmount = parseInt(currentRow.children[4].textContent) || 0; // Cột thứ 5 chứa số tiền gốc
+
+          // Tạo số tiền refund ngẫu nhiên, đảm bảo nhỏ hơn hoặc bằng số tiền gốc
+          amount = Math.min(Math.floor(Math.random() * 5 + 1) * 1000, saleAmount); // Số tiền refund không vượt quá số tiền gốc
+
+          // Cập nhật trạng thái của giao dịch sale gốc
+          if (currentRow) {
+            currentRow.children[3].textContent = "refunded"; // Cập nhật trạng thái thành refunded
+            currentRow.children[8].textContent = day; // Cập nhật ngày refunded
+
+            // Lấy số tiền gốc và số tiền cập nhật hiện tại
+            const originalAmount = parseInt(currentRow.children[4].textContent) || 0; // Số tiền gốc (cột thứ 5)
+            const updatedAmount = parseInt(currentRow.children[5].textContent) || originalAmount; // Số tiền cập nhật (cột thứ 6)
+
+            // Tính số tiền còn lại sau khi refund
+            const remainingAmount = updatedAmount - amount;
+
+            // Cập nhật cột Số Tiền Cập Nhật
+            currentRow.children[5].textContent = remainingAmount.toFixed(2);
+
+            // Vô hiệu hóa các nút trong cột Hành Động
+            const buttons = currentRow.querySelectorAll('button');
+            buttons.forEach(button => {
+              button.disabled = true;
+              button.style.opacity = 0.5; // Thêm hiệu ứng mờ
+              button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
+            });
+          }
+
+          // Cập nhật trạng thái của giao dịch sale gốc trong mảng saleTransactions
+          const saleIndex = saleTransactions.findIndex(sale => sale.id === selectedSale.id);
+          if (saleIndex !== -1) {
+            saleTransactions[saleIndex].status = 'refunded'; // Cập nhật trạng thái thành refunded
+          }
+        }
+
+        // Thêm giao dịch trực tiếp vào bảng
+        const newRow = document.createElement('tr');
+        newRow.id = `row-${transactionId.replace('T', '')}`;
+        newRow.innerHTML = `
+          <td>${transactionId}</td>
+          <td>${originalTransactionId}</td>
+          <td>${transactionType}</td>
+          <td>${status}</td>
+          <td>${amount}</td>
+          <td>${transactionType === 'sale' ? 0 : ''}</td>
+          <td>${day}</td>
+          <td>${dayVoided}</td>
+          <td>${dayRefunded}</td>
+          <td>
+            ${
+              transactionType === 'sale' && status === 'new'
+                ? `
+                  <button class="edit-btn" onclick="voidTransaction('${transactionId}')">Void</button>
+                  <button class="edit-btn" onclick="refundTransaction('${transactionId}')">Refund</button>
+                `
+                : ''
+            }
+          </td>
+        `;
+        tableBody.appendChild(newRow);
+      }
+
+      // Cập nhật transactionIdCounter và dayCounter
+      transactionIdCounter += totalTransactions;
+      dayCounter += totalTransactions;
+
+      alert('25 giao dịch mẫu đã được tạo!');
     }
 
+    ///////////// Phần tính toán cho phần bucket
+    let bucketIdCounter = 1; // Biến đếm ID tự tăng cho bucket
+
+    function addToBucketList(description, minPayment) {
+      const tableBody = document.querySelector('#bucket-list-table tbody');
+
+      // Tạo ID tự sinh
+      const bucketId = `B${bucketIdCounter++}`;
+      
+      // Tạo một hàng mới
+      const newRow = document.createElement('tr');
+      newRow.id = `row-${bucketId}`;
+      newRow.innerHTML = `
+        <td>${bucketId}</td>
+        <td>${description}</td>
+        <td>${minPayment}</td>
+        <td>
+          <input type="text" id="amount-${bucketId}" value="0" style="width: 100px;" />
+        </td>
+        <td>
+          <button onclick="payFull('${bucketId}')" class="edit-btn" style="margin-bottom: 5px;">Thanh toán toàn bộ</button>
+          <br>
+          <button onclick="payMin('${bucketId}')" class="edit-btn" style="margin-bottom: 5px;">Thanh toán tối thiểu</button>
+          <br>
+          <button onclick="payPartial('${bucketId}')" class="edit-btn" style="margin-bottom: 5px;">Thanh toán một phần</button>
+        </td>
+      `;
+
+      // Thêm hàng mới vào bảng
+      tableBody.appendChild(newRow);
+    }
+
+    // Hàm xử lý thanh toán toàn bộ
+    function payFull(bucketId) {
+      const amountInput = document.getElementById(`amount-${bucketId}`);
+      alert(`Thanh toán toàn bộ số tiền: ${amountInput.value}`);
+      amountInput.value = 0; // Đặt số tiền về 0 sau khi thanh toán
+    }
+
+    // Hàm xử lý thanh toán tối thiểu
+    function payMin(bucketId) {
+      const amountInput = document.getElementById(`amount-${bucketId}`);
+      const minAmount = parseFloat(amountInput.value) * 0.1; // Giả sử thanh toán tối thiểu là 10%
+      alert(`Thanh toán tối thiểu số tiền: ${minAmount.toFixed(2)}`);
+      amountInput.value = (parseFloat(amountInput.value) - minAmount).toFixed(2); // Cập nhật số tiền còn lại
+    }
+
+    // Hàm xử lý thanh toán một phần
+    function payPartial(bucketId) {
+      const amountInput = document.getElementById(`amount-${bucketId}`);
+      const partialAmount = prompt('Nhập số tiền muốn thanh toán:');
+      if (partialAmount && !isNaN(partialAmount)) {
+        const remainingAmount = parseFloat(amountInput.value) - parseFloat(partialAmount);
+        if (remainingAmount < 0) {
+          alert('Số tiền thanh toán vượt quá số tiền hiện tại!');
+        } else {
+          alert(`Thanh toán một phần số tiền: ${parseFloat(partialAmount).toFixed(2)}`);
+          amountInput.value = remainingAmount.toFixed(2); // Cập nhật số tiền còn lại
+        }
+      } else {
+        alert('Vui lòng nhập số tiền hợp lệ!');
+      }
+    }
+    /////////////
+
+    document.getElementById('create-sample-btn').addEventListener('click', createSampleTransactions);
     // Gắn sự kiện cho nút Reset Local Storage
     document.getElementById('reset-localstorage-btn').addEventListener('click', resetLocalStorage);
     document.getElementById('save-table-btn').addEventListener('click', saveTableToLocalStorage);
@@ -675,5 +1138,6 @@
       .then(response => response.text())
       .then(data => document.getElementById('nav-placeholder').innerHTML = data);
   </script>
+  <script src="../js/scripts.js"></script> <!-- Tải script chung -->
 </body>
 </html>

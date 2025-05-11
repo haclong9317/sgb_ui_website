@@ -9,6 +9,7 @@
 <body>
   <div id="container">
     <div id="nav-placeholder"></div>
+    <button id="toggle-nav-placeholder" class="arrow-btn" style="margin-top: 10px;" onclick="toggleNavigation();">&#9664;</button>
     <main>
       <!-- Danh sách Rule tiền mặt -->
       <div class="modal">
@@ -98,5 +99,6 @@
       .then(response => response.text())
       .then(data => document.getElementById('nav-placeholder').innerHTML = data);
   </script>
+  <script src="../js/scripts.js"></script> <!-- Tải script chung -->
 </body>
 </html>
