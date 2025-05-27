@@ -177,164 +177,266 @@
               </div>
               
               <div class="tab-content" id="config-card">
-                  <!-- Quy định giao dịch -->
-                  <div class="form-group">
-                    <label for="transaction-rule">Giao dịch:</label>
-                    <select id="transaction-rule" name="transaction-rule" required>
-                      <option value="" disabled selected>Chọn giao dịch</option>
-                      <option value="rule1">Thanh toán</option>
-                      <option value="rule2">Rút tiền mặt</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <button class="edit-btn">Thêm</button>
-                  </div>
-                  <h3>Danh sách giao dịch</h3>
-                  <table id="transaction-rule-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead>
-                      <tr>
-                        <th>Giao dịch</th>
-                        <th>Hành động</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Example Row -->
-                      <tr>
-                        <td>Thanh toán</td>
-                        <td style="text-align: right;">
-                          <button class="delete-btn">Xóa</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Rút tiền mặt</td>
-                        <td style="text-align: right;">
-                          <button class="delete-btn">Xóa</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <hr>
-          
-                  <!-- Phí giao dịch -->
-                  <h3>Phí giao dịch</h3>
-                  <div class="form-group">
-                    <label for="transaction-type">Loại giao dịch:</label>
-                    <select id="transaction-type" name="transaction-type" required>
-                      <option value="" disabled selected>Chọn loại giao dịch</option>
-                      <option value="type1">Loại 1</option>
-                      <option value="type2">Loại 2</option>
-                    </select>
+                <!-- Quy định giao dịch -->
+                <div class="form-group">
+                  <label for="transaction-rule">Giao dịch:</label>
+                  <select id="transaction-rule" name="transaction-rule" required>
+                    <option value="" disabled selected>Chọn giao dịch</option>
+                    <option value="rule1">Thanh toán</option>
+                    <option value="rule2">Rút tiền mặt</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <button class="edit-btn">Thêm</button>
+                </div>
+                <h3>Danh sách giao dịch</h3>
+                <table id="transaction-rule-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Giao dịch</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Example Row -->
+                    <tr>
+                      <td>Thanh toán</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Rút tiền mặt</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <hr>
+        
+                <!-- Phí giao dịch -->
+                <h3>Phí giao dịch</h3>
+                <div class="form-group">
+                  <label for="transaction-type">Loại giao dịch:</label>
+                  <select id="transaction-type" name="transaction-type" required>
+                    <option value="" disabled selected>Chọn loại giao dịch</option>
+                    <option value="type1">Loại 1</option>
+                    <option value="type2">Loại 2</option>
+                  </select>
 
-                  </div>
-                  <div class="form-group">
-                    <label for="fee-list">Danh sách phí:</label>
-                    <select id="fee-list" name="fee-list" required>
-                      <option value="" disabled selected>Chọn danh sách phí</option>
-                      <option value="fee1">Phí 1</option>
-                      <option value="fee2">Phí 2</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="fee-percentage">Giá trị phí (%):</label>
-                    <input type="text" id="fee-percentage" name="fee-percentage" placeholder="Nhập giá trị phí (%)" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="fixed-fee">Giá trị phí cố định:</label>
-                    <input type="text" id="fixed-fee" name="fixed-fee" placeholder="Nhập giá trị phí cố định">
-                  </div>
-                  <div class="form-group">
-                    <button class="edit-btn">Thêm</button>
-                  </div>
-                  <h3>Danh sách phí giao dịch</h3>
-                  <table id="transaction-fee-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead>
-                      <tr>
-                        <th>Loại giao dịch</th>
-                        <th>Danh sách phí</th>
-                        <th>Giá trị phí (%)</th>
-                        <th>Giá trị phí cố định</th>
-                        <th>Hành động</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Example Row -->
-                      <tr>
-                        <td>Loại 1</td>
-                        <td>Phí 1</td>
-                        <td>2.5%</td>
-                        <td></td>
-                        <td style="text-align: right;">
-                          <button class="delete-btn">Xóa</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Loại 2</td>
-                        <td>Phí 2</td>
-                        <td></td>
-                        <td>30,000 VNĐ</td>
-                        <td style="text-align: right;">
-                          <button class="delete-btn">Xóa</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <hr>
-                  <!-- Lãi suất -->
-                  <h3>Lãi suất</h3>
-                  <div class="form-group">
-                    <label for="interest-transaction-type">Loại giao dịch:</label>
-                    <select id="interest-transaction-type" name="interest-transaction-type" required>
-                      <option value="" disabled selected>Chọn loại giao dịch</option>
-                      <option value="type1">Loại 1</option>
-                      <option value="type2">Loại 2</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="debt-group">Nhóm nợ:</label>
-                    <select id="debt-group" name="debt-group" required>
-                      <option value="" disabled selected>Chọn nhóm nợ</option>
-                      <option value="group1">Nhóm 1</option>
-                      <option value="group2">Nhóm 2</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="interest-rate">Lãi suất (%):</label>
-                    <input type="text" id="interest-rate" name="interest-rate" placeholder="Nhập lãi suất (%)" required>
-                  </div>
-                  <div class="form-group">
-                    <button class="edit-btn">Thêm</button>
-                  </div>
-                  <h3>Danh sách Lãi Suất</h3>
-                  <table id="interest-rate-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead>
-                      <tr>
-                        <th>Loại giao dịch</th>
-                        <th>Nhóm nợ</th>
-                        <th>Lãi suất (%)</th>
-                        <th>Hành động</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Example Row -->
-                      <tr>
-                        <td>Loại 1</td>
-                        <td>Nhóm 1</td>
-                        <td>2.5%</td>
-                        <td style="text-align: right;">
-                          <button class="delete-btn">Xóa</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Loại 2</td>
-                        <td>Nhóm 2</td>
-                        <td>1.8%</td>
-                        <td style="text-align: right;">
-                          <button class="delete-btn">Xóa</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <hr>
+                </div>
+                <div class="form-group">
+                  <label for="fee-list">Danh sách phí:</label>
+                  <select id="fee-list" name="fee-list" required>
+                    <option value="" disabled selected>Chọn danh sách phí</option>
+                    <option value="fee1">Phí 1</option>
+                    <option value="fee2">Phí 2</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="fee-percentage">Giá trị phí (%):</label>
+                  <input type="text" id="fee-percentage" name="fee-percentage" placeholder="Nhập giá trị phí (%)" required>
+                </div>
+                <div class="form-group">
+                  <label for="fixed-fee">Giá trị phí cố định:</label>
+                  <input type="text" id="fixed-fee" name="fixed-fee" placeholder="Nhập giá trị phí cố định">
+                </div>
+                <div class="form-group">
+                  <button class="edit-btn">Thêm</button>
+                </div>
+                <h3>Danh sách phí giao dịch</h3>
+                <table id="transaction-fee-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Loại giao dịch</th>
+                      <th>Danh sách phí</th>
+                      <th>Giá trị phí (%)</th>
+                      <th>Giá trị phí cố định</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Example Row -->
+                    <tr>
+                      <td>Loại 1</td>
+                      <td>Phí 1</td>
+                      <td>2.5%</td>
+                      <td></td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Loại 2</td>
+                      <td>Phí 2</td>
+                      <td></td>
+                      <td>30,000 VNĐ</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <hr>
+                <!-- Lãi suất -->
+                <h3>Lãi suất</h3>
+                <div class="form-group">
+                  <label for="interest-transaction-type">Loại giao dịch:</label>
+                  <select id="interest-transaction-type" name="interest-transaction-type" required>
+                    <option value="" disabled selected>Chọn loại giao dịch</option>
+                    <option value="type1">Loại 1</option>
+                    <option value="type2">Loại 2</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="debt-group">Nhóm nợ:</label>
+                  <select id="debt-group" name="debt-group" required>
+                    <option value="" disabled selected>Chọn nhóm nợ</option>
+                    <option value="group1">Nhóm 1</option>
+                    <option value="group2">Nhóm 2</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="interest-rate">Lãi suất (%):</label>
+                  <input type="text" id="interest-rate" name="interest-rate" placeholder="Nhập lãi suất (%)" required>
+                </div>
+                <div class="form-group">
+                  <button class="edit-btn">Thêm</button>
+                </div>
+                <h3>Danh sách Lãi Suất</h3>
+                <table id="interest-rate-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>Loại giao dịch</th>
+                      <th>Nhóm nợ</th>
+                      <th>Lãi suất (%)</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Example Row -->
+                    <tr>
+                      <td>Loại 1</td>
+                      <td>Nhóm 1</td>
+                      <td>2.5%</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Loại 2</td>
+                      <td>Nhóm 2</td>
+                      <td>1.8%</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <hr>
+                <!-- Cấu hình trả góp -->
+                <h3>Trả góp</h3>
+                <div class="form-group">
+                <label for="installment-config">Cấu hình trả góp <span style="color:red">*</span>:</label>
+                <select id="installment-config" name="installment-config" required>
+                  <option value="" disabled selected>Chọn loại tên cấu hình trả góp</option>
+                  <option value="config1">Cấu hình 1</option>
+                  <option value="config2">Cấu hình 2</option>
+                </select>
+                </div>
+                <div class="form-group">
+                  <label for="installment-fee">Phí <span style="color:red">*</span>:</label>
+                  <select id="installment-fee" name="installment-fee" required>
+                    <option value="" disabled selected>Chọn danh sách các loại phí</option>
+                    <option value="fee1">Phí 1</option>
+                    <option value="fee2">Phí 2</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="installment-interest">Lãi suất <span style="color:red">*</span>:</label>
+                  <select id="installment-interest" name="installment-interest" required>
+                    <option value="" disabled selected>Chọn lãi suất áp dụng</option>
+                    <option value="rate1">Lãi suất 1</option>
+                    <option value="rate2">Lãi suất 2</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <button class="edit-btn">Thêm</button>
+                </div>
+                
+                <!-- Thêm bảng này ngay bên dưới phần "Trả góp" để hiển thị các cấu hình đã chọn -->
+                <h3>Danh sách cấu hình trả góp</h3>
+                <table id="installment-config-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 20px;">
+                  <thead>
+                    <tr>
+                      <th>Cấu hình trả góp</th>
+                      <th>Phí</th>
+                      <th>Lãi suất</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Example Row -->
+                    <tr>
+                      <td>Cấu hình 1</td>
+                      <td>Phí 1</td>
+                      <td>Lãi suất 1</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Cấu hình 2</td>
+                      <td>Phí 2</td>
+                      <td>Lãi suất 2</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- Cấu hình tài liệu -->
+                <hr>
+                <h3>Tài liệu</h3>
+                <div class="form-group">
+                  <label for="installment-fee">Tài liệu <span style="color:red">*</span>:</label>
+                  <select id="installment-fee" name="installment-fee" required>
+                    <option value="" disabled selected>Chọn danh sách các tài liệu</option>
+                    <option value="fee1">CCCD</option>
+                    <option value="fee2">Bảng lương</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <button class="edit-btn">Thêm</button>
+                </div>
+                <!-- Thêm bảng mô tả các tham số tài liệu ngay bên dưới phần "Tài liệu" -->
+                <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                  <thead>
+                    <tr>
+                      <th>STT</th>
+                      <th>Tên tài liệu</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>CCCD</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Bảng lương</td>
+                      <td style="text-align: right;">
+                        <button class="delete-btn">Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               <!-- Form actions -->
               <div class="actions">
