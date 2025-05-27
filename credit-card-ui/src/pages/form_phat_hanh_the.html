@@ -547,7 +547,14 @@
       <div id="reason-popup" class="modal1" style="display: none;">
         <div class="modal-content">
           <h3>Nhập lý do</h3>
-          <textarea id="reason-textarea" placeholder="Nhập lý do tại đây..." rows="5" style="width: 100%;"></textarea>
+          <!-- <textarea id="reason-textarea" placeholder="Nhập lý do tại đây..." rows="5" style="width: 100%;"></textarea> -->
+          <select id="reason-select" style="width: 100%;">
+            <option value="" disabled selected>Chọn lý do khóa thẻ</option>
+            <option value="lost">Không thanh toán dư nợ</option>
+            <option value="damaged">Mất thẻ</option>
+            <option value="info_change">Thẻ bị đánh cắp thông tin</option>
+            <option value="other">Lý do khác</option>
+          </select>
           <div class="actions">
             <button onclick="submitReason()" class="edit-btn">OK</button>
             <button onclick="closeReasonPopup()" class="delete-btn">Cancel</button>

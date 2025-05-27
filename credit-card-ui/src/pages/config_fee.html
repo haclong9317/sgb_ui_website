@@ -431,6 +431,10 @@
                 <th>Hình thức tính phí</th>
                 <th>Giá trị phần trăm</th>
                 <th>Giá trị cố định</th>
+                <th>Phí tối đa</th>
+                <th>Phí tối thiểu</th>
+                <th>Từ ngày</th>
+                <th>Đến ngày</th>
                 <th>Trạng thái</th>
                 <th>Mô tả</th>
                 <th>Hành động</th>
@@ -445,6 +449,10 @@
                 <td>P (Phần trăm)</td>
                 <td>2.5%</td>
                 <td>-</td>
+                <td>200,000 VNĐ</td>
+                <td>20,000 VNĐ</td>
+                <td>2024-01-01</td>
+                <td>2024-12-31</td>
                 <td>ACTIVE</td>
                 <td>Phí áp dụng cho giao dịch rút tiền mặt</td>
                 <td>
@@ -460,6 +468,10 @@
                 <td>F (Số tiền cố định)</td>
                 <td>-</td>
                 <td>500,000 VNĐ</td>
+                <td></td>
+                <td></td>
+                <td>2024-06-01</td>
+                <td>2024-12-31</td>
                 <td>INACTIVE</td>
                 <td>Phí áp dụng khi thanh toán trễ hạn</td>
                 <td>
@@ -540,6 +552,36 @@
                   <label for="fee-description">Mô tả:</label>
                   <textarea id="fee-description" name="fee-description" placeholder="Nhập mô tả" style="height: 60px;"></textarea>
                 </div>
+
+                <!-- Phí tối đa -->
+                <div class="form-group">
+                  <label for="fee-max">Phí tối đa:</label>
+                  <input type="text" id="fee-max" name="fee-max" placeholder="Nhập phí tối đa">
+                </div>
+
+                <!-- Phí tối thiểu -->
+                <div class="form-group">
+                  <label for="fee-min">Phí tối thiểu:</label>
+                  <input type="text" id="fee-min" name="fee-min" placeholder="Nhập phí tối thiểu">
+                </div>
+
+                <!-- Từ ngày -->
+                <div class="form-group">
+                  <label for="fee-from-date">Từ ngày:</label>
+                  <input type="date" id="fee-from-date" name="fee-from-date">
+                </div>
+
+                <!-- Đến ngày -->
+                <div class="form-group">
+                  <label for="fee-to-date">Đến ngày:</label>
+                  <input type="date" id="fee-to-date" name="fee-to-date">
+                </div>
+
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
           
                 <!-- Form actions -->
                 <div class="actions">
@@ -615,6 +657,36 @@
                   <textarea id="fee-description" name="fee-description" placeholder="Nhập mô tả" style="height: 60px;"></textarea>
                 </div>
           
+                <!-- Phí tối đa -->
+                <div class="form-group">
+                  <label for="fee-max">Phí tối đa:</label>
+                  <input type="text" id="fee-max" name="fee-max" placeholder="Nhập phí tối đa">
+                </div>
+
+                <!-- Phí tối thiểu -->
+                <div class="form-group">
+                  <label for="fee-min">Phí tối thiểu:</label>
+                  <input type="text" id="fee-min" name="fee-min" placeholder="Nhập phí tối thiểu">
+                </div>
+
+                <!-- Từ ngày -->
+                <div class="form-group">
+                  <label for="fee-from-date">Từ ngày:</label>
+                  <input type="date" id="fee-from-date" name="fee-from-date">
+                </div>
+
+                <!-- Đến ngày -->
+                <div class="form-group">
+                  <label for="fee-to-date">Đến ngày:</label>
+                  <input type="date" id="fee-to-date" name="fee-to-date">
+                </div>
+
+                <!-- Form actions -->
+                <div class="actions">
+                  <button type="submit" class="save">Lưu</button>
+                  <button type="button" class="cancel">Thoát</button>
+                </div>
+                
                 <!-- Form actions -->
                 <div class="actions">
                   <button type="submit" class="save">Lưu</button>

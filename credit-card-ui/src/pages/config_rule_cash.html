@@ -71,17 +71,38 @@
                 <input type="text" id="rule-name" name="rule-name" placeholder="Nhập tên Rule" required>
               </div>
               <div class="form-group">
-                <label for="max-withdrawal-limit">Giới hạn rút tiền tối đa (*)</label>
-                <input type="number" id="max-withdrawal-limit" name="max-withdrawal-limit" placeholder="Nhập số tiền tối đa (VNĐ)" required>
+                <label for="max-withdrawal-limit">Loại giới hạn rút tiền tối đa (*)</label>
+                <select id="max-withdrawal-limit" name="max-withdrawal-limit" required>
+                  <option value="" disabled selected>Chọn </option>
+                  <option value="10000000">P (phần trăm)</option>
+                  <option value="20000000">F (cố định)</option>
+                </select>
               </div>
               <div class="form-group">
-                <label for="min-withdrawal-limit">Giới hạn rút tiền tối thiểu (*)</label>
-                <input type="number" id="min-withdrawal-limit" name="min-withdrawal-limit" placeholder="Nhập số tiền tối thiểu (VNĐ)" required>
+                <label for="min-withdrawal-limit">Giá trị giới hạn(*)</label>
+                <input type="number" id="min-withdrawal-limit" name="min-withdrawal-limit" placeholder="Nhập giá trị" required>
               </div class="form-group">
+
               <div class="form-group">
                 <label for="monthly-withdrawal-limit">Hạn mức rút tiền mặt tháng (*)</label>
                 <input type="number" id="monthly-withdrawal-limit" name="monthly-withdrawal-limit" placeholder="Nhập hạn mức tháng (VNĐ)" required>
               </div>
+
+              <div class="form-group">
+                <label for="rule-type">Kênh giao dịch</label>
+                <select id="rule-type" name="rule-type" required>
+                  <option value="" disabled selected>Chọn kênh</option>
+                  <option value="vip">ATM</option>
+                  <option value="napas">ATM Napas</option>
+                  <option value="standard">POS</option>
+                  <option value="other">Quầy giao dịch</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="rule-description">Giới hạn tối thiểu</label>
+                <input type="text" id="rule-description" name="rule-description" placeholder="Nhập giới hạn rút tối thiểu" required>
+              </div>
+
               <!-- Form actions -->
               <div class="actions">
                 <button type="submit" class="save">Lưu</button>
