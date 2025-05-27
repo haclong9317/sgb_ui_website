@@ -46,39 +46,6 @@ sequenceDiagram
 
 ---
 
-## Starting a Dev Branch
-
-Below is a sequence diagram that describes the process of starting a `dev` branch:
-
-```mermaid
-sequenceDiagram
-    participant LocalRepo as Local Repository
-    participant RemoteRepo as Remote Repository
-    participant DevBranch as Dev Branch
-
-    LocalRepo->>RemoteRepo: Clone the repository (git clone <repository-url>)
-    LocalRepo->>LocalRepo: Create a new branch (git checkout -b dev)
-    LocalRepo->>RemoteRepo: Push the dev branch (git push origin dev)
-    RemoteRepo->>DevBranch: Dev branch is now available on the remote
-```
-
-### Steps to Start a Dev Branch
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   ```
-2. Create a new `dev` branch locally:
-   ```bash
-   git checkout -b dev
-   ```
-3. Push the `dev` branch to the remote repository:
-   ```bash
-   git push origin dev
-   ```
-4. The `dev` branch is now available for collaboration.
-
----
-
 ## Workflow Steps
 
 ### 1. Setting Up the Repository
@@ -161,10 +128,11 @@ git pull origin master
 
 ## Best Practices
 1. Always pull the latest changes before starting work on a branch.
-2. Use descriptive names for branches (e.g., `feature/login-page`, `hotfix/payment-bug`).
-3. Test thoroughly before merging into `master` or `dev`.
-4. Use pull requests for code reviews before merging.
-5. Delete branches after they are merged to keep the repository clean.
+2. Use descriptive names for branches (e.g., `feature/ITB-5662-login-page`, `hotfix/ITB-5662-payment-bug`), branch names for features or hotfixes should include a corresponding prefix with the Jira ID, if available.
+3. When committing, provide a clear description and avoid blank. Include a corresponding prefix with the Jira ID, if available. (e.g., `ITB-5662. Add file Korean string.xml`).
+4. Test thoroughly before merging into `master` or `dev`.
+5. Use pull requests for code reviews before merging.
+6. Delete branches after they are merged to keep the repository clean.
 
 This workflow ensures a structured and efficient way to manage source code in a collaborative environment.
 
@@ -261,10 +229,11 @@ This workflow ensures a structured and efficient way to manage source code in a 
 
 ### Các nguyên tắc tốt nhất
 1. Luôn kéo (pull) các thay đổi mới nhất trước khi bắt đầu làm việc trên một nhánh.
-2. Sử dụng tên nhánh mô tả rõ ràng (ví dụ: `feature/trang-dang-nhap`, `hotfix/loi-thanh-toan`).
-3. Kiểm tra kỹ lưỡng trước khi gộp vào nhánh `master` hoặc `dev`.
-4. Sử dụng pull request để xem xét mã nguồn trước khi gộp.
-5. Xóa các nhánh sau khi đã gộp để giữ repository sạch sẽ.
+2. Sử dụng tên nhánh mô tả rõ ràng (ví dụ: `feature/ITB-5662-trang-dang-nhap`, `hotfix/ITB-5662-loi-thanh-toan`), tên nhánh feature, hotfix thêm tiền tố tương ứng với id của Jira nếu có.
+3. Khi commit mô tả rõ ràng không nên để trống, thêm tiền tố tương ứng với id của Jira nếu có. (ví dụ: `ITB-5662. Add file Korean string.xml`).
+4. Kiểm tra kỹ lưỡng trước khi gộp vào nhánh `master` hoặc `dev`.
+5. Sử dụng pull request để xem xét mã nguồn trước khi gộp.
+6. Xóa các nhánh sau khi đã gộp để giữ repository sạch sẽ.
 
 ---
 
