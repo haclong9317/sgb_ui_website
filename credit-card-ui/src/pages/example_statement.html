@@ -721,24 +721,25 @@
       let sumVoided = 0;
       let sumRefunded = 0;
       let sumCash = 0;
+      let i = 0;
 
       console.log(tableRows.length);
       lastIndex = 0;
 
+      
+
       // Duyệt qua các hàng trong bảng giao dịch
-      for (let i = lastIndex; i < tableRows.length; i++) 
+      for (i = lastIndex; i < tableRows.length; i++) 
       {
         const row = tableRows[i];
 
         // Kiểm tra nếu hàng là delimiter (có nội dung là "---")
         const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
-        // if (cells.length === 1 && cells[0].textContent.trim() === '---') {
-        //   return; // Bỏ qua hàng này
-        // }
+        console.log(cells.length); // Loại giao dịch
 
         // Kiểm tra nếu hàng không có đủ số lượng ô
         if (cells.length < 5) {
-          return; // Bỏ qua hàng không hợp lệ
+          continue; // Bỏ qua hàng không hợp lệ
         }
         //console.log(cells.length);
 
@@ -862,11 +863,13 @@
   document.getElementById('statement-date-label').textContent = `Ngày sao kê: T + ${maxDay}`;
 
   // Duyệt qua các hàng trong bảng giao dịch
-  tableRows.forEach(row => {
+  for (i = lastIndex; i < tableRows.length; i++) 
+  {
+    const row = tableRows[i];
     const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
     // Kiểm tra nếu hàng không có đủ số lượng ô
     if (cells.length < 5) {
-      return; // Bỏ qua hàng không hợp lệ
+      continue; // Bỏ qua hàng không hợp lệ
     }
     
     const transactionId = row.children[0].textContent; // ID Giao Dịch
@@ -950,7 +953,7 @@
       totalInterest += interest; // Cộng dồn lãi suất vào tổng
       totalCashAmount += amount; // Cộng dồn số tiền cash vào tổng
     }
-  });
+  };
 
   // Tính bucket lãi và bucket old
   bucketInterest = totalInterest; // Bucket lãi là tổng lãi suất
@@ -1008,8 +1011,9 @@
   addToBucketList(description, minimumAmount.toFixed(2));
 
   // Hiển thị bucket lãi và bucket old
-  document.getElementById('statement-bucket-interest-label').textContent = `Bucket lãi: ${bucketInterest.toFixed(2)}`;
-  document.getElementById('statement-bucket-old-label').textContent = `Bucket old: ${bucketOld.toFixed(2)}`;
+  //document.getElementById('statement-bucket-interest-label').textContent = `Bucket lãi: ${bucketInterest.toFixed(2)}`;
+  //document.getElementById('statement-bucket-old-label').textContent = `Bucket old: ${bucketOld.toFixed(2)}`;
+  lastIndex = tableRows.length; // Cập nhật lastIndex để tránh tính lại các hàng đã tính toán trước đó
 }
 
 
