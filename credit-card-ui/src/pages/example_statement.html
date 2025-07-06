@@ -61,6 +61,7 @@
                   <th>Ngày</th>
                   <th>Ngày void</th>
                   <th>Ngày refund</th>
+                  <th>Ngày post</th> <!-- Thêm cột Ngày Post -->
                   <th>Hành Động</th>
                 </tr>
               </thead>
@@ -174,6 +175,8 @@
     let transactionIdCounter = 0;
     let dayCounter = 0;
     let lastIndex = 0; // Biến lưu trữ index cuối cùng trong mảng transactions
+    let cycle = 0; // Biến để theo dõi chu kỳ sao kê
+    
 
     document.getElementById('transaction-form').addEventListener('submit', function (event) {
       event.preventDefault(); // Ngăn chặn reload trang
@@ -724,10 +727,8 @@
       let sumCash = 0;
       let i = 0;
 
-      console.log(tableRows.length);
-      lastIndex = 0;
-
-      
+      console.log("tableRows.length: " + tableRows.length);
+      //lastIndex = 0;
 
       // Duyệt qua các hàng trong bảng giao dịch
       for (i = lastIndex; i < tableRows.length; i++) 
@@ -736,14 +737,13 @@
 
         // Kiểm tra nếu hàng là delimiter (có nội dung là "---")
         const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
-        console.log(cells.length); // Loại giao dịch
+        console.log("cells " + cells.length); // Loại giao dịch
 
         // Kiểm tra nếu hàng không có đủ số lượng ô
         if (cells.length < 5) {
           continue; // Bỏ qua hàng không hợp lệ
         }
         //console.log(cells.length);
-
 
         const transactionType = row.children[2].textContent; // Loại giao dịch
         const status = row.children[3].textContent; // Trạng thái
@@ -760,25 +760,38 @@
             sumNew += updatedAmount;
           } else if (status === 'voided') {
             // Không tính giao dịch sale đã voided
-            return;
+            continue;
           }
         }
 
         // Tính tổng cho giao dịch voided (lấy từ cột Số Tiền Gốc)
         if (transactionType === 'void') {
-          sumVoided += amount; // Lấy giá trị từ cột Số Tiền Gốc
+          sumVoided += 0; // Lấy giá trị từ cột Số Tiền Gốc
+          console.log(`sumVoided: ${sumVoided}`);
         }
 
         // Tính tổng cho giao dịch refunded (lấy từ cột Số Tiền Gốc)
         if (transactionType === 'refund') {
-          sumRefunded += amount; // Lấy giá trị từ cột Số Tiền Gốc
+          sumRefunded += 0; // Lấy giá trị từ cột Số Tiền Gốc
         }
 
-        // Tính tổng cho giao dịch refunded (lấy từ cột Số Tiền Gốc)
+        // Xử lý giao dịch cash
         if (transactionType === 'cash') {
-          sumCash += amount; // Lấy giá trị từ cột Số Tiền Gốc
+          if (status === 'new') {
+            // Lấy số tiền gốc cho giao dịch cash có trạng thái new
+            sumCash += amount;
+          } else if (status === 'refunded') {
+            // Lấy số tiền cập nhật cho giao dịch cash có trạng thái refunded
+            const updatedAmount = parseInt(row.children[5].textContent) || 0; // Cột thứ 6 chứa số tiền cập nhật
+            sumCash += updatedAmount;
+          } else if (status === 'voided') {
+            // Không tính giao dịch cash đã voided
+            continue;
+          }
         }
       }
+
+      console.log(`sumNew: ${sumNew}, sumVoided: ${sumVoided}, sumRefunded: ${sumRefunded}, sumCash: ${sumCash}`);
 
       // Cập nhật bảng tổng hợp
       document.getElementById('sum-new').textContent = sumNew.toFixed(2);
@@ -789,7 +802,7 @@
       // Hiển thị số tiền gốc trong bảng giao dịch
       document.getElementById('statement-original-amount-sale-label').textContent = `Số tiền sale trong kỳ: ${(sumNew).toFixed(2)}`;
       document.getElementById('statement-original-amount-cash-label').textContent = `Số tiền cash trong kỳ: ${(sumCash).toFixed(2)}`;
-      document.getElementById('statement-original-amount-label').textContent = `Số tiền gốc trong kỳ: ${(sumNew + sumCash).toFixed(2)}`;
+      document.getElementById('statement-original-amount-label').textContent = `Tổng tiền gốc trong kỳ: ${(sumNew + sumCash).toFixed(2)}`;
 
 
       // Lấy số tiền từ hàng cuối trong bảng bucket-list-table
@@ -823,206 +836,215 @@
       document.getElementById('statement-opening-debt-sale-label').textContent = `Dư nợ đầu kỳ: ${openingDebt.toFixed(2)}`;
 
       updateInterestTable(); // Cập nhật bảng tính lãi
+      lastIndex = i; // Cập nhật lastIndex để tránh tính lại các hàng đã tính lãi
+      cycle++; // Tăng cycleCounter mỗi lần tính lãi
+
+      // Bật lại nút create-sample-btn
+      const createButton = document.getElementById('create-sample-btn');
+      createButton.disabled = false; // Bật lại nút
+      createButton.style.opacity = 1; // Xóa hiệu ứng mờ
+      createButton.style.cursor = 'pointer'; // Đổi con trỏ chuột về trạng thái bình thường
     }
 
 
     function updateInterestTable() {
-  const tableRows = document.querySelectorAll('#transaction-table tbody tr');
-  const interestTableBody = document.querySelector('#interest-table tbody');
-  const annualInterestRate = 0.2; // Lãi suất 20% mỗi năm
-  const interestRate = annualInterestRate / 365; // Lãi suất mỗi ngày
+        const tableRows = document.querySelectorAll('#transaction-table tbody tr');
+        const interestTableBody = document.querySelector('#interest-table tbody');
+        const annualInterestRate = 0.2; // Lãi suất 20% mỗi năm
+        const interestRate = annualInterestRate / 365; // Lãi suất mỗi ngày
 
-  const annualInterestRateCash = 0.2; // Lãi suất 20% mỗi năm cho giao dịch cash
-  const interestRateCash = annualInterestRateCash / 365; // Lãi suất mỗi ngày cho cash
-  let totalInterest = 0; // Biến lưu tổng lãi suất
-  let totalCashAmount = 0; // Biến lưu tổng số tiền cash
-  let totalSaleAmount = 0; // Biến lưu tổng số tiền sale
-  let bucketInterest = 0; // Biến lưu bucket lãi
-  let bucketOld = 0; // Biến lưu bucket old
+        const annualInterestRateCash = 0.2; // Lãi suất 20% mỗi năm cho giao dịch cash
+        const interestRateCash = annualInterestRateCash / 365; // Lãi suất mỗi ngày cho cash
+        let totalInterest = 0; // Biến lưu tổng lãi suất
+        let totalCashAmount = 0; // Biến lưu tổng số tiền cash
+        let totalSaleAmount = 0; // Biến lưu tổng số tiền sale
+        let bucketInterest = 0; // Biến lưu bucket lãi
+        let bucketOld = 0; // Biến lưu bucket old
 
-  // Xóa nội dung cũ trong bảng tính lãi
-  interestTableBody.innerHTML = '';
+        // Xóa nội dung cũ trong bảng tính lãi
+        interestTableBody.innerHTML = '';
 
-  // Lấy ngày cuối cùng trong bảng
-  let maxDay = 0;
-  tableRows.forEach(row => {
-    const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
-    // Kiểm tra nếu hàng không có đủ số lượng ô
-    if (cells.length < 5) {
-      return; // Bỏ qua hàng không hợp lệ
+        // Lấy ngày cuối cùng trong bảng
+        let maxDay = 0;
+        tableRows.forEach(row => {
+          const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
+          // Kiểm tra nếu hàng không có đủ số lượng ô
+          if (cells.length < 5) {
+            return; // Bỏ qua hàng không hợp lệ
+          }
+
+          const dayString = row.children[9].textContent.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
+          const transactionDay = parseInt(dayString, 10); // Chuyển đổi thành số nguyên
+          if (transactionDay > maxDay) {
+            maxDay = transactionDay; // Cập nhật ngày cuối cùng
+          }
+        });
+        //maxDay += 1; // Cộng thêm 1 vào ngày cuối cùng
+        maxDay = Math.ceil((maxDay + 1) / 25) * 25; // Làm tròn lên bội số của 25
+
+        // Hiển thị ngày sao kê
+        document.getElementById('statement-date-label').textContent = `Cycle ${cycle + 1} - Ngày sao kê: T + ${((cycle+1) * 25)}`; // Cập nhật ngày sao kê;
+
+        // Duyệt qua các hàng trong bảng giao dịch
+        for (i = lastIndex; i < tableRows.length; i++) 
+        {
+          const row = tableRows[i];
+          const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
+          // Kiểm tra nếu hàng không có đủ số lượng ô
+          if (cells.length < 5) {
+            continue; // Bỏ qua hàng không hợp lệ
+        }
+        
+        const transactionId = row.children[0].textContent; // ID Giao Dịch
+        const transactionType = row.children[2].textContent; // Loại Giao Dịch
+        const status = row.children[3].textContent; // Trạng thái
+        const amount = parseFloat(row.children[4].textContent) || 0; // Số Tiền Gốc
+        const updatedAmount = parseFloat(row.children[5].textContent) || 0; // Số Tiền Cập Nhật
+        const dayString = row.children[9].textContent.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
+        const transactionDay = parseInt(dayString, 10); // Chuyển đổi thành số nguyên
+        const refundDayString = row.children[8]?.textContent.replace('T + ', '') || ''; // Lấy ngày refund từ cột thứ 9
+        const refundDay = parseInt(refundDayString, 10) || 0; // Chuyển đổi thành số nguyên
+
+        // Tính số ngày tính lãi
+        let daysElapsed = 0;
+
+        if (transactionType === 'sale' && status === 'new') {
+          daysElapsed = maxDay - transactionDay; // Ngày cuối cùng trừ đi ngày giao dịch
+          const interest = amount * interestRate * daysElapsed; // Tiền lãi = Số tiền gốc * Lãi suất * Số ngày
+
+          // Thêm dòng vào bảng chi tiết tính lãi
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+            <td>${transactionId}</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysElapsed}</td>
+            <td>${row.children[9].textContent}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interest.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow);
+          totalInterest += interest; // Cộng dồn lãi suất vào tổng
+          totalSaleAmount += amount; // Cộng dồn số tiền sale vào tổng
+        } else if (transactionType === 'sale' && status === 'refunded' && updatedAmount > 0) {
+          const daysToRefund = refundDay - transactionDay; // Số ngày từ ngày giao dịch đến ngày refund
+          const interestOriginal = amount * interestRate * daysToRefund; // Tiền lãi cho số tiền gốc
+
+          const newRow1 = document.createElement('tr');
+          newRow1.innerHTML = `
+            <td>${transactionId} (Gốc)</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysToRefund}</td>
+            <td>${row.children[9].textContent}</td>
+            <td>${row.children[8]?.textContent || ''}</td>
+            <td>${interestOriginal.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow1);
+
+          const daysFromRefund = maxDay - refundDay; // Số ngày từ ngày refund đến ngày sao kê
+          const interestUpdated = updatedAmount * interestRate * daysFromRefund; // Tiền lãi cho số tiền cập nhật
+
+          const newRow2 = document.createElement('tr');
+          newRow2.innerHTML = `
+            <td>${transactionId} (Cập nhật)</td>
+            <td>${transactionType}</td>
+            <td>${updatedAmount.toFixed(2)}</td>
+            <td>${daysFromRefund}</td>
+            <td>${row.children[8]?.textContent || ''}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interestUpdated.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow2);
+          totalInterest += interestOriginal + interestUpdated; // Cộng dồn lãi suất vào tổng
+          totalSaleAmount += updatedAmount; // Cộng dồn số tiền sale vào tổng
+        } else if (transactionType === 'cash' && status === 'new') {
+          daysElapsed = maxDay - transactionDay; // Ngày cuối cùng trừ đi ngày giao dịch
+          const interest = amount * interestRateCash * daysElapsed; // Tiền lãi = Số tiền gốc * Lãi suất * Số ngày
+
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+            <td>${transactionId}</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysElapsed}</td>
+            <td>${row.children[9].textContent}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interest.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow);
+          totalInterest += interest; // Cộng dồn lãi suất vào tổng
+          totalCashAmount += amount; // Cộng dồn số tiền cash vào tổng
+        }
+      };
+
+      // Tính bucket lãi và bucket old
+      bucketInterest = totalInterest; // Bucket lãi là tổng lãi suất
+      bucketOld = totalSaleAmount + bucketInterest + totalCashAmount; // Bucket old là tổng của sale, lãi, và cash
+
+      // Hiển thị số tiền gốc trong bảng giao dịch
+      document.getElementById('statement-interest-label').textContent = `Số tiền lãi: ${totalInterest.toFixed(2)}`;
+      const originAmountLabel = document.getElementById('statement-original-amount-label').textContent; // Lấy nội dung của label
+      console.log("tiền gốc " + originAmountLabel); // Hiển thị nội dung của label trong console
+      const originAmount = parseFloat(originAmountLabel.replace('Tổng tiền gốc trong kỳ: ', '').replace(/,/g, '').trim()) || 0; // Loại bỏ chữ và chuyển thành số
+      const minimumAmount = (totalInterest + originAmount) * 0.2; // Số tiền tối thiểu phải trả, 20% tổng số tiền
+      
+      document.getElementById('statement-min-amount-label').textContent = `Số tiền tối thiểu phải trả: 20% * (${originAmount.toFixed(2)} + ${totalInterest.toFixed(2)}) = ${minimumAmount.toFixed(2)}`;
+      const saleAmountLabel = document.getElementById('statement-original-amount-sale-label').textContent; // Lấy nội dung của label sale
+      const saleAmount = parseFloat(saleAmountLabel.replace('Số tiền sale trong kỳ: ', '').replace(/,/g, '').trim()) || 0; // Loại bỏ chữ và chuyển thành số
+      
+      // Lấy số tiền từ hàng trên trong bảng bucket-list-table
+      const bucketTableRows = document.querySelectorAll('#bucket-list-table tbody tr');
+      let previousSaleBucket = 0;
+      let previousCashBucket = 0;
+      let previousInterestBucket = 0;
+      let previousPayment = 0;
+
+      if (bucketTableRows.length > 0) {
+        const lastRow = bucketTableRows[bucketTableRows.length - 1];
+        const descriptionCell = lastRow.querySelector('td:nth-child(2)'); // Cột chứa description
+
+        if (descriptionCell) {
+          const descriptionText = descriptionCell.textContent || ''; // Lấy nội dung của description
+
+          // Trích xuất giá trị từ description
+          const saleBucketMatch = descriptionText.match(/Sale bucket: ([\d.]+)/);
+          const cashBucketMatch = descriptionText.match(/Cash bucket: ([\d.]+)/);
+          const interestBucketMatch = descriptionText.match(/Interest bucket: ([\d.]+)/);
+          const bucketOldMatch = descriptionText.match(/Bucket old: ([\d.]+)/);
+
+          previousSaleBucket = saleBucketMatch ? parseFloat(saleBucketMatch[1]) : 0;
+          previousCashBucket = cashBucketMatch ? parseFloat(cashBucketMatch[1]) : 0;
+          previousInterestBucket = interestBucketMatch ? parseFloat(interestBucketMatch[1]) : 0;
+          previousPayment = bucketOldMatch ? parseFloat(bucketOldMatch[1]) : 0; // Bucket old được sử dụng như số tiền trả
+        }
+      }
+
+      // Tính bucket old
+      bucketOld = (previousSaleBucket + previousCashBucket + previousInterestBucket) - previousPayment;
+
+      // Cập nhật description
+      const description = `Bucket ${bucketIdCounter}: <br> 
+      Sale bucket: ${saleAmount.toFixed(2)}<br> 
+      Cash bucket: ${totalCashAmount.toFixed(2)}<br> 
+      Interest bucket: <span style="color: red;">${totalInterest.toFixed(2)}</span><br> 
+      Bucket old: <span style="color: red;">${bucketOld.toFixed(2)}</span><br> 
+      Sum: <span style="color: red;">${(saleAmount + totalCashAmount + totalInterest).toFixed(2)}</span><br> 
+      Payment: 0.00`;
+      //const description = `Bucket ${bucketIdCounter}: <br> Sale bucket: ${saleAmount.toFixed(2)}<br> Cash bucket: ${totalCashAmount.toFixed(2)}`;
+      addToBucketList(description, minimumAmount.toFixed(2));
+
+      // Hiển thị bucket lãi và bucket old
+      //document.getElementById('statement-bucket-interest-label').textContent = `Bucket lãi: ${bucketInterest.toFixed(2)}`;
+      //document.getElementById('statement-bucket-old-label').textContent = `Bucket old: ${bucketOld.toFixed(2)}`;
+      lastIndex = tableRows.length; // Cập nhật lastIndex để tránh tính lại các hàng đã tính toán trước đó
     }
-
-    const dayString = row.children[6].textContent.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
-    const transactionDay = parseInt(dayString, 10); // Chuyển đổi thành số nguyên
-    if (transactionDay > maxDay) {
-      maxDay = transactionDay; // Cập nhật ngày cuối cùng
-    }
-  });
-  //maxDay += 1; // Cộng thêm 1 vào ngày cuối cùng
-  maxDay = Math.ceil((maxDay + 1) / 25) * 25; // Làm tròn lên bội số của 25
-
-  // Hiển thị ngày sao kê
-  document.getElementById('statement-date-label').textContent = `Ngày sao kê: T + ${maxDay}`;
-
-  // Duyệt qua các hàng trong bảng giao dịch
-  for (i = lastIndex; i < tableRows.length; i++) 
-  {
-    const row = tableRows[i];
-    const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
-    // Kiểm tra nếu hàng không có đủ số lượng ô
-    if (cells.length < 5) {
-      continue; // Bỏ qua hàng không hợp lệ
-    }
-    
-    const transactionId = row.children[0].textContent; // ID Giao Dịch
-    const transactionType = row.children[2].textContent; // Loại Giao Dịch
-    const status = row.children[3].textContent; // Trạng thái
-    const amount = parseFloat(row.children[4].textContent) || 0; // Số Tiền Gốc
-    const updatedAmount = parseFloat(row.children[5].textContent) || 0; // Số Tiền Cập Nhật
-    const dayString = row.children[6].textContent.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
-    const transactionDay = parseInt(dayString, 10); // Chuyển đổi thành số nguyên
-    const refundDayString = row.children[8]?.textContent.replace('T + ', '') || ''; // Lấy ngày refund từ cột thứ 9
-    const refundDay = parseInt(refundDayString, 10) || 0; // Chuyển đổi thành số nguyên
-
-    // Tính số ngày tính lãi
-    let daysElapsed = 0;
-
-    if (transactionType === 'sale' && status === 'new') {
-      daysElapsed = maxDay - transactionDay; // Ngày cuối cùng trừ đi ngày giao dịch
-      const interest = amount * interestRate * daysElapsed; // Tiền lãi = Số tiền gốc * Lãi suất * Số ngày
-
-      // Thêm dòng vào bảng chi tiết tính lãi
-      const newRow = document.createElement('tr');
-      newRow.innerHTML = `
-        <td>${transactionId}</td>
-        <td>${transactionType}</td>
-        <td>${amount.toFixed(2)}</td>
-        <td>${daysElapsed}</td>
-        <td>${row.children[6].textContent}</td>
-        <td>${'T + ' + maxDay}</td>
-        <td>${interest.toFixed(2)}</td>
-      `;
-      interestTableBody.appendChild(newRow);
-      totalInterest += interest; // Cộng dồn lãi suất vào tổng
-      totalSaleAmount += amount; // Cộng dồn số tiền sale vào tổng
-    } else if (transactionType === 'sale' && status === 'refunded' && updatedAmount > 0) {
-      const daysToRefund = refundDay - transactionDay; // Số ngày từ ngày giao dịch đến ngày refund
-      const interestOriginal = amount * interestRate * daysToRefund; // Tiền lãi cho số tiền gốc
-
-      const newRow1 = document.createElement('tr');
-      newRow1.innerHTML = `
-        <td>${transactionId} (Gốc)</td>
-        <td>${transactionType}</td>
-        <td>${amount.toFixed(2)}</td>
-        <td>${daysToRefund}</td>
-        <td>${row.children[6].textContent}</td>
-        <td>${row.children[8]?.textContent || ''}</td>
-        <td>${interestOriginal.toFixed(2)}</td>
-      `;
-      interestTableBody.appendChild(newRow1);
-
-      const daysFromRefund = maxDay - refundDay; // Số ngày từ ngày refund đến ngày sao kê
-      const interestUpdated = updatedAmount * interestRate * daysFromRefund; // Tiền lãi cho số tiền cập nhật
-
-      const newRow2 = document.createElement('tr');
-      newRow2.innerHTML = `
-        <td>${transactionId} (Cập nhật)</td>
-        <td>${transactionType}</td>
-        <td>${updatedAmount.toFixed(2)}</td>
-        <td>${daysFromRefund}</td>
-        <td>${row.children[8]?.textContent || ''}</td>
-        <td>${'T + ' + maxDay}</td>
-        <td>${interestUpdated.toFixed(2)}</td>
-      `;
-      interestTableBody.appendChild(newRow2);
-      totalInterest += interestOriginal + interestUpdated; // Cộng dồn lãi suất vào tổng
-      totalSaleAmount += updatedAmount; // Cộng dồn số tiền sale vào tổng
-    } else if (transactionType === 'cash') {
-      daysElapsed = maxDay - transactionDay; // Ngày cuối cùng trừ đi ngày giao dịch
-      const interest = amount * interestRateCash * daysElapsed; // Tiền lãi = Số tiền gốc * Lãi suất * Số ngày
-
-      const newRow = document.createElement('tr');
-      newRow.innerHTML = `
-        <td>${transactionId}</td>
-        <td>${transactionType}</td>
-        <td>${amount.toFixed(2)}</td>
-        <td>${daysElapsed}</td>
-        <td>${row.children[6].textContent}</td>
-        <td>${'T + ' + maxDay}</td>
-        <td>${interest.toFixed(2)}</td>
-      `;
-      interestTableBody.appendChild(newRow);
-      totalInterest += interest; // Cộng dồn lãi suất vào tổng
-      totalCashAmount += amount; // Cộng dồn số tiền cash vào tổng
-    }
-  };
-
-  // Tính bucket lãi và bucket old
-  bucketInterest = totalInterest; // Bucket lãi là tổng lãi suất
-  bucketOld = totalSaleAmount + bucketInterest + totalCashAmount; // Bucket old là tổng của sale, lãi, và cash
-
-  // Hiển thị số tiền gốc trong bảng giao dịch
-  document.getElementById('statement-interest-label').textContent = `Số tiền lãi: ${totalInterest.toFixed(2)}`;
-  const originAmountLabel = document.getElementById('statement-original-amount-label').textContent; // Lấy nội dung của label
-  const originAmount = parseFloat(originAmountLabel.replace('Số tiền gốc: ', '').replace(/,/g, '').trim()) || 0; // Loại bỏ chữ và chuyển thành số
-  const minimumAmount = (totalInterest + originAmount) * 0.05; // Số tiền tối thiểu phải trả, 5% tổng số tiền
-  
-  document.getElementById('statement-min-amount-label').textContent = `Số tiền tối thiểu phải trả: 20% * (${originAmount.toFixed(2)} + ${totalInterest.toFixed(2)}) = ${minimumAmount.toFixed(2)}`;
-  const saleAmountLabel = document.getElementById('statement-original-amount-sale-label').textContent; // Lấy nội dung của label sale
-  const saleAmount = parseFloat(saleAmountLabel.replace('Số tiền sale: ', '').replace(/,/g, '').trim()) || 0; // Loại bỏ chữ và chuyển thành số
-  
-  // Lấy số tiền từ hàng trên trong bảng bucket-list-table
-  const bucketTableRows = document.querySelectorAll('#bucket-list-table tbody tr');
-  let previousSaleBucket = 0;
-  let previousCashBucket = 0;
-  let previousInterestBucket = 0;
-  let previousPayment = 0;
-
-  if (bucketTableRows.length > 0) {
-    const lastRow = bucketTableRows[bucketTableRows.length - 1];
-    const descriptionCell = lastRow.querySelector('td:nth-child(2)'); // Cột chứa description
-
-    if (descriptionCell) {
-      const descriptionText = descriptionCell.textContent || ''; // Lấy nội dung của description
-
-      // Trích xuất giá trị từ description
-      const saleBucketMatch = descriptionText.match(/Sale bucket: ([\d.]+)/);
-      const cashBucketMatch = descriptionText.match(/Cash bucket: ([\d.]+)/);
-      const interestBucketMatch = descriptionText.match(/Interest bucket: ([\d.]+)/);
-      const bucketOldMatch = descriptionText.match(/Bucket old: ([\d.]+)/);
-
-      previousSaleBucket = saleBucketMatch ? parseFloat(saleBucketMatch[1]) : 0;
-      previousCashBucket = cashBucketMatch ? parseFloat(cashBucketMatch[1]) : 0;
-      previousInterestBucket = interestBucketMatch ? parseFloat(interestBucketMatch[1]) : 0;
-      previousPayment = bucketOldMatch ? parseFloat(bucketOldMatch[1]) : 0; // Bucket old được sử dụng như số tiền trả
-    }
-  }
-
-  // Tính bucket old
-  bucketOld = (previousSaleBucket + previousCashBucket + previousInterestBucket) - previousPayment;
-
-  // Cập nhật description
-  const description = `Bucket ${bucketIdCounter}: <br> 
-  Sale bucket: ${saleAmount.toFixed(2)}<br> 
-  Cash bucket: ${totalCashAmount.toFixed(2)}<br> 
-  Interest bucket: ${totalInterest.toFixed(2)}<br> 
-  Bucket old: ${bucketOld.toFixed(2)}<br> 
-  Sum: ${(saleAmount + totalCashAmount + totalInterest).toFixed(2)}<br> 
-  Payment: 0.00`;
-  //const description = `Bucket ${bucketIdCounter}: <br> Sale bucket: ${saleAmount.toFixed(2)}<br> Cash bucket: ${totalCashAmount.toFixed(2)}`;
-  addToBucketList(description, minimumAmount.toFixed(2));
-
-  // Hiển thị bucket lãi và bucket old
-  //document.getElementById('statement-bucket-interest-label').textContent = `Bucket lãi: ${bucketInterest.toFixed(2)}`;
-  //document.getElementById('statement-bucket-old-label').textContent = `Bucket old: ${bucketOld.toFixed(2)}`;
-  lastIndex = tableRows.length; // Cập nhật lastIndex để tránh tính lại các hàng đã tính toán trước đó
-}
 
 
     function createSampleTransactions() {
       const tableBody = document.querySelector('#transaction-table tbody');
       //const totalTransactions = Math.floor(Math.random() * 21) + 5; // Số ngẫu nhiên từ 5 đến 25 - số giao dịch cần tạo
-      const totalTransactions = Math.floor(Math.random() * 5) + 1; // Số ngẫu nhiên từ 5 đến 25 - số giao dịch cần tạo
+      const totalTransactions = Math.floor(Math.random() * 21) + 1; // Số ngẫu nhiên từ 5 đến 25 - số giao dịch cần tạo
       let saleTransactions = []; // Lưu trữ các giao dịch sale để làm ID gốc cho void và refund
 
       // Tạo giao dịch mẫu
@@ -1186,6 +1208,160 @@
       //alert('25 giao dịch mẫu đã được tạo!');
     }
 
+
+    function createRandomTransactions() {
+      let maxTransactions = 20;
+      const tableBody = document.querySelector('#transaction-table tbody');
+      const totalTransactions = Math.floor(Math.random() * maxTransactions) + 1; // Số ngẫu nhiên từ 1 đến maxTransactions
+      let transactions = []; // Lưu trữ các giao dịch sale và cash để làm ID gốc cho void
+      const maxPostDay = cycle === 0 ? 25 : (cycle * 25); // Kiểm tra giá trị của cycle
+
+      // Tạo giao dịch mẫu
+      for (let i = 1; i <= totalTransactions; i++) 
+      {
+        const transactionId = `T${transactionIdCounter + i + lastIndex}`;
+        const day = `T + ${dayCounter + i + (cycle*25) - 1}`;
+        let transactionType, originalTransactionId, status, amount;
+        dayVoided = '-';
+
+        const randomType = Math.random(); // Giá trị ngẫu nhiên để quyết định loại giao dịch
+
+        if (randomType < 0.5) {
+          // Tạo giao dịch sale
+          transactionType = 'sale';
+          originalTransactionId = '';
+          status = 'new';
+          amount = Math.floor(Math.random() * 10 + 1) * 1000; // Số tiền ngẫu nhiên là bội số của 1000
+          transactions.push({ id: transactionId, type: transactionType, status }); // Lưu giao dịch để làm ID gốc cho void
+        } 
+        else if (randomType < 0.8) 
+        {
+          // Tạo giao dịch cash
+          transactionType = 'cash';
+          originalTransactionId = '';
+          status = 'new';
+          amount = Math.floor(Math.random() * 10 + 1) * 1000; // Số tiền ngẫu nhiên là bội số của 1000
+          transactions.push({ id: transactionId, type: transactionType, status }); // Lưu giao dịch để làm ID gốc cho void
+        } 
+        else 
+        {
+          // Tạo giao dịch void
+          const validTransactions = transactions.filter(tx => tx.status === 'new'); // Chỉ lấy các giao dịch sale hoặc cash có trạng thái new
+          if (validTransactions.length === 0) {
+            continue; // Bỏ qua nếu không có giao dịch hợp lệ
+          }
+          const selectedTransaction = validTransactions[Math.floor(Math.random() * validTransactions.length)]; // Chọn ngẫu nhiên một giao dịch hợp lệ
+
+          transactionType = 'void';
+          originalTransactionId = `<span class="original-void">${selectedTransaction.id}</span>`; // Thêm class màu đỏ
+          status = 'voided';
+          amount = 0; // Void không có số tiền
+
+          // Cập nhật trạng thái của giao dịch gốc
+          const currentRow = document.querySelector(`#row-${selectedTransaction.id.replace('T', '')}`);
+          if (currentRow) {
+            const transactionDay = parseInt(currentRow.children[6].textContent.replace('T + ', '')) || 0; // Lấy ngày giao dịch từ cột thứ 7
+            const voidDay = Math.min(transactionDay + 1, maxPostDay); // Ngày void không được quá 1 ngày so với ngày giao dịch và nhỏ hơn hoặc bằng T + 24
+
+            currentRow.children[3].textContent = "voided"; // Cập nhật trạng thái thành voided
+            currentRow.children[7].textContent = `T + ${voidDay}`; // Cập nhật ngày voided
+            const buttons = currentRow.querySelectorAll('button');
+            buttons.forEach(button => {
+              button.disabled = true;
+              button.style.opacity = 0.5; // Thêm hiệu ứng mờ
+              button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
+            });
+          }
+
+          // Cập nhật trạng thái của giao dịch gốc trong mảng transactions
+          const transactionIndex = transactions.findIndex(tx => tx.id === selectedTransaction.id);
+          if (transactionIndex !== -1) {
+            transactions[transactionIndex].status = 'voided'; // Cập nhật trạng thái thành voided
+          }
+        }
+
+        // Thêm giao dịch trực tiếp vào bảng
+        const newRow = document.createElement('tr');
+        newRow.id = `row-${transactionId.replace('T', '')}`;
+        newRow.innerHTML = `
+          <td>${transactionId}</td>
+          <td>${originalTransactionId}</td>
+          <td>${transactionType}</td>
+          <td>${status}</td>
+          <td>${amount}</td>
+          <td>${transactionType === 'sale' || transactionType === 'cash' ? 0 : ''}</td>
+          <td>${day}</td>
+          <td>${dayVoided}</td>
+          <td>-</td>
+          <td>-</td>
+          <td>
+            ${
+              transactionType === 'sale' && status === 'new'
+                ? `
+                  <button class="edit-btn" onclick="voidTransaction('${transactionId}')">Void</button>
+                  <button class="edit-btn" onclick="refundTransaction('${transactionId}')">Refund</button>
+                `
+                : ''
+            }
+          </td>
+        `;
+        tableBody.appendChild(newRow);
+      }
+
+      // Thêm delimiter vào cuối bảng
+      const delimiterRow = document.createElement('tr');
+      delimiterRow.innerHTML = `
+        <td colspan="11" style="background-color: #f0f0f0; text-align: center;">End cycle ${cycle + 1}</td>
+      `;
+      tableBody.appendChild(delimiterRow);
+
+      ///Cập nhật ngày post
+      const tableRows = document.querySelectorAll('#transaction-table tbody tr'); // Lấy tất cả các hàng trong bảng
+
+      for (let i = lastIndex; i < tableRows.length; i++) { // Sửa điều kiện vòng lặp
+        const row = tableRows[i];
+
+        // Kiểm tra nếu hàng là delimiter hoặc không hợp lệ
+        const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
+        if (cells.length < 5) {
+          continue; // Bỏ qua hàng không hợp lệ
+        }
+        //console.log(cells.length);
+
+        const transactionType = row.children[2].textContent.trim(); // Loại giao dịch
+        const status = row.children[3].textContent.trim(); // Trạng thái
+        const day = row.children[6].textContent.trim(); // Ngày (cột thứ 7)
+        const dayPostCell = row.children[9]; // Cột Ngày Post (cột thứ 10)
+
+        // Chỉ xử lý giao dịch sale hoặc cash có trạng thái new
+        if (status === 'new') {
+          if (transactionType === 'sale') {
+            // Tạo giá trị Ngày Post ngẫu nhiên, lớn hơn ngày hiện tại và nhỏ hơn T + 24
+            const currentDay = parseInt(day.replace('T + ', '')) || 0; // Lấy giá trị số từ ngày
+            const postDay = Math.floor(Math.random() * (maxPostDay - currentDay)) + currentDay + 1; // Ngày Post ngẫu nhiên
+
+            // Cập nhật cột Ngày Post
+            dayPostCell.textContent = `T + ${postDay}`;
+          } else if (transactionType === 'cash') {
+            // Đối với giao dịch cash, Ngày Post bằng đúng ngày giao dịch
+            dayPostCell.textContent = day;
+          }
+        }
+      }
+      //
+  
+      // Cập nhật transactionIdCounter và dayCounter
+      transactionIdCounter += totalTransactions;
+      dayCounter += totalTransactions;
+
+      //alert(`${totalTransactions} giao dịch ngẫu nhiên đã được tạo!`);
+
+      // Disable nút sau khi tạo giao dịch
+      const createButton = document.getElementById('create-sample-btn');
+      createButton.disabled = true;
+      createButton.style.opacity = 0.5; // Thêm hiệu ứng mờ
+      createButton.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
+    } 
 
     function createSampleTransactions_2() {
       const tableBody = document.querySelector('#transaction-table tbody');
@@ -1378,7 +1554,7 @@
           <input type="text" id="amount-${bucketId}" value="0" style="width: 100px;" />
         </td>
         <td>
-          <label id="pay-date-${bucketId}"></label>
+          <input type="text" id="pay-date-${bucketId}" value="0" style="width: 100px;" />
         </td>
         <td>
           <button onclick="payFull('${bucketId}')" class="edit-btn" style="margin-bottom: 5px;">Thanh toán toàn bộ</button>
@@ -1395,10 +1571,86 @@
 
     // Hàm xử lý thanh toán toàn bộ
     function payFull(bucketId) {
+  const amountInput = document.getElementById(`amount-${bucketId}`);
+  const payDateInput = document.getElementById(`pay-date-${bucketId}`); // Lấy textbox chứa ngày thanh toán
+  const row = document.getElementById(`row-${bucketId}`); // Lấy hàng tương ứng trong bảng bucket-list-table
+  const descriptionCell = row.querySelector('td:nth-child(2)'); // Cột chứa description
+  let sumValue = 0; // Biến lưu giá trị Sum
+
+  if (descriptionCell) {
+    const descriptionText = descriptionCell.innerHTML; // Lấy nội dung của description
+
+    // Trích xuất giá trị Sum từ description
+    const sumMatch = descriptionText.match(/Sum: ([\d.]+)/);
+    sumValue = sumMatch ? parseFloat(sumMatch[1]) : 0;
+
+    // Lấy giá trị ngày thanh toán từ textbox
+    const paidDay = payDateInput ? payDateInput.value.trim() : 'N/A'; // Nếu không có giá trị, đặt là 'N/A'
+
+    // Cập nhật Payment trong description
+    let updatedDescription = descriptionText.replace(/Payment: [\d.]+/, `Paid: ${sumValue.toFixed(2)}`);
+
+    // Tính toán giá trị Remain
+    const remainValue = sumValue - sumValue;
+
+    // Cập nhật hoặc thêm giá trị Remain vào description
+    if (updatedDescription.includes('Remain:')) {
+      updatedDescription = updatedDescription.replace(
+        /Remain: .*/,
+        `Remain: ${sumValue.toFixed(2)} - ${sumValue.toFixed(2)} = <span style="color: red;">${remainValue.toFixed(2)}</span>`
+      );
+    } else {
+      updatedDescription += `<br>Remain: ${sumValue.toFixed(2)} - ${sumValue.toFixed(2)} = <span style="color: red;">${remainValue.toFixed(2)}</span>`;
+    }
+
+    // Thêm PaidDay vào description
+    if (updatedDescription.includes('PaidDay:')) {
+      updatedDescription = updatedDescription.replace(
+        /PaidDay: .*/,
+        `PaidDay: <span style="color: red;">T + ${cycle * 25 + parseInt(paidDay, 10)}</span>`
+      );
+    } else {
+      updatedDescription += `<br>PaidDay: <span style="color: red;">T + ${cycle * 25 + parseInt(paidDay, 10)}</span>`;
+    }
+
+    // Thêm status: Full vào description
+    if (!updatedDescription.includes('Status: Full')) {
+      updatedDescription += `<br>Status: <span style="color: red;">Full</span>`;
+    }
+
+    descriptionCell.innerHTML = updatedDescription; // Cập nhật nội dung của description
+  }
+
+  amountInput.value = 0; // Đặt số tiền về 0 sau khi thanh toán
+
+  // Vô hiệu hóa tất cả các nút trong hàng hiện tại
+  const tableRows = document.querySelectorAll('#bucket-list-table tbody tr');
+  tableRows.forEach(tableRow => {
+    if (tableRow.id == `row-${bucketId}`) { // Kiểm tra là hàng hiện tại
+      const previousButtons = tableRow.querySelectorAll('button');
+      previousButtons.forEach(button => {
+        button.disabled = true; // Vô hiệu hóa nút
+        button.style.opacity = 0.5; // Thêm hiệu ứng mờ
+        button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
+      });
+    }
+  });
+}
+
+    // Hàm xử lý thanh toán tối thiểu
+    function payMin(bucketId) {
       const amountInput = document.getElementById(`amount-${bucketId}`);
       const row = document.getElementById(`row-${bucketId}`); // Lấy hàng tương ứng trong bảng bucket-list-table
       const descriptionCell = row.querySelector('td:nth-child(2)'); // Cột chứa description
+      const minPaymentCell = row.querySelector('td:nth-child(3)'); // Cột thứ 3 chứa số tiền thanh toán tối thiểu
       let sumValue = 0; // Biến lưu giá trị Sum
+      let paymentValue = 0; // Biến lưu giá trị Payment
+      let minAmount = 0; // Biến lưu giá trị thanh toán tối thiểu
+
+      if (minPaymentCell) {
+        // Lấy số tiền thanh toán tối thiểu từ cột thứ 3
+        minAmount = parseFloat(minPaymentCell.textContent) || 0;
+      }
 
       if (descriptionCell) {
         const descriptionText = descriptionCell.innerHTML; // Lấy nội dung của description
@@ -1407,18 +1659,37 @@
         const sumMatch = descriptionText.match(/Sum: ([\d.]+)/);
         sumValue = sumMatch ? parseFloat(sumMatch[1]) : 0;
 
-        // Cập nhật Payment trong description
-        let updatedDescription = descriptionText.replace(/Payment: [\d.]+/, `Payment: ${sumValue.toFixed(2)}`);
+        // Trích xuất giá trị Payment từ description
+        const paymentMatch = descriptionText.match(/Paid: ([\d.]+)/);
+        paymentValue = paymentMatch ? parseFloat(paymentMatch[1]) : 0;
 
-        // Thêm status: Full vào description
-        if (!updatedDescription.includes('Status: Full')) {
-          updatedDescription += `<br>Status: Full`;
+        // Cập nhật Payment trong description
+        const newPaymentValue = paymentValue + minAmount;
+        let updatedDescription = descriptionText.replace(/Payment: [\d.]+/, `Paid: ${newPaymentValue.toFixed(2)}`);
+
+        // Tính toán giá trị Remain
+        const remainValue = sumValue - newPaymentValue;
+
+        // Cập nhật hoặc thêm giá trị Remain vào description
+        if (updatedDescription.includes('Remain:')) {
+          updatedDescription = updatedDescription.replace(
+            /Remain: [\d.]+/,
+            `Remain:  ${sumValue.toFixed(2)} - ${newPaymentValue.toFixed(2)} = ${remainValue.toFixed(2)}`
+          );
+        } else {
+          updatedDescription += `<br>Remain: ${sumValue.toFixed(2)} - ${newPaymentValue.toFixed(2)} = ${remainValue.toFixed(2)}`;
+        }
+
+        // Thêm status: Partial vào description
+        if (!updatedDescription.includes('Status: Partial')) {
+          updatedDescription += `<br>Status: Partial`;
         }
 
         descriptionCell.innerHTML = updatedDescription; // Cập nhật nội dung của description
       }
 
-      amountInput.value = 0; // Đặt số tiền về 0 sau khi thanh toán
+      // Cập nhật số tiền còn lại trong ô input
+      amountInput.value = (parseFloat(amountInput.value) - minAmount).toFixed(2);
 
       // Vô hiệu hóa tất cả các nút trong hàng hiện tại
       const tableRows = document.querySelectorAll('#bucket-list-table tbody tr');
@@ -1433,28 +1704,7 @@
         }
       });
 
-      //alert(`Thanh toán toàn bộ số tiền: ${sumValue.toFixed(2)}`);
-
-      // // Vô hiệu hóa các nút của hàng trước đó
-      // tableRows = document.querySelectorAll('#bucket-list-table tbody tr');
-      // tableRows.forEach(tableRow => {
-      //   if (tableRow.id !== `row-${bucketId}`) { // Kiểm tra nếu không phải hàng hiện tại
-      //     const previousButtons = tableRow.querySelectorAll('button');
-      //     previousButtons.forEach(button => {
-      //       button.disabled = true; // Vô hiệu hóa nút
-      //       button.style.opacity = 0.5; // Thêm hiệu ứng mờ
-      //       button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
-      //     });
-      //   }
-      // });
-    }
-
-    // Hàm xử lý thanh toán tối thiểu
-    function payMin(bucketId) {
-      const amountInput = document.getElementById(`amount-${bucketId}`);
-      const minAmount = parseFloat(amountInput.value) * 0.1; // Giả sử thanh toán tối thiểu là 10%
-      alert(`Thanh toán tối thiểu số tiền: ${minAmount.toFixed(2)}`);
-      amountInput.value = (parseFloat(amountInput.value) - minAmount).toFixed(2); // Cập nhật số tiền còn lại
+      //alert(`Thanh toán tối thiểu số tiền: ${minAmount.toFixed(2)}`);
     }
 
     // Hàm xử lý thanh toán một phần
@@ -1475,7 +1725,7 @@
     }
     /////////////
 
-    document.getElementById('create-sample-btn').addEventListener('click', createSampleTransactions);
+    document.getElementById('create-sample-btn').addEventListener('click', createRandomTransactions);
     // Gắn sự kiện cho nút Reset Local Storage
     document.getElementById('reset-localstorage-btn').addEventListener('click', resetLocalStorage);
     document.getElementById('save-table-btn').addEventListener('click', saveTableToLocalStorage);
