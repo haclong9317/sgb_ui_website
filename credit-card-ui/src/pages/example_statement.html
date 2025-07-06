@@ -112,6 +112,10 @@
               <td>Cash</td>
               <td id="sum-cash">0</td>
             </tr>
+            <tr>
+              <td>Payment</td>
+              <td id="sum-payment">0</td>
+            </tr>
           </tbody>
         </table>
         <br>
@@ -140,6 +144,8 @@
         <label id="bucket-status" style="font-weight: bold;">Tình trạng: Chưa xác định</label>
         <label id="statement-original-amount-sale-label" style="font-weight: bold;">Số tiền sale trong kỳ: Chưa xác định</label>
         <label id="statement-original-amount-cash-label" style="font-weight: bold;">Số tiền cash trong kỳ: Chưa xác định</label>
+        <label id="statement-original-amount-payment-label" style="font-weight: bold;">Số tiền payment trong kỳ: Chưa xác định</label>
+        ------------------------------------------------------------------------------
         <label id="statement-original-amount-label" style="font-weight: bold;">Tổng tiền gốc trong kỳ: Chưa xác định</label>
         <label id="statement-interest-label" style="font-weight: bold;">Số tiền lãi trong kỳ: Chưa xác định</label>
         <label id="statement-min-amount-label" style="font-weight: bold;">Số tiền tối thiểu phải trả: Chưa xác định</label>
@@ -724,6 +730,7 @@
       let sumNew = 0;
       let sumVoided = 0;
       let sumRefunded = 0;
+      let sumPayment = 0;
       let sumCash = 0;
       let i = 0;
 
@@ -775,6 +782,12 @@
           sumRefunded += 0; // Lấy giá trị từ cột Số Tiền Gốc
         }
 
+        // Tính tổng cho giao dịch payment (lấy từ cột Số Tiền Gốc)
+        if (transactionType === 'payment') {
+          sumPayment += amount; // Lấy giá trị từ cột Số Tiền Gốc
+          console.log(`sumPayment: ${sumPayment}`);
+        }
+
         // Xử lý giao dịch cash
         if (transactionType === 'cash') {
           if (status === 'new') {
@@ -798,6 +811,7 @@
       document.getElementById('sum-voided').textContent = sumVoided.toFixed(2);
       document.getElementById('sum-refunded').textContent = sumRefunded.toFixed(2);
       document.getElementById('sum-cash').textContent = sumCash.toFixed(2);
+      document.getElementById('sum-payment').textContent = sumPayment.toFixed(2);
 
       // Hiển thị số tiền gốc trong bảng giao dịch
       document.getElementById('statement-original-amount-sale-label').textContent = `Số tiền sale trong kỳ: ${(sumNew).toFixed(2)}`;
@@ -822,7 +836,7 @@
           sumValue = sumMatch ? parseFloat(sumMatch[1]) : 0;
 
           // Trích xuất giá trị Payment từ description
-          const paymentMatch = descriptionText.match(/Payment: ([\d.]+)/);
+          const paymentMatch = descriptionText.match(/Paid: ([\d.]+)/);
           paymentValue = paymentMatch ? parseFloat(paymentMatch[1]) : 0;
         }
       }
@@ -926,7 +940,9 @@
           interestTableBody.appendChild(newRow);
           totalInterest += interest; // Cộng dồn lãi suất vào tổng
           totalSaleAmount += amount; // Cộng dồn số tiền sale vào tổng
-        } else if (transactionType === 'sale' && status === 'refunded' && updatedAmount > 0) {
+        } 
+        else if (transactionType === 'sale' && status === 'refunded' && updatedAmount > 0) 
+        {
           const daysToRefund = refundDay - transactionDay; // Số ngày từ ngày giao dịch đến ngày refund
           const interestOriginal = amount * interestRate * daysToRefund; // Tiền lãi cho số tiền gốc
 
@@ -958,7 +974,9 @@
           interestTableBody.appendChild(newRow2);
           totalInterest += interestOriginal + interestUpdated; // Cộng dồn lãi suất vào tổng
           totalSaleAmount += updatedAmount; // Cộng dồn số tiền sale vào tổng
-        } else if (transactionType === 'cash' && status === 'new') {
+        } 
+        else if (transactionType === 'cash' && status === 'new') 
+        {
           daysElapsed = maxDay - transactionDay; // Ngày cuối cùng trừ đi ngày giao dịch
           const interest = amount * interestRateCash * daysElapsed; // Tiền lãi = Số tiền gốc * Lãi suất * Số ngày
 
@@ -975,6 +993,25 @@
           interestTableBody.appendChild(newRow);
           totalInterest += interest; // Cộng dồn lãi suất vào tổng
           totalCashAmount += amount; // Cộng dồn số tiền cash vào tổng
+        }
+        else if (transactionType === 'payment' && status === 'completed') {
+          daysElapsed = maxDay - transactionDay; // Ngày cuối cùng trừ đi ngày giao dịch
+          const interest = amount * 0 * daysElapsed; // Tiền lãi = Số tiền gốc * Lãi suất * Số ngày
+
+          // Thêm dòng vào bảng chi tiết tính lãi
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+            <td>${transactionId}</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysElapsed}</td>
+            <td>${row.children[9].textContent}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interest.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow);
+          //totalInterest += interest; // Cộng dồn lãi suất vào tổng
+          //totalPaymentAmount += amount; // Cộng dồn số tiền payment vào tổng
         }
       };
 
@@ -1243,6 +1280,14 @@
           amount = Math.floor(Math.random() * 10 + 1) * 1000; // Số tiền ngẫu nhiên là bội số của 1000
           transactions.push({ id: transactionId, type: transactionType, status }); // Lưu giao dịch để làm ID gốc cho void
         } 
+        else if (randomType < 0.9) {
+          // Tạo giao dịch payment
+          transactionType = 'payment';
+          originalTransactionId = '';
+          status = 'completed';
+          amount = Math.floor(Math.random() * 10 + 1) * 1000; // Số tiền ngẫu nhiên là bội số của 1000
+          transactions.push({ id: transactionId, type: transactionType, status }); // Lưu giao dịch payment
+        }
         else 
         {
           // Tạo giao dịch void
@@ -1334,7 +1379,7 @@
         const dayPostCell = row.children[9]; // Cột Ngày Post (cột thứ 10)
 
         // Chỉ xử lý giao dịch sale hoặc cash có trạng thái new
-        if (status === 'new') {
+        if (status === 'new' || status === 'completed') {
           if (transactionType === 'sale') {
             // Tạo giá trị Ngày Post ngẫu nhiên, lớn hơn ngày hiện tại và nhỏ hơn T + 24
             const currentDay = parseInt(day.replace('T + ', '')) || 0; // Lấy giá trị số từ ngày
@@ -1345,6 +1390,14 @@
           } else if (transactionType === 'cash') {
             // Đối với giao dịch cash, Ngày Post bằng đúng ngày giao dịch
             dayPostCell.textContent = day;
+          }
+          else if (transactionType === 'payment') {
+            // Đối với giao dịch payment, Ngày Post là 1 ngày sau ngày giao dịch
+            const currentDay = parseInt(day.replace('T + ', '')) || 0; // Lấy giá trị số từ ngày
+            const postDay = currentDay + 1; // Ngày Post là 1 ngày sau ngày giao dịch
+
+            // Cập nhật cột Ngày Post
+            dayPostCell.textContent = `T + ${postDay}`;
           }
         }
       }
