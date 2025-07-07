@@ -62,6 +62,7 @@
                   <th>Ngày void</th>
                   <th>Ngày refund</th>
                   <th>Ngày post</th> <!-- Thêm cột Ngày Post -->
+                  <th>Ngày paid</th> <!-- Thêm cột Ngày Post -->
                   <th>Hành Động</th>
                 </tr>
               </thead>
@@ -116,6 +117,10 @@
               <td>Payment</td>
               <td id="sum-payment">0</td>
             </tr>
+            <tr>
+              <td>Fee</td>
+              <td id="sum-fee">0</td>
+            </tr>
           </tbody>
         </table>
         <br>
@@ -144,6 +149,7 @@
         <label id="bucket-status" style="font-weight: bold;">Tình trạng: Chưa xác định</label>
         <label id="statement-original-amount-sale-label" style="font-weight: bold;">Số tiền sale trong kỳ: Chưa xác định</label>
         <label id="statement-original-amount-cash-label" style="font-weight: bold;">Số tiền cash trong kỳ: Chưa xác định</label>
+        <label id="statement-original-amount-fee-label" style="font-weight: bold;">Số tiền fee trong kỳ: Chưa xác định</label>
         <label id="statement-original-amount-payment-label" style="font-weight: bold;">Số tiền payment trong kỳ: Chưa xác định</label>
         ------------------------------------------------------------------------------
         <label id="statement-original-amount-label" style="font-weight: bold;">Tổng tiền gốc trong kỳ: Chưa xác định</label>
@@ -732,6 +738,7 @@
       let sumRefunded = 0;
       let sumPayment = 0;
       let sumCash = 0;
+      let sumFee = 0; // Biến để lưu tổng số tiền phí
       let i = 0;
 
       console.log("tableRows.length: " + tableRows.length);
@@ -802,6 +809,18 @@
             continue;
           }
         }
+
+        // Xử lý giao dịch fee
+        if (transactionType === 'fee') {
+          if (status === 'new') {
+            // Lấy số tiền fee chưa void
+            const feeAmount = parseFloat(row.children[4].textContent) || 0; // Cột thứ 4 chứa số tiền gốc
+            sumFee += feeAmount; // Cộng số tiền fee vào tổng cash
+          } else if (status === 'voided') {
+            // Không tính giao dịch fee đã voided
+            continue;
+          }
+        }
       }
 
       console.log(`sumNew: ${sumNew}, sumVoided: ${sumVoided}, sumRefunded: ${sumRefunded}, sumCash: ${sumCash}`);
@@ -812,11 +831,14 @@
       document.getElementById('sum-refunded').textContent = sumRefunded.toFixed(2);
       document.getElementById('sum-cash').textContent = sumCash.toFixed(2);
       document.getElementById('sum-payment').textContent = sumPayment.toFixed(2);
+      document.getElementById('sum-fee').textContent = sumFee.toFixed(2);
 
       // Hiển thị số tiền gốc trong bảng giao dịch
       document.getElementById('statement-original-amount-sale-label').textContent = `Số tiền sale trong kỳ: ${(sumNew).toFixed(2)}`;
       document.getElementById('statement-original-amount-cash-label').textContent = `Số tiền cash trong kỳ: ${(sumCash).toFixed(2)}`;
-      document.getElementById('statement-original-amount-label').textContent = `Tổng tiền gốc trong kỳ: ${(sumNew + sumCash).toFixed(2)}`;
+      document.getElementById('statement-original-amount-payment-label').textContent = `Số tiền payment trong kỳ: ${(sumPayment).toFixed(2)}`;
+      document.getElementById('statement-original-amount-fee-label').textContent = `Số tiền fee trong kỳ: ${(sumFee).toFixed(2)}`;
+      document.getElementById('statement-original-amount-label').textContent = `Tổng tiền gốc trong kỳ: (sale + cash + fee - payment) = ${(sumNew + sumCash + sumFee - sumPayment).toFixed(2)}`;
 
 
       // Lấy số tiền từ hàng cuối trong bảng bucket-list-table
@@ -860,8 +882,183 @@
       createButton.style.cursor = 'pointer'; // Đổi con trỏ chuột về trạng thái bình thường
     }
 
-
+    
     function updateInterestTable() {
+      const tableRows = document.querySelectorAll('#transaction-table tbody tr');
+      const interestTableBody = document.querySelector('#interest-table tbody');
+      const annualInterestRate = 0.2; // Lãi suất 20% mỗi năm
+      const interestRate = annualInterestRate / 365; // Lãi suất mỗi ngày
+
+      const annualInterestRateCash = 0.2; // Lãi suất 20% mỗi năm cho giao dịch cash
+      const interestRateCash = annualInterestRateCash / 365; // Lãi suất mỗi ngày cho cash
+
+      const annualInterestRateFee = 0.2; // Lãi suất 20% mỗi năm cho giao dịch fee
+      const interestRateFee = annualInterestRateFee / 365; // Lãi suất mỗi ngày cho fee
+
+      let totalInterest = 0; // Biến lưu tổng lãi suất
+      let totalCashAmount = 0; // Biến lưu tổng số tiền cash
+      let totalSaleAmount = 0; // Biến lưu tổng số tiền sale
+      let totalFeeAmount = 0; // Biến lưu tổng số tiền fee
+      let bucketInterest = 0; // Biến lưu bucket lãi
+      let bucketOld = 0; // Biến lưu bucket old
+
+      // Xóa nội dung cũ trong bảng tính lãi
+      interestTableBody.innerHTML = '';
+
+      // Lấy ngày cuối cùng trong bảng
+      let maxDay = 0;
+      tableRows.forEach(row => {
+        const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
+        if (cells.length < 5) {
+          return; // Bỏ qua hàng không hợp lệ
+        }
+
+        const dayString = row.children[9].textContent.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
+        const transactionDay = parseInt(dayString, 10); // Chuyển đổi thành số nguyên
+        if (transactionDay > maxDay) {
+          maxDay = transactionDay; // Cập nhật ngày cuối cùng
+        }
+      });
+      maxDay = Math.ceil((maxDay + 1) / 25) * 25; // Làm tròn lên bội số của 25
+
+      // Hiển thị ngày sao kê
+      document.getElementById('statement-date-label').textContent = `Cycle ${cycle + 1} - Ngày sao kê: T + ${((cycle + 1) * 25)}`;
+
+      // Duyệt qua các hàng trong bảng giao dịch
+      for (let i = lastIndex; i < tableRows.length; i++) {
+        const row = tableRows[i];
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 5) {
+          continue; // Bỏ qua hàng không hợp lệ
+        }
+
+        const transactionId = row.children[0].textContent; // ID Giao Dịch
+        const transactionType = row.children[2].textContent; // Loại Giao Dịch
+        const status = row.children[3].textContent; // Trạng thái
+        const amount = parseFloat(row.children[4].textContent) || 0; // Số Tiền Gốc
+        const updatedAmount = parseFloat(row.children[5].textContent) || 0; // Số Tiền Cập Nhật
+        const dayString = row.children[9].textContent.replace('T + ', ''); // Lấy số ngày từ chuỗi "T + X"
+        const transactionDay = parseInt(dayString, 10); // Chuyển đổi thành số nguyên
+        const refundDayString = row.children[8]?.textContent.replace('T + ', '') || ''; // Lấy ngày refund từ cột thứ 9
+        const refundDay = parseInt(refundDayString, 10) || 0; // Chuyển đổi thành số nguyên
+
+        // Tính số ngày tính lãi
+        let daysElapsed = 0;
+
+        if (transactionType === 'sale' && status === 'new') {
+          daysElapsed = maxDay - transactionDay;
+          const interest = amount * interestRate * daysElapsed;
+
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+            <td>${transactionId}</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysElapsed}</td>
+            <td>${row.children[9].textContent}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interest.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow);
+          totalInterest += interest;
+          totalSaleAmount += amount;
+        } else if (transactionType === 'sale' && status === 'refunded' && updatedAmount > 0) {
+          const daysToRefund = refundDay - transactionDay;
+          const interestOriginal = amount * interestRate * daysToRefund;
+
+          const newRow1 = document.createElement('tr');
+          newRow1.innerHTML = `
+            <td>${transactionId} (Gốc)</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysToRefund}</td>
+            <td>${row.children[9].textContent}</td>
+            <td>${row.children[8]?.textContent || ''}</td>
+            <td>${interestOriginal.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow1);
+
+          const daysFromRefund = maxDay - refundDay;
+          const interestUpdated = updatedAmount * interestRate * daysFromRefund;
+
+          const newRow2 = document.createElement('tr');
+          newRow2.innerHTML = `
+            <td>${transactionId} (Cập nhật)</td>
+            <td>${transactionType}</td>
+            <td>${updatedAmount.toFixed(2)}</td>
+            <td>${daysFromRefund}</td>
+            <td>${row.children[8]?.textContent || ''}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interestUpdated.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow2);
+          totalInterest += interestOriginal + interestUpdated;
+          totalSaleAmount += updatedAmount;
+        } else if (transactionType === 'cash' && status === 'new') {
+          daysElapsed = maxDay - transactionDay;
+          const interest = amount * interestRateCash * daysElapsed;
+
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+            <td>${transactionId}</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysElapsed}</td>
+            <td>${row.children[9].textContent}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interest.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow);
+          totalInterest += interest;
+          totalCashAmount += amount;
+        } else if (transactionType === 'fee' && status === 'new') {
+          daysElapsed = maxDay - transactionDay;
+          const interest = amount * interestRateFee * daysElapsed;
+
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+            <td>${transactionId}</td>
+            <td>${transactionType}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${daysElapsed}</td>
+            <td>${row.children[9].textContent}</td>
+            <td>${'T + ' + maxDay}</td>
+            <td>${interest.toFixed(2)}</td>
+          `;
+          interestTableBody.appendChild(newRow);
+          totalInterest += interest;
+          totalFeeAmount += amount;
+        }
+      }
+
+      // Tính bucket lãi và bucket old
+      bucketInterest = totalInterest;
+      bucketOld = totalSaleAmount + bucketInterest + totalCashAmount + totalFeeAmount;
+
+      // Hiển thị số tiền gốc trong bảng giao dịch
+      document.getElementById('statement-interest-label').textContent = `Số tiền lãi: ${totalInterest.toFixed(2)}`;
+      const originAmountLabel = document.getElementById('statement-original-amount-label').textContent;
+      const originAmount = parseFloat(originAmountLabel.replace('Tổng tiền gốc trong kỳ: (sale + cash + fee - payment) = ', '').replace(/,/g, '').trim()) || 0;
+      const minimumAmount = (totalInterest + originAmount) * 0.2;
+
+      document.getElementById('statement-min-amount-label').textContent = `Số tiền tối thiểu phải trả: 20% * (${originAmount.toFixed(2)} + ${totalInterest.toFixed(2)}) = ${minimumAmount.toFixed(2)}`;
+
+      // Cập nhật description
+      const description = `Bucket ${bucketIdCounter}: <br> 
+        Sale bucket: ${totalSaleAmount.toFixed(2)}<br> 
+        Cash bucket: ${totalCashAmount.toFixed(2)}<br> 
+        Fee bucket: ${totalFeeAmount.toFixed(2)}<br> 
+        Interest bucket: <span style="color: red;">${totalInterest.toFixed(2)}</span><br> 
+        Bucket old: <span style="color: red;">${bucketOld.toFixed(2)}</span><br> 
+        Sum: <span style="color: red;">${(totalSaleAmount + totalCashAmount + totalFeeAmount + totalInterest).toFixed(2)}</span><br> 
+        Payment: 0.00`;
+
+      addToBucketList(description, minimumAmount.toFixed(2));
+
+      lastIndex = tableRows.length; // Cập nhật lastIndex để tránh tính lại các hàng đã tính toán trước đó
+    }
+
+    function updateInterestTable_org() {
         const tableRows = document.querySelectorAll('#transaction-table tbody tr');
         const interestTableBody = document.querySelector('#interest-table tbody');
         const annualInterestRate = 0.2; // Lãi suất 20% mỗi năm
@@ -1279,6 +1476,37 @@
           status = 'new';
           amount = Math.floor(Math.random() * 10 + 1) * 1000; // Số tiền ngẫu nhiên là bội số của 1000
           transactions.push({ id: transactionId, type: transactionType, status }); // Lưu giao dịch để làm ID gốc cho void
+
+          // Tạo giao dịch fee liên quan
+          const feeTransactionId = `F${transactionId}`; // ID giao dịch fee
+          const feeAmount = amount * 0.01; // Tính phí bằng 1% số tiền gốc
+          const feeTransaction = {
+            id: feeTransactionId,
+            type: 'fee',
+            status: 'new',
+            originalTransactionId: transactionId, // Liên kết với giao dịch cash
+            amount: feeAmount
+          };
+          transactions.push(feeTransaction); // Lưu giao dịch fee
+
+          // Thêm giao dịch fee vào bảng
+          const feeRow = document.createElement('tr');
+          feeRow.id = `row-${feeTransactionId}`;
+          feeRow.innerHTML = `
+            <td>${feeTransactionId}</td>
+            <td>${transactionId}</td>
+            <td>fee</td>
+            <td>${feeTransaction.status}</td>
+            <td>${feeAmount.toFixed(2)}</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+          `;
+          tableBody.appendChild(feeRow);
         } 
         else if (randomType < 0.9) {
           // Tạo giao dịch payment
@@ -1316,6 +1544,28 @@
               button.style.opacity = 0.5; // Thêm hiệu ứng mờ
               button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
             });
+
+            // Nếu giao dịch gốc là cash, void luôn giao dịch fee liên quan
+            if (selectedTransaction.type === 'cash') {
+              const feeTransactionId = `F${selectedTransaction.id}`; // ID giao dịch fee liên quan
+              const feeRow = document.querySelector(`#row-${feeTransactionId}`);
+              if (feeRow) {
+                feeRow.children[3].textContent = "voided"; // Cập nhật trạng thái thành voided
+                feeRow.children[7].textContent = `T + ${voidDay}`; // Cập nhật ngày voided
+                const feeButtons = feeRow.querySelectorAll('button');
+                feeButtons.forEach(button => {
+                  button.disabled = true;
+                  button.style.opacity = 0.5; // Thêm hiệu ứng mờ
+                  button.style.cursor = 'not-allowed'; // Thay đổi con trỏ chuột
+                });
+
+                // Cập nhật trạng thái của giao dịch fee trong mảng transactions
+                const feeTransactionIndex = transactions.findIndex(tx => tx.id === feeTransactionId);
+                if (feeTransactionIndex !== -1) {
+                  transactions[feeTransactionIndex].status = 'voided'; // Cập nhật trạng thái thành voided
+                }
+              }
+            }
           }
 
           // Cập nhật trạng thái của giao dịch gốc trong mảng transactions
@@ -1337,6 +1587,7 @@
           <td>${transactionType === 'sale' || transactionType === 'cash' ? 0 : ''}</td>
           <td>${day}</td>
           <td>${dayVoided}</td>
+          <td>-</td>
           <td>-</td>
           <td>-</td>
           <td>
@@ -1379,7 +1630,8 @@
         const dayPostCell = row.children[9]; // Cột Ngày Post (cột thứ 10)
 
         // Chỉ xử lý giao dịch sale hoặc cash có trạng thái new
-        if (status === 'new' || status === 'completed') {
+        if (status === 'new' || status === 'completed') 
+        {
           if (transactionType === 'sale') {
             // Tạo giá trị Ngày Post ngẫu nhiên, lớn hơn ngày hiện tại và nhỏ hơn T + 24
             const currentDay = parseInt(day.replace('T + ', '')) || 0; // Lấy giá trị số từ ngày
@@ -1390,6 +1642,14 @@
           } else if (transactionType === 'cash') {
             // Đối với giao dịch cash, Ngày Post bằng đúng ngày giao dịch
             dayPostCell.textContent = day;
+
+            // Tìm giao dịch fee liên quan và cập nhật ngày post
+            const feeTransactionId = `F${row.children[0].textContent.trim()}`; // ID giao dịch fee liên quan
+            const feeRow = document.querySelector(`#row-${feeTransactionId}`);
+            if (feeRow) {
+              const feeDayPostCell = feeRow.children[9]; // Cột Ngày Post của fee
+              feeDayPostCell.textContent = day; // Ngày Post của fee bằng ngày giao dịch cash
+            }
           }
           else if (transactionType === 'payment') {
             // Đối với giao dịch payment, Ngày Post là 1 ngày sau ngày giao dịch
