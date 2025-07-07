@@ -1515,6 +1515,63 @@
           status = 'completed';
           amount = Math.floor(Math.random() * 10 + 1) * 1000; // Số tiền ngẫu nhiên là bội số của 1000
           transactions.push({ id: transactionId, type: transactionType, status }); // Lưu giao dịch payment
+
+          // Rà lại bảng và cập nhật giao dịch theo thứ tự cash, fee, sale
+          const tableRows = document.querySelectorAll('#transaction-table tbody tr');
+          let remainingPayment = amount; // Số tiền payment còn lại để xử lý
+
+          for (let i = 0; i < tableRows.length; i++) {
+            const row = tableRows[i];
+            const transactionType = row.children[2].textContent.trim(); // Loại giao dịch
+            const status = row.children[3].textContent.trim(); // Trạng thái
+            const updatedAmountCell = row.children[5]; // Cột Số Tiền Cập Nhật
+            const paidDayCell = row.children[10]; // Cột Ngày Paid
+            let updatedAmount = parseFloat(updatedAmountCell.textContent) || 0; // Số Tiền Cập Nhật
+
+            // Chỉ xử lý các giao dịch có trạng thái "new" hoặc "refunded" và số tiền cập nhật > 0
+            if ((transactionType === 'cash' || transactionType === 'fee' || transactionType === 'sale') && 
+                (status === 'new' || status === 'refunded' || status === 'partial') && updatedAmount > 0) {
+              
+              if (remainingPayment >= updatedAmount) {
+                // Nếu số tiền payment đủ để thanh toán toàn bộ số tiền cập nhật
+                remainingPayment -= updatedAmount;
+                updatedAmountCell.textContent = '0'; // Đặt số tiền cập nhật về 0
+                row.children[3].textContent = 'paid'; // Cập nhật trạng thái thành "paid"
+                paidDayCell.textContent = `T + ${dayCounter}`; // Cập nhật ngày paid
+              } 
+              else 
+              {
+                // Nếu số tiền payment không đủ để thanh toán toàn bộ
+                updatedAmount -= remainingPayment;
+                updatedAmountCell.textContent = updatedAmount.toFixed(2); // Cập nhật số tiền còn lại
+                remainingPayment = 0; // Đặt số tiền payment còn lại về 0
+                paidDayCell.textContent = `T + ${dayCounter}`; // Cập nhật ngày paid
+              }
+
+              // Nếu số tiền payment đã hết, thoát khỏi vòng lặp
+              if (remainingPayment <= 0) {
+                break;
+              }
+            }
+          }
+
+          // Thêm giao dịch payment vào bảng
+          const newRow = document.createElement('tr');
+          newRow.id = `row-${transactionId}`;
+          newRow.innerHTML = `
+            <td>${transactionId}</td>
+            <td>${originalTransactionId}</td>
+            <td>${transactionType}</td>
+            <td>${status}</td>
+            <td>${amount}</td>
+            <td>-</td>
+            <td>${`T + ${dayCounter}`}</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          `;
+          tableBody.appendChild(newRow);
         }
         else 
         {
