@@ -157,7 +157,7 @@ html, body {
     text-decoration: underline;
   }
   main {
-    width: 80%;
+    width: 95%;
     display: block;
     justify-content: center;
     align-items: flex-start;
@@ -165,7 +165,7 @@ html, body {
     overflow-y: auto;
   }
   .modal {
-  width: 95%; /* Occupy full width of the parent container */
+  width: 99%; /* Occupy full width of the parent container */
   margin-bottom: 20px; /* Add spacing between modals */
   background-color: #fff; /* White background */
   border: 1px solid #ddd; /* Add a border */
