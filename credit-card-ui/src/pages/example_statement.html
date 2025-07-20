@@ -65,10 +65,12 @@
             <button id="create-sample-btn" class="edit-btn" style="background-color: blue; color: white;">Tạo Giao Dịch Mẫu (n)</button>
             <button id="reset-sample-btn" class="edit-btn" style="background-color: red ; color: white;">Reset table</button>
             <button id="create-txn-sample-btn" class="edit-btn" style="background-color: green ; color: white;">Tạo Giao Dịch Mẫu</button>
-            <button id="create-txn-sale-sample-btn" class="edit-btn" style="background-color: darkorange; color: white;">Tạo Giao Dịch Mẫu Sale</button>
-            <button id="create-txn-cash-sample-btn" class="edit-btn" style="background-color: gold; color: white;">Tạo Giao Dịch Mẫu Cash</button>
-            <button id="create-txn-payment-sample-btn" class="edit-btn" style="background-color: green; color: white;">Tạo Giao Dịch Mẫu Payment</button>
-            <button id="create-txn-void-sample-btn" class="edit-btn" style="background-color: teal; color: white;">Tạo Giao Dịch Mẫu Void</button>
+          </div>
+          <div style="margin-top: 20px;margin-bottom: 20px;">
+            <button id="create-txn-sale-sample-btn" class="edit-btn" style="background-color: darkorange; color: white;">Tạo GD Sale</button>
+            <button id="create-txn-cash-sample-btn" class="edit-btn" style="background-color: gold; color: white;">Tạo GD Cash</button>
+            <button id="create-txn-payment-sample-btn" class="edit-btn" style="background-color: green; color: white;">Tạo GD Payment</button>
+            <button id="create-txn-void-sample-btn" class="edit-btn" style="background-color: teal; color: white;">Tạo GD Void</button>
           </div>
           <div style="margin-top: 20px;margin-bottom: 20px;">
             <button id="add-Delimeter-btn" class="edit-btn" style="background-color: blue; color: white;">Thêm delimeter</button>
@@ -91,6 +93,25 @@
                 <th>T.T sao kê</th> <!-- Thêm cột trạng thái statement -->
                 <th>Ngày t.toán cuối</th> <!-- Thêm cột ngày thanh toán cuối -->
                 <th>Hành Động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Các giao dịch sẽ được thêm vào đây -->
+            </tbody>
+          </table>
+          <table id="transaction-table-interest" border="1" style="width: 100%; border-collapse: collapse; text-align: left;margin-top: 20px;">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>ID G.D Gốc</th>
+                <th>Loại Giao Dịch</th>
+                <th>Trạng Thái</th> <!-- Cột Trạng Thái -->
+                <th>Số Tiền gốc</th>
+                <th>Ngày GD</th>
+                <th>Ngày tính lãi</th> <!-- Thêm cột Ngày tính lãi -->
+                <th>Loại lãi</th> <!-- Thêm cột loại lãi -->
+                <th>Tiền trong hạn</th> <!-- Thêm cột loại lãi -->
+                <th>Tiền quá hạn</th> <!-- Thêm cột loại lãi -->
               </tr>
             </thead>
             <tbody>
@@ -787,6 +808,7 @@
 
     function calculateStatement() {
       const tableRows = document.querySelectorAll('#transaction-table tbody tr');
+      const tableRowsInterest = document.querySelector('#transaction-table-interest tbody');
       let sumNew = 0;
       let sumVoided = 0;
       let sumRefunded = 0;
@@ -794,6 +816,8 @@
       let sumCash = 0;
       let sumFee = 0; // Biến để lưu tổng số tiền phí
       let i = 0;
+      //amountPaymentInCycle = 0;
+      //updateLabelAmtPaymentInCycle();
 
       addLog("tableRows.length: " + tableRows.length);
       addDelimiterRow();
@@ -813,15 +837,21 @@
           }
           //addLog(cells.length);
 
+          const transactionID = row.children[0].textContent; // ID giao dịch
           const transactionType = row.children[2].textContent; // Loại giao dịch
           const status = row.children[3].textContent; // Trạng thái
           const amount = parseInt(row.children[4].textContent) || 0; // Số tiền gốc
+          const day = row.children[6].textContent; // Ngày giao dịch 
+          const interestIN = parseFloat(row.children[4].textContent) || 0; // Số tiền lãi (nếu có)
+          const interestOUT = parseFloat(row.children[4].textContent) || 0; // Số tiền lãi (nếu có)
 
             // Xử lý giao dịch sale
-          if (transactionType === 'sale') {
+          if (transactionType === 'sale') 
+          {
               if (status === 'new') {
                 // Lấy số tiền gốc cho giao dịch sale có trạng thái new
                 sumNew += amount;
+                addRowToTableInterest(transactionID, transactionType, status, amount, day);
               } else if (status === 'refunded') {
                 // Lấy số tiền cập nhật cho giao dịch sale có trạng thái refunded
                 const updatedAmount = parseInt(row.children[5].textContent) || 0; // Cột thứ 6 chứa số tiền cập nhật
@@ -855,6 +885,7 @@
               if (status === 'new') {
                 // Lấy số tiền gốc cho giao dịch cash có trạng thái new
                 sumCash += amount;
+                addRowToTableInterest(transactionID, transactionType, status, amount, day);
               } else if (status === 'refunded') {
                 // Lấy số tiền cập nhật cho giao dịch cash có trạng thái refunded
                 const updatedAmount = parseInt(row.children[5].textContent) || 0; // Cột thứ 6 chứa số tiền cập nhật
@@ -1115,10 +1146,19 @@
       document.getElementById('statement-interest-label').textContent = `Số tiền lãi: ${totalInterest.toFixed(2)}`;
       const originAmountLabel = document.getElementById('statement-original-amount-label').textContent;
       const originAmount = parseFloat(originAmountLabel.replace('Tổng tiền gốc trong kỳ: (sale + cash + fee - payment) = ', '').replace(/,/g, '').trim()) || 0;
-      const minimumAmount = (totalInterest + originAmount) * 0.2;
+      let minimumAmount = (totalInterest + originAmount) * 0.2;
 
-      document.getElementById('statement-min-amount-label').textContent = `Số tiền tối thiểu phải trả: 20% * (${originAmount.toFixed(2)} + ${totalInterest.toFixed(2)}) = ${minimumAmount.toFixed(2)}`;
-
+      if(minimumAmount < 0) 
+      {
+        //document.getElementById('statement-min-amount-label').textContent = `Số tiền tối thiểu phải trả: 20% * (${originAmount.toFixed(2)} + ${totalInterest.toFixed(2)}) = ${minimumAmount.toFixed(2)}`;
+        document.getElementById('statement-min-amount-label').textContent = `Số tiền tối thiểu phải trả: 0.00`;
+        minimumAmount = 0;
+      }
+      else
+      {
+        document.getElementById('statement-min-amount-label').textContent = `Số tiền tối thiểu phải trả: 20% * (${originAmount.toFixed(2)} + ${totalInterest.toFixed(2)}) = ${minimumAmount.toFixed(2)}`;
+      }
+      
       // Cập nhật description
       const description = `Bucket ${bucketIdCounter}: <br> 
         Sale bucket: ${totalSaleAmount.toFixed(2)}<br> 
@@ -2514,7 +2554,7 @@
           const newPaymentValue = paymentValue + minAmount;
           let updatedDescription = descriptionText.replace(/Payment: [\d.]+/, `Paid: ${newPaymentValue.toFixed(2)}`);
 
-          createTransactionPaymentWhenCalStatement(minAmount); // Tạo giao dịch thanh toán            
+          //createTransactionPaymentWhenCalStatement(minAmount); // Tạo giao dịch thanh toán            
           // Tính toán giá trị Remain
           const remainValue = sumValue - newPaymentValue;
 
@@ -2532,9 +2572,9 @@
           }
 
           // Thêm status: Partial vào description
-          if (!updatedDescription.includes('Status: Partial')) 
+          if (!updatedDescription.includes('Status: Min')) 
           {
-            updatedDescription += `<br>Status: Partial`;
+            updatedDescription += `<br>Status: Min`;
           }
 
           descriptionCell.innerHTML = updatedDescription; // Cập nhật nội dung của description
@@ -2568,34 +2608,109 @@
 
     // Hàm xử lý thanh toán một phần
     function payPartial(bucketId) {
-      const amountInput = document.getElementById(`amount-${bucketId}`);
-      const partialAmount = prompt('Nhập số tiền muốn thanh toán:');
-      if (partialAmount && !isNaN(partialAmount)) {
-        const remainingAmount = parseFloat(amountInput.value) - parseFloat(partialAmount);
-        if (remainingAmount < 0) {
-          alert('Số tiền thanh toán vượt quá số tiền hiện tại!');
-        } else {
-          alert(`Thanh toán một phần số tiền: ${parseFloat(partialAmount).toFixed(2)}`);
-          amountInput.value = remainingAmount.toFixed(2); // Cập nhật số tiền còn lại
-        }
-      } else {
-        alert('Vui lòng nhập số tiền hợp lệ!');
-      }
-      addLog(`Thanh toán một phần cho cycle ${cycle} với số tiền: ${partialAmount}`);
-      addLineInLog();
-      calInterestForFee = true;
-      calInterestForSale = true;
-      const calculateButton = document.getElementById('cal-statement');
-      calculateButton.disabled = false; // Kích hoạt nút tính toán sau khi thanh toán toàn bộ
+      const amountInput = document.getElementById(`amount-${bucketId}`); // Lấy ô nhập số tiền
+      const partialAmount = prompt('Nhập số tiền muốn thanh toán:'); // Nhập số tiền thanh toán
       const row = document.getElementById(`row-${bucketId}`); // Lấy hàng tương ứng trong bảng bucket-list-table
       const descriptionCell = row.querySelector('td:nth-child(2)'); // Cột chứa description
       const minPaymentCell = row.querySelector('td:nth-child(3)'); // Cột thứ 3 chứa số tiền thanh toán tối thiểu
-      let minAmount = parseFloat(minPaymentCell.textContent);
-      if(partialAmount > minAmount) 
-        payAction = 3;
-      else
-        payAction = 4;
-      updateStatusStatement();
+      let sumValue = 0; // Biến lưu giá trị Sum
+      let paymentValue = 0; // Biến lưu giá trị Payment
+      let minAmount = 0; // Biến lưu giá trị thanh toán tối thiểu
+      // Trích xuất giá trị Sum từ description
+      let descriptionText = 0;
+      if (descriptionCell) {
+        descriptionText = descriptionCell.innerHTML; // Lấy nội dung của description
+      }
+      // Trích xuất giá trị Payment từ description
+      const paymentMatch = descriptionText.match(/Paid: ([\d.]+)/);
+      //paymentValue = paymentMatch ? parseFloat(paymentMatch[1]) : 0;
+      let newPaymentValue = '';
+      let updatedDescription = '';
+
+      const sumMatch = descriptionText.match(/Sum: <span style="color: red;">([\d.]+)<\/span>/);
+      sumValue = sumMatch ? parseFloat(sumMatch[1]) : 0;
+      addLog(`Trích xuất giá trị Sum: ${sumMatch ? sumMatch[1] : 'Không tìm thấy'}`); // Ghi log giá trị Sum
+      let remainingAmount = 0;
+
+      if (minPaymentCell) {
+        // Lấy số tiền thanh toán tối thiểu từ cột thứ 3
+          minAmount = parseFloat(minPaymentCell.textContent) || 0;
+      }
+
+      // Lấy hàng tương ứng trong bảng bucket-list-table
+      minAmount = parseFloat(minPaymentCell.textContent) || 0; // Lấy số tiền thanh toán tối thiểu
+
+      if (partialAmount && !isNaN(partialAmount)) 
+      {
+        //const remainingAmount = parseFloat(partialAmount.value) - minAmount; // Tính số tiền còn lại
+        paymentValue = parseFloat(partialAmount); // Chuyển đổi giá trị thanh toán sang số thực
+        remainingAmount = sumValue - paymentValue; // Tính số tiền còn lại sau khi thanh toán
+        
+        updatedDescription = descriptionText.replace(/Paid: [\d.]+/, `Paid: ${paymentValue.toFixed(2)}`);
+
+        if (paymentValue > minAmount && paymentValue < sumValue ) // thanh toán hơn min payment và nhỏ hơn số tiền sum
+        {
+          addLog('Số tiền thanh toán lớn hơn mức tối thiểu và nhỏ hơn tổng số tiền.');
+          payAction = 3;
+          amountPaymentInCycle = 0; // Không có số tiền thanh toán còn lại trong chu kỳ này
+        } 
+        else if(paymentValue == minAmount)
+        {
+          addLog(`Thanh toán đúng mức tối thiểu: ${parseFloat(partialAmount).toFixed(2)}`);
+          payAction = 2;
+          amountPaymentInCycle = 0;
+        }
+        else if(paymentValue < minAmount)
+        {
+          addLog(`Số tiền thanh toán nhỏ hơn mức tối thiểu: ${parseFloat(partialAmount).toFixed(2)}`);
+          payAction = 4;
+          amountPaymentInCycle = 0; // Không có số tiền thanh toán còn lại trong chu kỳ này
+        }
+        else if(paymentValue > sumValue)
+        {
+          addLog(`Số tiền thanh toán lớn hơn tổng số tiền: ${parseFloat(partialAmount).toFixed(2)}`);
+          payAction = 1; // Thanh toán toàn bộ
+          // Hiển thị số tiền payment còn lại trong label
+          amountPaymentInCycle = paymentValue - sumValue; // Tính số tiền thanh toán còn lại
+        }
+        updateLabelAmtPaymentInCycle();
+
+        updatedDescription = descriptionText.replace(/Payment: [\d.]+/, `Paid: ${paymentValue.toFixed(2)}`);
+      
+        // Cập nhật hoặc thêm giá trị Remain vào description
+        if (updatedDescription.includes('Remain:')) {
+          updatedDescription = updatedDescription.replace(
+            /Remain: .*/,
+            `Remain: ${remainingAmount.toFixed(2)}`
+          );
+        } else {
+          updatedDescription += `<br>Remain: ${remainingAmount.toFixed(2)}`;
+        }
+
+        // Cập nhật trạng thái nếu cần
+        if (remainingAmount === 0) {
+          updatedDescription += `<br>Status: <span style="color: green;">Paid</span>`;
+        } else {
+          updatedDescription += `<br>Status: <span style="color: orange;">Partial</span>`;
+        }
+
+        descriptionCell.innerHTML = updatedDescription; // Cập nhật nội dung của description
+
+        // Ghi log và cập nhật trạng thái
+        addLog(`Thanh toán một phần cho cycle ${cycle} với số tiền: ${parseFloat(partialAmount).toFixed(2)}`);
+        addLineInLog();
+        calInterestForFee = true;
+        calInterestForSale = true;
+
+        // Kích hoạt nút tính toán
+        const calculateButton = document.getElementById('cal-statement');
+        calculateButton.disabled = false;
+
+        updateStatusStatement(); // Cập nhật trạng thái sao kê
+      }
+      // } else {
+      //   alert('Vui lòng nhập số tiền hợp lệ!');
+      // }
     }
 
     function nopay(bucketId) {
@@ -2691,7 +2806,15 @@
         else
         {
           alert(`Không thể tạo giao dịch mới vì đã đạt đến giới hạn ngày post tối đa (T + ${maxPostDay}). Vui lòng tạo giao dịch mới sau khi reset.`);
-          addDelimiterRow();
+          const lastRow = tableBody.lastElementChild; // Lấy dòng cuối cùng trong tableBody
+          if (lastRow.children.length < 2) {
+            console.log('Dòng cuối cùng:', lastRow.children.length); // Kiểm tra dòng cuối cùng
+          } 
+          else 
+          {
+            console.log('Không có dòng nào trong tableBody', lastRow.children.length);
+            addDelimiterRow();
+          }
           return;
         }
       //}
@@ -2755,69 +2878,6 @@
       `;
       tableBody.appendChild(newRow);
       
-
-      ///Cập nhật ngày post
-      // const tableRows = document.querySelectorAll('#transaction-table tbody tr'); // Lấy tất cả các hàng trong bảng
-
-      // for (let i = lastIndex; i < tableRows.length; i++) 
-      // { // Sửa điều kiện vòng lặp
-      //   const row = tableRows[i];
-
-      //   // Kiểm tra nếu hàng là delimiter hoặc không hợp lệ
-      //   const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
-      //   if (cells.length < 5) {
-      //     continue; // Bỏ qua hàng không hợp lệ
-      //   }
-      //   //addLog(cells.length);
-
-      //   const transactionType = row.children[2].textContent.trim(); // Loại giao dịch
-      //   const status = row.children[3].textContent.trim(); // Trạng thái
-      //   const day = row.children[6].textContent.trim(); // Ngày (cột thứ 7)
-      //   const dayPostCell = row.children[9]; // Cột Ngày Post (cột thứ 10)
-
-      //   // Chỉ xử lý giao dịch sale hoặc cash có trạng thái new
-      //   if (status === 'new') 
-      //   {
-      //     if (transactionType === 'sale') {
-      //       // Tạo giá trị Ngày Post ngẫu nhiên, lớn hơn ngày hiện tại và nhỏ hơn T + 24
-      //       const currentDay = parseInt(day.replace('T + ', '')) || 0; // Lấy giá trị số từ ngày
-      //       let postDay;
-
-      //       // Kiểm tra nếu maxPostDay lớn hơn currentDay + 1
-      //       if (maxPostDay > currentDay + 1) {
-      //         //postDay = Math.floor(Math.random() * (maxPostDay - currentDay - 1)) + currentDay + 1; // Ngày Post ngẫu nhiên
-      //         postDay = currentDay + 1; // ngày post là ngày tiếp theo
-      //       } else {
-      //         postDay = currentDay + 1; // Nếu không, đặt ngày post là ngày tiếp theo
-      //       }
-      //       // Cập nhật cột Ngày Post
-      //       dayPostCell.textContent = `T + ${postDay}`;
-      //     } 
-      //     else if (transactionType === 'cash') 
-      //     {
-      //       // Đối với giao dịch cash, Ngày Post bằng đúng ngày giao dịch
-      //       dayPostCell.textContent = day;
-
-      //       // Tìm giao dịch fee liên quan và cập nhật ngày post
-      //       const feeTransactionId = `F${row.children[0].textContent.trim()}`; // ID giao dịch fee liên quan
-      //       const feeRow = document.querySelector(`#row-${feeTransactionId}`);
-      //       if (feeRow) {
-      //         const feeDayPostCell = feeRow.children[9]; // Cột Ngày Post của fee
-      //         feeDayPostCell.textContent = day; // Ngày Post của fee bằng ngày giao dịch cash
-      //       }
-      //     }
-      //     else if (transactionType === 'payment') {
-      //       // Đối với giao dịch payment, Ngày Post là 1 ngày sau ngày giao dịch
-      //       const currentDay = parseInt(day.replace('T + ', '')) || 0; // Lấy giá trị số từ ngày
-      //       const postDay = currentDay + 1; // Ngày Post là 1 ngày sau ngày giao dịch
-
-      //       // Cập nhật cột Ngày Post
-      //       dayPostCell.textContent = `T + ${postDay}`;
-      //     }
-      //   }
-      // }
-      //
-  
       // Cập nhật transactionIdCounter và dayCounter
       transactionIdCounter += 1;
       dayCounter += 1;
@@ -2866,7 +2926,15 @@
           else
           {
             alert(`Không thể tạo giao dịch mới vì đã đạt đến giới hạn ngày post tối đa (T + ${maxPostDay}). Vui lòng tạo giao dịch mới sau khi reset.`);
-            addDelimiterRow();
+            const lastRow = tableBody.lastElementChild; // Lấy dòng cuối cùng trong tableBody
+            if (lastRow.children.length < 2) {
+              console.log('Dòng cuối cùng:', lastRow.children.length); // Kiểm tra dòng cuối cùng
+            } 
+            else 
+            {
+              console.log('Không có dòng nào trong tableBody', lastRow.children.length);
+              addDelimiterRow();
+            }
             return;
           }
         //}
@@ -2975,52 +3043,7 @@
           </td>
         `;
         tableBody.appendChild(newRow);
-      
-
-      // Thêm delimiter vào cuối bảng
-      // const delimiterRow = document.createElement('tr');
-      // delimiterRow.innerHTML = `
-      //   <td colspan="11" style="background-color: #f0f0f0; text-align: center;">End cycle ${cycle + 1}</td>
-      // `;
-      // tableBody.appendChild(delimiterRow);
-
-      ///Cập nhật ngày post
-      // const tableRows = document.querySelectorAll('#transaction-table tbody tr'); // Lấy tất cả các hàng trong bảng
-
-      // for (let i = lastIndex; i < tableRows.length; i++) { // Sửa điều kiện vòng lặp
-      //   const row = tableRows[i];
-
-      //   // Kiểm tra nếu hàng là delimiter hoặc không hợp lệ
-      //   const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
-      //   if (cells.length < 5) {
-      //     continue; // Bỏ qua hàng không hợp lệ
-      //   }
-      //   //addLog(cells.length);
-
-      //   const transactionType = row.children[2].textContent.trim(); // Loại giao dịch
-      //   const status = row.children[3].textContent.trim(); // Trạng thái
-      //   const day = row.children[6].textContent.trim(); // Ngày (cột thứ 7)
-      //   const dayPostCell = row.children[9]; // Cột Ngày Post (cột thứ 10)
-
-      //   // Chỉ xử lý giao dịch sale hoặc cash có trạng thái new
-      //   if (status === 'new') 
-      //   {
-      //     if (transactionType === 'cash') {
-      //       // Đối với giao dịch cash, Ngày Post bằng đúng ngày giao dịch
-      //       dayPostCell.textContent = day;
-
-      //       // Tìm giao dịch fee liên quan và cập nhật ngày post
-      //       const feeTransactionId = `F${row.children[0].textContent.trim()}`; // ID giao dịch fee liên quan
-      //       const feeRow = document.querySelector(`#row-${feeTransactionId}`);
-      //       if (feeRow) {
-      //         const feeDayPostCell = feeRow.children[9]; // Cột Ngày Post của fee
-      //         feeDayPostCell.textContent = day; // Ngày Post của fee bằng ngày giao dịch cash
-      //       }
-      //     }
-      //   }
-      // }
-      //
-  
+        
       // Cập nhật transactionIdCounter và dayCounter
       transactionIdCounter += 1;
       dayCounter += 1;
@@ -3077,7 +3100,15 @@
           else
           {
             alert(`Không thể tạo giao dịch mới vì đã đạt đến giới hạn ngày post tối đa (T + ${maxPostDay}). Vui lòng tạo giao dịch mới sau khi reset.`);
-            addDelimiterRow();
+            const lastRow = tableBody.lastElementChild; // Lấy dòng cuối cùng trong tableBody
+            if (lastRow.children.length < 2) {
+              console.log('Dòng cuối cùng:', lastRow.children.length); // Kiểm tra dòng cuối cùng
+            } 
+            else 
+            {
+              console.log('Không có dòng nào trong tableBody', lastRow.children.length);
+              addDelimiterRow();
+            }
             return;
           }
         // }
@@ -3194,6 +3225,11 @@
           for (let i = 0; i < tableRows.length; i++) 
           {
             const row = tableRows[i];
+            // Kiểm tra nếu hàng là delimiter hoặc không hợp lệ
+            const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
+            if (cells.length < 5) {
+              continue; // Bỏ qua hàng không hợp lệ
+            }
             const transactionType = row.children[2].textContent.trim(); // Loại giao dịch
             const status = row.children[3].textContent.trim(); // Trạng thái
             const orgAmountCell = row.children[4]; // Cột Số Tiền gốc
@@ -3327,35 +3363,6 @@
       
         if(newRowSale !== null) 
           tableBody.appendChild(newRowSale); // Thêm hàng mới vào bảng
-        
-        // // Thêm giao dịch trực tiếp vào bảng
-        // const newRow = document.createElement('tr');
-        // newRow.id = `row-${transactionId.replace('T', '')}`;
-        // newRow.innerHTML = `
-        //   <td>${transactionId}</td>
-        //   <td>${originalTransactionId}</td>
-        //   <td>${transactionType}</td>
-        //   <td>${status}</td>
-        //   <td>${amount}</td>
-        //   <td>${transactionType === 'sale' || transactionType === 'cash' ? 0 : ''}</td>
-        //   <td>${day}</td>
-        //   <td>${dayVoided}</td>
-        //   <td>-</td>
-        //   <td>-</td>
-        //   <td>-</td>
-        //   <td>
-        //     ${
-        //       transactionType === 'sale' && status === 'new'
-        //         ? `
-        //           <button class="edit-btn" onclick="voidTransaction('${transactionId}')">Void</button>
-        //           <button class="edit-btn" onclick="refundTransaction('${transactionId}')">Refund</button>
-        //         `
-        //         : ''
-        //     }
-        //   </td>
-        // `;
-        // tableBody.appendChild(newRow);
-      
 
       ///Cập nhật ngày post
       const tableRows1 = document.querySelectorAll('#transaction-table tbody tr'); // Lấy tất cả các hàng trong bảng
@@ -3444,7 +3451,15 @@
       else
       {
           alert(`Không thể tạo giao dịch mới vì đã đạt đến giới hạn ngày post tối đa (T + ${maxPostDay}). Vui lòng tạo giao dịch mới sau khi reset.`);
-          addDelimiterRow();
+          const lastRow = tableBody.lastElementChild; // Lấy dòng cuối cùng trong tableBody
+          if (lastRow.children.length < 2) {
+            console.log('Dòng cuối cùng:', lastRow.children.length); // Kiểm tra dòng cuối cùng
+          } 
+          else 
+          {
+            console.log('Không có dòng nào trong tableBody', lastRow.children.length);
+            addDelimiterRow();
+          }
           return;
       }
 
@@ -3700,58 +3715,7 @@
         if(newRowSale !== null) 
           tableBody.appendChild(newRowSale); // Thêm hàng mới vào bảng
         
-      ///Cập nhật ngày post
-      // const tableRows1 = document.querySelectorAll('#transaction-table tbody tr'); // Lấy tất cả các hàng trong bảng
-
-      // for (let i = lastIndex; i < tableRows1.length; i++) { // Sửa điều kiện vòng lặp
-      //   const row = tableRows1[i];
-
-      //   // Kiểm tra nếu hàng là delimiter hoặc không hợp lệ
-      //   const cells = row.querySelectorAll('td'); // Lấy tất cả các ô trong hàng
-      //   if (cells.length < 5) {
-      //     continue; // Bỏ qua hàng không hợp lệ
-      //   }
-      //   //addLog(cells.length);
-
-      //   const transactionType = row.children[2].textContent.trim(); // Loại giao dịch
-      //   const status = row.children[3].textContent.trim(); // Trạng thái
-      //   const day = row.children[6].textContent.trim(); // Ngày (cột thứ 7)
-      //   const dayPostCell = row.children[9]; // Cột Ngày Post (cột thứ 10)
-
-      //   // Chỉ xử lý giao dịch sale hoặc cash có trạng thái new
-      //   if (status === 'new' || status === 'completed') 
-      //   {
-      //     if (transactionType === 'sale') {
-      //       // Tạo giá trị Ngày Post ngẫu nhiên, lớn hơn ngày hiện tại và nhỏ hơn T + 24
-      //       const currentDay = parseInt(day.replace('T + ', '')) || 0; // Lấy giá trị số từ ngày
-      //       //const postDay = Math.floor(Math.random() * (maxPostDay - currentDay)) + currentDay + 1; // Ngày Post ngẫu nhiên
-      //       postDay = currentDay + 1; // Ngày Post là 1 ngày sau ngày giao dịch
-
-      //       // Cập nhật cột Ngày Post
-      //       dayPostCell.textContent = `T + ${postDay}`;
-      //     } else if (transactionType === 'cash') {
-      //       // Đối với giao dịch cash, Ngày Post bằng đúng ngày giao dịch
-      //       dayPostCell.textContent = day;
-
-      //       // Tìm giao dịch fee liên quan và cập nhật ngày post
-      //       const feeTransactionId = `F${row.children[0].textContent.trim()}`; // ID giao dịch fee liên quan
-      //       const feeRow = document.querySelector(`#row-${feeTransactionId}`);
-      //       if (feeRow) {
-      //         const feeDayPostCell = feeRow.children[9]; // Cột Ngày Post của fee
-      //         feeDayPostCell.textContent = day; // Ngày Post của fee bằng ngày giao dịch cash
-      //       }
-      //     }
-      //     else if (transactionType === 'payment') {
-      //       // Đối với giao dịch payment, Ngày Post là 1 ngày sau ngày giao dịch
-      //       const currentDay = parseInt(day.replace('T + ', '')) || 0; // Lấy giá trị số từ ngày
-      //       const postDay = currentDay + 1; // Ngày Post là 1 ngày sau ngày giao dịch
-
-      //       // Cập nhật cột Ngày Post
-      //       dayPostCell.textContent = `T + ${postDay}`;
-      //     }
-      //   }
-      // }
-      //
+      
   
       // Cập nhật transactionIdCounter và dayCounter
       transactionIdCounter += 1;
@@ -4084,6 +4048,72 @@
             else
                 statementStatusCell.textContent = 'Interest'; // Cập nhật thành "interest"
         }
+      }
+    }
+    /////////////////////////////////////////////////////////////////////////
+    function addRowToTableInterest(transactionID, transactionType, status, amount, day) {
+      //const tableBody = document.querySelector(`transaction-table-interest`); // Lấy phần tử tbody theo ID
+      const tableBody = document.querySelector('#transaction-table-interest tbody');
+
+      if (tableBody) {
+        const newRow = document.createElement('tr');
+        newRow.id = 'TRI'+transactionID; // Gán ID duy nhất cho hàng
+        newRow.innerHTML = `
+          <td>${transactionID}</td>
+          <td>-</td>
+          <td>${transactionType}</td>
+          <td>${status}</td>
+          <td>${amount}</td>
+          <td>${day}</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        `;
+        tableBody.appendChild(newRow); // Thêm hàng mới vào bảng
+        addLog(`Hàng mới đã được thêm vào bảng transaction-table-interest với ID: ${transactionID}`);
+      } else {
+        console.error(`Không tìm thấy bảng với ID: transaction-table-interest`);
+      }
+    }
+
+    function updateColumn(rowId, columnIndex, value) 
+    {
+      const row = document.getElementById(rowId); // Lấy hàng theo ID
+
+      if (row) {
+        const cells = row.children; // Lấy tất cả các ô (cột) trong hàng
+
+        // Kiểm tra nếu cột tồn tại
+        if (cells.length > columnIndex) {
+          cells[columnIndex].textContent = value || '-'; // Cập nhật giá trị cho cột
+        } else {
+          console.error(`Hàng với ID ${rowId} không có cột thứ ${columnIndex + 1}`);
+        }
+      } else {
+        console.error(`Không tìm thấy hàng với ID ${rowId}`);
+      }
+    }
+
+    function getRowID_tableInterest(transactionID) {
+      const row = document.getElementById("TRI"+transactionID); // Tìm hàng theo ID
+
+      if (row) {
+        return row; // Trả về hàng nếu tìm thấy
+      } else {
+        console.error("Không tìm thấy hàng với ID: TRI" + transactionID);
+        return null; // Trả về null nếu không tìm thấy
+      }
+    }
+
+    function deleteRowById(rowId) {
+      const row = document.getElementById(rowId); // Tìm hàng theo ID
+
+      if (row) {
+        row.remove(); // Xóa hàng khỏi bảng
+        console.log(`Hàng với ID ${rowId} đã được xóa.`);
+      } else {
+        console.error(`Không tìm thấy hàng với ID: ${rowId}`);
       }
     }
     /////////////
