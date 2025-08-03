@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitbucket Management</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; vertical-align: top; }
+    th { background: #f4f4f9; }
+  </style>
+</head>
+<body>
+  <h1>Bitbucket Management Dashboard</h1>
+  <form id="bitbucket-form" action="javascript:void(0);">
+    <div>
+      <label for="username">Username (email):</label>
+      <input type="text" id="username" required>
+    </div>
+    <div>
+      <label for="password">App Password:</label>
+      <input type="password" id="password" required>
+    </div>
+    <div>
+      <label for="workspace">Workspace:</label>
+      <input type="text" id="workspace" value="bcvn" required>
+    </div>
+    <button type="submit">Fetch Data</button>
+  </form>
+
+  <h2>Projects</h2>
+  <table id="project-table">
+    <thead>
+      <tr>
+        <th>Project Key</th>
+        <th>Project Name</th>
+        <th>Permissions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Repositories</h2>
+  <table id="repository-table">
+    <thead>
+      <tr>
+        <th>Repository</th>
+        <th>Project Permissions</th>
+        <th>Repo Permissions</th>
+        <th>Branching Model</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    document.getElementById('bitbucket-form').addEventListener('submit', async function () {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const workspace = document.getElementById('workspace').value.trim();
+
+      const authHeader = 'Basic ' + btoa(`${username}:${password}`);
+      const repoTable = document.querySelector('#repository-table tbody');
+      const projectTable = document.querySelector('#project-table tbody');
+      repoTable.innerHTML = '';
+      projectTable.innerHTML = '';
+
+      async function fetchAllPages(url) {
+        let results = [];
+        while (url) {
+          const res = await fetch(url, { headers: { Authorization: authHeader } });
+          if (!res.ok) break;
+          const data = await res.json();
+          results = results.concat(data.values);
+          url = data.next || null;
+        }
+        return results;
+      }
+
+      try {
+        // 🔹 Lấy danh sách Projects
+        const projects = await fetchAllPages(`https://api.bitbucket.org/2.0/workspaces/${workspace}/projects`);
+        for (const project of projects) {
+          // Lấy permissions của project
+          let projectMembers = [];
+          try {
+            const projPerms = await fetchAllPages(
+              `https://api.bitbucket.org/2.0/workspaces/${workspace}/projects/${project.key}/permissions-config/users`
+            );
+            projectMembers = projPerms.map(u => `${u.user.display_name} (${u.permission})`);
+          } catch { projectMembers = []; }
+
+          const projRow = document.createElement('tr');
+          projRow.innerHTML = `
+            <td>${project.key}</td>
+            <td>${project.name}</td>
+            <td>${projectMembers.length ? projectMembers.join('<br>') : 'None'}</td>
+          `;
+          projectTable.appendChild(projRow);
+        }
+
+        // 🔹 Lấy danh sách Repositories
+        let nextPageUrl = `https://api.bitbucket.org/2.0/repositories/${workspace}`;
+        while (nextPageUrl) {
+          const response = await fetch(nextPageUrl, { headers: { Authorization: authHeader } });
+          if (!response.ok) throw new Error(`Failed to fetch repositories: ${response.status}`);
+          const data = await response.json();
+
+          for (const repo of data.values) {
+            // Branching model
+            let branchingInfo = 'N/A';
+            try {
+              const modelRes = await fetch(
+                `https://api.bitbucket.org/2.0/repositories/${repo.full_name}/branching-model`,
+                { headers: { Authorization: authHeader } }
+              );
+              if (modelRes.ok) {
+                const modelData = await modelRes.json();
+                const dev = modelData.development?.branch?.name || 'None';
+                const prod = modelData.production?.branch?.name || 'None';
+                const types = (modelData.branch_types || [])
+                  .map(t => `${t.kind}: ${t.prefix}`).join('<br>');
+                branchingInfo = `
+                  <strong>Development:</strong> ${dev}<br>
+                  <strong>Production:</strong> ${prod}<br>
+                  <strong>Types:</strong><br>${types || 'None'}
+                `;
+              }
+            } catch { branchingInfo = 'N/A'; }
+
+            // Project permissions (reuse project info)
+            let projectMembers = [];
+            try {
+              if (repo.project?.key) {
+                const projPerms = await fetchAllPages(
+                  `https://api.bitbucket.org/2.0/workspaces/${workspace}/projects/${repo.project.key}/permissions/users`
+                );
+                projectMembers = projPerms.map(u => `${u.user.display_name} (${u.permission})`);
+              }
+            } catch { projectMembers = []; }
+
+            // Repo permissions
+            let repoMembers = [];
+            try {
+              const repoPerms = await fetchAllPages(
+                `https://api.bitbucket.org/2.0/repositories/${repo.full_name}/permissions-config/users`
+              );
+              repoMembers = repoPerms.map(u => `${u.user.display_name} (${u.permission})`);
+            } catch { repoMembers = []; }
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${repo.name}</td>
+              <td>${projectMembers.length ? projectMembers.join('<br>') : 'None'}</td>
+              <td>${repoMembers.length ? repoMembers.join('<br>') : 'None'}</td>
+              <td>${branchingInfo}</td>
+            `;
+            repoTable.appendChild(row);
+          }
+
+          nextPageUrl = data.next || null;
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
