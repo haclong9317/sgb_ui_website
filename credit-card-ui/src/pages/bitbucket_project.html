@@ -31,25 +31,27 @@
   </form>
 
   <h2>Projects</h2>
-  <table id="project-table">
+  <table id="project-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
     <thead>
       <tr>
         <th>Project Key</th>
         <th>Project Name</th>
         <th>Permissions</th>
+        <th>Link</th> <!-- New column for the link -->
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
   <h2>Repositories</h2>
-  <table id="repository-table">
+  <table id="repository-table" border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
     <thead>
       <tr>
-        <th>Repository</th>
-        <th>Project Permissions</th>
-        <th>Repo Permissions</th>
-        <th>Branching Model</th>
+        <th>Name</th>
+        <th>Project Members</th>
+        <th>Repo Members</th>
+        <th>Branching Info</th>
+        <th>Link</th> <!-- New column for the link -->
       </tr>
     </thead>
     <tbody></tbody>
@@ -97,6 +99,7 @@
             <td>${project.key}</td>
             <td>${project.name}</td>
             <td>${projectMembers.length ? projectMembers.join('<br>') : 'None'}</td>
+            <td><a href="https://bitbucket.org/${workspace}/workspace/projects/${project.key}" target="_blank">View Project</a></td> <!-- Link column -->
           `;
           projectTable.appendChild(projRow);
         }
@@ -156,6 +159,7 @@
               <td>${projectMembers.length ? projectMembers.join('<br>') : 'None'}</td>
               <td>${repoMembers.length ? repoMembers.join('<br>') : 'None'}</td>
               <td>${branchingInfo}</td>
+              <td><a href="https://bitbucket.org/${workspace}/${repo.slug}/admin/branch-restrictions" target="_blank">View Repository</a></td> <!-- Link column -->
             `;
             repoTable.appendChild(row);
           }
@@ -177,7 +181,14 @@
         // Duyệt qua từng hàng trong bảng
         rows.forEach(row => {
             const cells = row.querySelectorAll('td, th'); // Lấy tất cả các ô (cột) trong hàng
-            const rowContent = Array.from(cells).map(cell => `"${cell.textContent.trim()}"`).join(','); // Chuyển nội dung ô thành CSV
+            const rowContent = Array.from(cells).map(cell => {
+                const link = cell.querySelector('a'); // Kiểm tra nếu ô chứa thẻ <a>
+                if (link) {
+                    return `"${cell.textContent.trim()} (${link.href})"`; // Thêm nội dung và link vào CSV
+                } else {
+                    return `"${cell.textContent.trim()}"`; // Chỉ thêm nội dung nếu không có link
+                }
+            }).join(','); // Chuyển nội dung ô thành CSV
             csvContent += rowContent + '\n'; // Thêm hàng vào chuỗi CSV
         });
 
